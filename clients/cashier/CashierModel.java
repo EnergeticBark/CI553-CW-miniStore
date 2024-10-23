@@ -5,15 +5,12 @@ import catalogue.Product;
 import debug.DEBUG;
 import middle.*;
 
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
+import java.util.Observable;
 
 /**
  * Implements the Model of the cashier client
  */
-public class CashierModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
+public class CashierModel extends Observable {
     private enum State { process, checked }
 
     private State theState = State.process; // Current state
@@ -37,10 +34,6 @@ public class CashierModel {
             DEBUG.error("CashierModel.constructor\n%s", e.getMessage());
         }
         theState = State.process; // Current state
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
     }
 
     /**
@@ -89,7 +82,7 @@ public class CashierModel {
             DEBUG.error("%s\n%s", "CashierModel.doCheck", e.getMessage());
             theAction = e.getMessage();
         }
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 
     /**
@@ -124,7 +117,7 @@ public class CashierModel {
             theAction = e.getMessage();
         }
         theState = State.process; // All Done
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 
     /**
@@ -147,7 +140,7 @@ public class CashierModel {
             theAction = e.getMessage();
         }
         theBasket = null;
-        this.pcs.firePropertyChange("action", null, theAction); // Notify
+        setChanged(); notifyObservers(theAction); // Notify
     }
 
     /**
@@ -155,7 +148,7 @@ public class CashierModel {
      * or after system reset
      */
     public void askForUpdate() {
-        this.pcs.firePropertyChange("action", null, "Welcome");
+        setChanged(); notifyObservers("Welcome");
     }
 
     /**

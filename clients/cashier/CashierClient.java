@@ -36,8 +36,8 @@ public class CashierClient {
         CashierController cont = new CashierController(model, view);
         view.setController(cont);
 
-    model.addPropertyChangeListener(view); // Add listener to the model
-    window.setVisible(true); // Display Screen
-    model.askForUpdate();
-  }
+        model.addObserver(view); // Add observer to the model
+        window.setVisible(true); // Display Screen
+        model.askForUpdate();
+    }
 }

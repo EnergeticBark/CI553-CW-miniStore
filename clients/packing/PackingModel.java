@@ -7,16 +7,13 @@ import middle.OrderException;
 import middle.OrderProcessing;
 import middle.StockReadWriter;
 
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
+import java.util.Observable;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Implements the Model of the warehouse packing client
  */
-public class PackingModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
+public class PackingModel extends Observable {
     private AtomicReference<Basket> theBasket = new AtomicReference<>();
 
     private StockReadWriter theStock = null;
@@ -40,10 +37,6 @@ public class PackingModel {
         theBasket.set(null); // Initial Basket
         // Start a background check to see when a new order can be packed
         new Thread(() -> checkForNewOrder()).start();
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
     }
 
     /**
@@ -91,7 +84,7 @@ public class PackingModel {
                         worker.free(); // Free
                         theAction = "";
                     }
-                    this.pcs.firePropertyChange("action", null, theAction);
+                    setChanged(); notifyObservers(theAction);
                 }
                 Thread.sleep(2000); // idle
             } catch (Exception e) {
@@ -128,12 +121,12 @@ public class PackingModel {
                 // F
                 theAction = "No order"; // Not packed order
             }
-            this.pcs.firePropertyChange("action", null, theAction);
+            setChanged(); notifyObservers(theAction);
         } catch (OrderException e) { // Error
             // Of course
             DEBUG.error("ReceiptModel.doOk()\n%s\n", // should not
                     e.getMessage()); //  happen
         }
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 }

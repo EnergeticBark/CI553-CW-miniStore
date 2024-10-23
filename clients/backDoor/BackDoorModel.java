@@ -8,15 +8,12 @@ import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReadWriter;
 
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
+import java.util.Observable;
 
 /**
  * Implements the Model of the back door client
  */
-public class BackDoorModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
+public class BackDoorModel extends Observable {
     private Basket theBasket = null; // Bought items
     private String pn = ""; // Product being processed
 
@@ -34,10 +31,6 @@ public class BackDoorModel {
         }
 
         theBasket = makeBasket(); // Initial Basket
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
     }
 
     /**
@@ -81,7 +74,7 @@ public class BackDoorModel {
         } catch (StockException e) {
             theAction = e.getMessage();
         }
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 
     /**
@@ -104,7 +97,7 @@ public class BackDoorModel {
                 }
             } catch (Exception err) {
                 theAction = "Invalid quantity";
-                this.pcs.firePropertyChange("action", null, theAction);
+                setChanged(); notifyObservers(theAction);
                 return;
             }
 
@@ -122,7 +115,7 @@ public class BackDoorModel {
         } catch (StockException e) {
             theAction = e.getMessage();
         }
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 
     /**
@@ -132,7 +125,7 @@ public class BackDoorModel {
         String theAction = "";
         theBasket.clear(); // Clear s. list
         theAction = "Enter Product Number"; // Set display
-        this.pcs.firePropertyChange("action", null, theAction); // inform the listener view that model changed
+        setChanged(); notifyObservers(theAction); // inform the observer view that model changed
     }
 
     /**

@@ -35,8 +35,7 @@ public class BackDoorClient {
         BackDoorController cont = new BackDoorController(model, view);
         view.setController(cont);
 
-        // Add listener to the model - view is listener, model has PropertyChangeSupport
-        model.addPropertyChangeListener(view);
+        model.addObserver(view); // Add observer to the model - view is observer, model is Observable
         window.setVisible(true); // Display Screen
     }
 }

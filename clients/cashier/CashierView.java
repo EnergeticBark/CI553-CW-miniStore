@@ -7,8 +7,8 @@ import middle.StockReadWriter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Observable;
+import java.util.Observer;
 
 
 /**
@@ -106,12 +106,13 @@ public class CashierView implements Observer {
 
     /**
      * Update the view
-     * @param evt The event source and property that has changed
+     * @param modelC The observed model
+     * @param arg Specific args
      */
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        CashierModel model = (CashierModel) evt.getSource();
-        String message = (String) evt.getNewValue();
+    public void update(Observable modelC, Object arg) {
+        CashierModel model = (CashierModel) modelC;
+        String message = (String) arg;
         theAction.setText(message);
         Basket basket = model.getBasket();
         if (basket == null) {

@@ -9,15 +9,12 @@ import middle.StockException;
 import middle.StockReader;
 
 import javax.swing.*;
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
+import java.util.Observable;
 
 /**
  * Implements the Model of the customer client
  */
-public class CustomerModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
+public class CustomerModel extends Observable {
     private Product theProduct = null; // Current product
     private Basket theBasket = null; // Bought items
 
@@ -38,10 +35,6 @@ public class CustomerModel {
             DEBUG.error("CustomerModel.constructor\n" + "Database not created?\n%s\n", e.getMessage());
         }
         theBasket = makeBasket(); // Initial Basket
-    }
-
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
     }
 
     /**
@@ -89,7 +82,7 @@ public class CustomerModel {
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 
     /**
@@ -100,7 +93,7 @@ public class CustomerModel {
         theBasket.clear(); // Clear s. list
         theAction = "Enter Product Number"; // Set display
         thePic = null; // No picture
-        this.pcs.firePropertyChange("action", null, theAction);
+        setChanged(); notifyObservers(theAction);
     }
 
     /**
@@ -115,7 +108,7 @@ public class CustomerModel {
      * ask for update of view callled at start
      */
     private void askForUpdate() {
-        this.pcs.firePropertyChange("action", null, "START only"); // Notify
+        setChanged(); notifyObservers("START only"); // Notify
     }
 
     /**

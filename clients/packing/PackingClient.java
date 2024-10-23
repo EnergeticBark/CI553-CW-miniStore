@@ -40,7 +40,7 @@ public class PackingClient {
         PackingController cont = new PackingController(model, view);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add listener to the model
+        model.addObserver(view); // Add observer to the model
         window.setVisible(true); // Display Screen
     }
 }

@@ -5,13 +5,13 @@ import middle.StockReadWriter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Implements the Customer view.
  */
-public class BackDoorView implements PropertyChangeListener {
+public class BackDoorView implements Observer {
     private static final String RESTOCK = "Add";
     private static final String CLEAR = "Clear";
     private static final String QUERY = "Query";
@@ -101,13 +101,14 @@ public class BackDoorView implements PropertyChangeListener {
     }
 
     /**
-     * Update the view, called by pcs.firePropertyChange(theAction) in model,
-     * @param evt The event source and property that has changed
+     * Update the view, called by notifyObservers(theAction) in model,
+     * @param modelC   The observed model
+     * @param arg      Specific args
      */
     @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        BackDoorModel model = (BackDoorModel) evt.getSource();
-        String message = (String) evt.getNewValue();
+    public void update(Observable modelC, Object arg) {
+        BackDoorModel model = (BackDoorModel) modelC;
+        String message = (String) arg;
         theAction.setText(message);
 
         theOutput.setText(model.getBasket().getDetails());
