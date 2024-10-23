@@ -16,10 +16,11 @@ import orders.Order;
  */
 
 // Pattern: Abstract Factory
+
 public class LocalMiddleFactory implements MiddleFactory {
-    private static StockR aStockR = null;
+    private static StockR  aStockR  = null;
     private static StockRW aStockRW = null;
-    private static Order aOrder = null;
+    private static Order   aOrder   = null;
 
     /**
      * Return an object to access the database for read only access.
@@ -27,7 +28,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
 
     public StockReader makeStockReader() throws StockException {
-        if (aStockR == null) {
+        if ( aStockR == null ) {
             aStockR = new StockR();
         }
         return aStockR;
@@ -39,7 +40,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
 
     public StockReadWriter makeStockReadWriter() throws StockException {
-        if (aStockRW == null) {
+        if ( aStockRW == null ) {
             aStockRW = new StockRW();
         }
         return aStockRW;
@@ -51,7 +52,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
 
     public OrderProcessing makeOrderProcessing() throws OrderException {
-        if (aOrder == null) {
+        if ( aOrder == null ) {
             aOrder = new Order();
         }
         return aOrder;

@@ -12,8 +12,13 @@ import java.rmi.RemoteException;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
+
 public interface RemoteStockR_I extends Remote {
-    boolean exists(String number) throws RemoteException, StockException;
-    Product getDetails(String number) throws RemoteException, StockException;
-    ImageIcon getImage(String number) throws RemoteException, StockException;
+    boolean   exists(String number)
+            throws RemoteException, StockException;
+    Product   getDetails(String number)
+            throws RemoteException, StockException;
+    ImageIcon getImage(String number)
+            throws RemoteException, StockException;
 }
+

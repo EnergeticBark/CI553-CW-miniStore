@@ -11,7 +11,9 @@ package middle;
  */
 
 // Pattern: Abstract Factory
+
 public interface MiddleFactory {
+
     /**
      * Return an object to access the database for read only access
      * @return instance of StockReader
@@ -25,6 +27,7 @@ public interface MiddleFactory {
      * @throws StockException if issue
      */
     public StockReadWriter makeStockReadWriter() throws StockException;
+
 
     /**
      * Return an object to access the order processing system

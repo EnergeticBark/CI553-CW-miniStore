@@ -17,7 +17,10 @@ import java.rmi.RemoteException;
  * @author  Mike Smith University of Brighton
  * @version 2.1
  */
-public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements RemoteStockRW_I {
+
+public class      R_StockRW
+        extends    java.rmi.server.UnicastRemoteObject
+        implements RemoteStockRW_I {
     private static final long serialVersionUID = 1;
     private StockRW aStockRW = null;
 
@@ -38,8 +41,8 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
      * @return true if product exists else false
      * @throws middle.StockException if underlying error
      */
-    public synchronized boolean exists(String pNum) throws StockException {
-        return aStockRW.exists(pNum);
+    public synchronized boolean exists( String pNum ) throws StockException {
+        return aStockRW.exists( pNum );
     }
 
     /**
@@ -48,8 +51,8 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
      * @return StockNumber, Description, Price, Quantity
      * @throws middle.StockException if underlying error
      */
-    public synchronized Product getDetails(String pNum) throws StockException {
-        return aStockRW.getDetails(pNum);
+    public synchronized Product getDetails( String pNum ) throws StockException {
+        return aStockRW.getDetails( pNum );
     }
 
     /**
@@ -58,8 +61,8 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
      * @return image
      * @throws middle.StockException if underlying error
      */
-    public synchronized ImageIcon getImage(String pNum) throws StockException {
-        return aStockRW.getImage(pNum);
+    public synchronized ImageIcon getImage( String pNum ) throws StockException {
+        return aStockRW.getImage( pNum );
     }
 
 
@@ -71,9 +74,10 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
      * @throws middle.StockException if underlying error
      */
     // Need to Fix
-    // What happens if can not commit data
-    public synchronized boolean buyStock(String pNum, int amount) throws StockException {
-        return aStockRW.buyStock(pNum, amount);
+    //  What happens if can not commit data
+    //
+    public synchronized boolean buyStock( String pNum, int amount ) throws StockException {
+        return aStockRW.buyStock( pNum, amount );
     }
 
     /**
@@ -82,9 +86,10 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
      * @param amount Quantity
      * @throws middle.StockException if underlying error
      */
-    public synchronized void addStock(String pNum, int amount) throws StockException {
-        aStockRW.addStock(pNum, amount);
+    public synchronized void addStock( String pNum, int amount ) throws StockException {
+        aStockRW.addStock( pNum, amount );
     }
+
 
     /**
      * Modifies Stock details for a given product number.
@@ -92,7 +97,7 @@ public class R_StockRW extends java.rmi.server.UnicastRemoteObject implements Re
      * @param product The product to be modified
      * @throws middle.StockException if underlying error
      */
-    public synchronized void modifyStock(Product product) throws StockException {
-        aStockRW.modifyStock(product);
+    public synchronized void modifyStock( Product product ) throws StockException {
+        aStockRW.modifyStock( product );
     }
 }
