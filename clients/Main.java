@@ -31,7 +31,7 @@ class Main {
     }
 
     /**
-     * Starts the system (Non distributed)
+     * Starts the system (Non-distributed)
      */
     public void begin() {
         //DEBUG.set(true); /* Lots of debug info */
@@ -51,7 +51,7 @@ class Main {
         JFrame window = new JFrame();
         window.setTitle("Customer Client MVC");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension pos = PosOnScrn.getPos();
+        Dimension pos = PosOnScreen.getPos();
 
         CustomerModel model = new CustomerModel(mlf);
         CustomerView view = new CustomerView(window, mlf, pos.width, pos.height);
@@ -71,7 +71,7 @@ class Main {
         JFrame window = new JFrame();
         window.setTitle("Cashier Client MVC");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension pos = PosOnScrn.getPos();
+        Dimension pos = PosOnScreen.getPos();
 
         CashierModel model = new CashierModel(mlf);
         CashierView view = new CashierView(window, mlf, pos.width, pos.height);
@@ -92,7 +92,7 @@ class Main {
 
         window.setTitle("Packing Client MVC");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension pos = PosOnScrn.getPos();
+        Dimension pos = PosOnScreen.getPos();
 
         PackingModel model = new PackingModel(mlf);
         PackingView view = new PackingView(window, mlf, pos.width, pos.height);
@@ -112,7 +112,7 @@ class Main {
 
         window.setTitle("BackDoor Client MVC");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        Dimension pos = PosOnScrn.getPos();
+        Dimension pos = PosOnScreen.getPos();
 
         BackDoorModel model = new BackDoorModel(mlf);
         BackDoorView view = new BackDoorView(window, mlf, pos.width, pos.height);

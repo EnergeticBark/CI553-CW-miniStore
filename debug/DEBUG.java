@@ -23,7 +23,7 @@ public class DEBUG {
     }
 
     /**
-     * Revert to previous debuging state (Not nested)
+     * Revert to previous debugging state (Not nested)
      */
     public static void revert() {
         synchronized(DEBUG.class) {

@@ -73,7 +73,7 @@ public class PackingModel {
 
     /**
      * Method run in a separate thread to check if there
-     * is a new order waiting to be packed and we have
+     * is a new order waiting to be packed, and we have
      * nothing to do.
      */
     private void checkForNewOrder() {

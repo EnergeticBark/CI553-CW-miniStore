@@ -40,8 +40,8 @@ public class CustomerView implements PropertyChangeListener {
      * Construct the view
      * @param rpc   Window in which to construct
      * @param mf    Factor to deliver order and stock objects
-     * @param x     x-cordinate of position of window on screen
-     * @param y     y-cordinate of position of window on screen
+     * @param x     x-coordinate of position of window on screen
+     * @param y     y-coordinate of position of window on screen
      */
     public CustomerView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
         try {
@@ -91,7 +91,7 @@ public class CustomerView implements PropertyChangeListener {
         cp.add(thePicture); // Add to canvas
         thePicture.clear();
 
-        rootWindow.setVisible(true); // Make visible);
+        rootWindow.setVisible(true); // Make visible;
         theInput.requestFocus(); // Focus is here
     }
 

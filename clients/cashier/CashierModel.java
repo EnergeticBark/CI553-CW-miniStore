@@ -74,7 +74,7 @@ public class CashierModel {
                                     pr.getQuantity() // quantity
                             );
                     theProduct = pr; // Remember prod.
-                    theProduct.setQuantity( amount ); // & quantity
+                    theProduct.setQuantity(amount); // & quantity
                     theState = State.checked; // OK await BUY
                 } else {
                     // F
@@ -102,7 +102,7 @@ public class CashierModel {
         try {
             if (theState != State.checked) { // Not checked
                 // with customer
-                theAction = "please check its availablity";
+                theAction = "please check its availability";
             } else {
                 boolean stockBought = // Buy
                         theStock.buyStock( // however
@@ -152,7 +152,7 @@ public class CashierModel {
     }
 
     /**
-     * ask for update of view callled at start of day
+     * ask for update of view called at start of day
      * or after system reset
      */
     public void askForUpdate() {
@@ -169,7 +169,7 @@ public class CashierModel {
                 theBasket = makeBasket(); // basket list
                 theBasket.setOrderNum( uon ); // Add an order number
             } catch (OrderException e) {
-                DEBUG.error("Comms failure\n" + "CashierModel.makeBasket()\n%s", e.getMessage());
+                DEBUG.error("Communications failure\n" + "CashierModel.makeBasket()\n%s", e.getMessage());
             }
         }
     }

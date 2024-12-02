@@ -90,9 +90,9 @@ public class DBAccessFactory {
             final int len = (int) length(file);
             if (len < 1000) {
                 vec = new byte[len];
-                FileInputStream istream = new FileInputStream(file);
-                final int read = istream.read(vec, 0, len);
-                istream.close();
+                FileInputStream iStream = new FileInputStream(file);
+                final int read = iStream.read(vec, 0, len);
+                iStream.close();
                 return vec;
             } else {
                 DEBUG.error("File %s length %d bytes too long", file, len);

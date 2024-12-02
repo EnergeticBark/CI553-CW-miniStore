@@ -10,7 +10,6 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-
 /**
  * View of the model 
  */
@@ -27,9 +26,9 @@ public class CashierView implements PropertyChangeListener {
     private final JTextField theInput = new JTextField();
     private final JTextArea theOutput = new JTextArea();
     private final JScrollPane theSP = new JScrollPane();
-    private final JButton theBtCheck = new JButton( CHECK );
-    private final JButton theBtBuy   = new JButton( BUY );
-    private final JButton theBtBought= new JButton( BOUGHT );
+    private final JButton theBtCheck = new JButton(CHECK);
+    private final JButton theBtBuy = new JButton(BUY);
+    private final JButton theBtBought = new JButton(BOUGHT);
 
     private StockReadWriter theStock = null;
     private OrderProcessing theOrder = null;
@@ -58,7 +57,7 @@ public class CashierView implements PropertyChangeListener {
         Font f = new Font("Monospaced", Font.PLAIN, 12); // Font f is
 
         pageTitle.setBounds(110, 0 , 270, 20);
-        pageTitle.setText("Thank You for Shopping at MiniStrore");
+        pageTitle.setText("Thank You for Shopping at MiniStore");
         cp.add(pageTitle);
 
         theBtCheck.setBounds(16, 25 + 60 * 0, 80, 40); // Check Button

@@ -165,14 +165,12 @@ class Setup {
                 }
                 System.out.println();
             }
-
-
         } catch (Exception e) {
             System.err.println("problems with SQL sent to " + url + "\n" + e.getMessage());
         }
     }
 
-    private static String m( int len, String s ) {
+    private static String m(int len, String s) {
         if (s.length() >= len) {
             return s.substring(0, len - 1) + " ";
         } else {

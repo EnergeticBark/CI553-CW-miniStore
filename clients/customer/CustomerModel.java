@@ -113,7 +113,7 @@ public class CustomerModel {
     }
 
     /**
-     * ask for update of view callled at start
+     * ask for update of view called at start
      */
     private void askForUpdate() {
         this.pcs.firePropertyChange("action", null, "START only"); // Notify

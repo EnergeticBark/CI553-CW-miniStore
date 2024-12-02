@@ -22,9 +22,9 @@ import java.util.*;
  * @version 3.0
  */
 public class Order implements OrderProcessing {
-    private enum State {Waiting, BeingPacked, ToBeCollected};
+    private enum State {Waiting, BeingPacked, ToBeCollected}
     /**
-     * Wraps a Basket and it state into a folder
+     * Wraps a Basket and its state into a folder
      */
     private class Folder {
         private State stateIs; // Order state

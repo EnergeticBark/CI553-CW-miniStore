@@ -7,7 +7,7 @@ import java.awt.*;
  * @author Mike Smith University of Brighton
  * @version 1.0
  */
-class PosOnScrn {
+class PosOnScreen {
     private final static int clientW = 400;
     private final static int clientH = 300;
 
@@ -17,8 +17,8 @@ class PosOnScrn {
     private static int cX = 0; // Initial window pos on screen
     private static int cY = 0; // Initial window pos on screen
 
-    // class initialiser
-    //  Will be called (once) when the class is loaded
+    // class initializer
+    // Will be called (once) when the class is loaded
     static {
         Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
         maxX = (int) dimension.getWidth();

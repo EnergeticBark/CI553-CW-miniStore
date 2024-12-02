@@ -23,10 +23,10 @@ import java.util.Formatter;
  * The order processing system.<BR>
  * Manages the progression of customer orders, instances of a Basket as they are
  * progressed through the system.
- * This is achieved by holding 3 seperate lists of orders, each list represents a specific
+ * This is achieved by holding 3 separate lists of orders, each list represents a specific
  * stage in the orders life cycle. These stages are:
  * <BR><B>Waiting to be processed<BR>
- * Curently being picked<BR>
+ * Currently being picked<BR>
  * Waiting to be collected<BR></B>
  * @author  Michael Alexander Smith
  * @version 2.0
@@ -83,7 +83,7 @@ public class OrderX implements OrderProcessing {
 
     /**
      * Returns an order to pick from the warehouse.
-     *  However if there is no order avilable then return null.
+     * However, if there is no order available then return null.
      * @return An order to pick.
      */
     public synchronized Basket getOrderToPack() throws OrderException {
@@ -137,7 +137,7 @@ public class OrderX implements OrderProcessing {
     /**
      * Returns information about all the orders (order number) in the order processing system
      * This consists of a map with the orders in the 3 states:
-     * "waiting to be processed", "curently being picked" and "waiting to be collected".
+     * "waiting to be processed", "currently being picked" and "waiting to be collected".
      *<PRE>
      * Key "Waiting"       A list of orders waiting to be processed
      * Key "BeingPicked"   A list of orders that are currently being picked

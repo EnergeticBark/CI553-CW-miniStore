@@ -19,7 +19,7 @@ public class Basket extends ArrayList<Product> implements Serializable {
     private int theOrderNum = 0; // Order number
 
     /**
-     * Constructor for a basket which is used to represent a customer order/ wish list
+     * Constructor for a basket which is used to represent a customer order/wish list
      */
     public Basket() {
         theOrderNum  = 0;
@@ -27,7 +27,7 @@ public class Basket extends ArrayList<Product> implements Serializable {
 
     /**
      * Set the customers unique order number
-     * Valid order Numbers 1 .. N
+     * Valid order Numbers 1 ... N
      * @param anOrderNum A unique order number
      */
     public void setOrderNum(int anOrderNum) {
@@ -63,7 +63,7 @@ public class Basket extends ArrayList<Product> implements Serializable {
         Locale uk = Locale.UK;
         StringBuilder sb = new StringBuilder(256);
         Formatter fr = new Formatter(sb, uk);
-        String csign = (Currency.getInstance( uk )).getSymbol();
+        String cSign = (Currency.getInstance(uk)).getSymbol();
         double total = 0.00;
         if (theOrderNum != 0) {
             fr.format("Order number: %03d\n", theOrderNum);
@@ -75,13 +75,13 @@ public class Basket extends ArrayList<Product> implements Serializable {
                 fr.format("%-7s", pr.getProductNum());
                 fr.format("%-14.14s ", pr.getDescription());
                 fr.format("(%3d) ", number);
-                fr.format("%s%7.2f", csign, pr.getPrice() * number);
+                fr.format("%s%7.2f", cSign, pr.getPrice() * number);
                 fr.format("\n");
                 total += pr.getPrice() * number;
             }
             fr.format("----------------------------\n");
             fr.format("Total                       ");
-            fr.format("%s%7.2f\n", csign, total);
+            fr.format("%s%7.2f\n", cSign, total);
             fr.close();
         }
         return sb.toString();
