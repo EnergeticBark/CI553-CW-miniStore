@@ -17,17 +17,17 @@ import java.rmi.RemoteException;
  */
 public class StockReadWriterProvider extends StockReaderProvider implements StockReadWriter {
     private RemoteStockReadWriter stub = null;
-    private final String theStockURL;
+    private final String url;
 
     public StockReadWriterProvider(String url) {
         super(url); // Not used
-        theStockURL = url;
+        this.url = url;
     }
 
     private void connect() throws StockException {
         // Setup connection
         try {
-            stub = (RemoteStockReadWriter) Naming.lookup(theStockURL); // Stub returned
+            stub = (RemoteStockReadWriter) Naming.lookup(url); // Stub returned
         } catch (Exception e) {
             // Failure to attach to the object.
             stub = null;

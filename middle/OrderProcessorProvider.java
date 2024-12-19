@@ -20,16 +20,16 @@ import java.util.Map;
  */
 public class OrderProcessorProvider implements OrderProcessor {
     private RemoteOrderProcessor stub = null;
-    private final String theOrderURL;
+    private final String url;
 
     public OrderProcessorProvider(String url) {
-        theOrderURL = url;
+        this.url = url;
     }
 
     private void connect() throws OrderException {
         // Setup connection
         try {
-            stub = (RemoteOrderProcessor) Naming.lookup(theOrderURL);
+            stub = (RemoteOrderProcessor) Naming.lookup(url);
         } catch (Exception e) {
             // Failure to attach to the object.
             stub = null;
@@ -52,7 +52,7 @@ public class OrderProcessorProvider implements OrderProcessor {
     }
 
     public int uniqueNumber() throws OrderException {
-        DEBUG.trace("OrderProcessorProvider:uniqueNumber()" );
+        DEBUG.trace("OrderProcessorProvider:uniqueNumber()");
         try {
             if (stub == null) {
                 connect();
@@ -69,7 +69,6 @@ public class OrderProcessorProvider implements OrderProcessor {
      * if no order then returns null.
      * @return An order to pick
      */
-
     public synchronized Basket getOrderToPack() throws OrderException {
         DEBUG.trace("OrderProcessorProvider:getOrderTioPack()");
         try {
@@ -88,7 +87,6 @@ public class OrderProcessorProvider implements OrderProcessor {
      * picked and the products are now on the conveyor belt to
      * the shop floor.
      */
-
     public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
         DEBUG.trace("OrderProcessorProvider:informOrderPacked()");
         try {
@@ -106,7 +104,6 @@ public class OrderProcessorProvider implements OrderProcessor {
      * Informs the order processing system that the order has been
      * collected by the customer
      */
-
     public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
         DEBUG.trace("OrderProcessorProvider:informOrderCollected()" );
         try {
@@ -123,7 +120,6 @@ public class OrderProcessorProvider implements OrderProcessor {
     /**
      * Returns information about all orders in the order processing system
      */
-
     public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
         DEBUG.trace("OrderProcessorProvider:getOrderState()");
         try {

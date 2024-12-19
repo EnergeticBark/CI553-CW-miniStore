@@ -101,8 +101,7 @@ public class DBAccessFactory {
         catch (FileNotFoundException  err) {
             DEBUG.error("File does not exist: fileToBytes [%s]\n", file);
             System.exit(0);
-        }
-        catch ( IOException err ) {
+        } catch (IOException err) {
             DEBUG.error("IO error: fileToBytes [%s]\n", file);
             System.exit(0);
         }
