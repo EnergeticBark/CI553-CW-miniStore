@@ -19,12 +19,12 @@ import java.sql.SQLException;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class StockRW extends StockR implements StockReadWriter {
+public class DBStockReadWriter extends DBStockReader implements StockReadWriter {
     /*
      * Connects to database
      */
-    public StockRW() throws StockException {
-        super(); // Connection done in StockR's constructor
+    public DBStockReadWriter() throws StockException {
+        super(); // Connection done in DBStockReader's constructor
     }
 
     /**
@@ -39,7 +39,7 @@ public class StockRW extends StockR implements StockReadWriter {
                 WHERE productNo = ? AND stockLevel >= ?
                 """;
 
-        DEBUG.trace("DB StockRW: buyStock(%s,%d)", pNum, amount);
+        DEBUG.trace("DB DBStockReadWriter: buyStock(%s,%d)", pNum, amount);
         int updates;
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
             statement.setInt(1, amount);
@@ -70,7 +70,7 @@ public class StockRW extends StockR implements StockReadWriter {
             statement.setInt(1, amount);
             statement.setString(2, pNum);
             statement.executeUpdate();
-            DEBUG.trace("DB StockRW: addStock(%s,%d)", pNum, amount);
+            DEBUG.trace("DB DBStockReadWriter: addStock(%s,%d)", pNum, amount);
         } catch (SQLException e) {
             throw new StockException("SQL addStock: " + e.getMessage());
         }
@@ -89,7 +89,7 @@ public class StockRW extends StockR implements StockReadWriter {
         final String updateProductQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
         final String updateStockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
 
-        DEBUG.trace("DB StockRW: modifyStock(%s)", detail.getProductNum());
+        DEBUG.trace("DB DBStockReadWriter: modifyStock(%s)", detail.getProductNum());
         try {
             if (!exists(detail.getProductNum())) {
                 try (

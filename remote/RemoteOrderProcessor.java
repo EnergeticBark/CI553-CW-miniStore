@@ -10,10 +10,11 @@ import java.util.Map;
 
 /**
  * Defines the RMI interface for the Order object.
+ * Like OrderProcessor, but each method could throw a RemoteException.
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public interface RemoteOrder_I extends Remote {
+public interface RemoteOrderProcessor extends Remote {
     void newOrder(Basket order) throws RemoteException, OrderException;
     int uniqueNumber() throws RemoteException, OrderException;
     Basket getOrderToPack() throws RemoteException, OrderException;

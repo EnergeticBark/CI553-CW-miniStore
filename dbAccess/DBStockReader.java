@@ -21,16 +21,15 @@ import java.sql.*;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class StockR implements StockReader {
+public class DBStockReader implements StockReader {
     final private Connection theCon; // Connection to database
-    final private Statement theStmt; // Statement object
 
     /**
      * Connects to database
      * Uses a factory method to help set up the connection
      * @throws StockException if problem
      */
-    public StockR() throws StockException {
+    public DBStockReader() throws StockException {
         try {
             DBAccess dbDriver = (new DBAccessFactory()).getNewDBAccess();
             dbDriver.loadDriver();
@@ -40,23 +39,13 @@ public class StockR implements StockReader {
                     dbDriver.username(),
                     dbDriver.password()
             );
-
-            theStmt = theCon.createStatement();
+            
             theCon.setAutoCommit(true);
         } catch (SQLException e) {
             throw new StockException("SQL problem:" + e.getMessage());
         } catch (Exception e) {
             throw new StockException("Can not load database driver.");
         }
-    }
-
-
-    /**
-     * Returns a statement object that is used to process SQL statements
-     * @return A statement object used to access the database
-     */
-    protected Statement getStatementObject() {
-        return theStmt;
     }
 
     /**
@@ -81,7 +70,7 @@ public class StockR implements StockReader {
             ResultSet rs = statement.executeQuery();
 
             boolean res = rs.next();
-            DEBUG.trace("DB StockR: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
+            DEBUG.trace("DB DBStockReader: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
             return res;
         } catch (SQLException e) {
             throw new StockException("SQL exists: " + e.getMessage());
@@ -142,7 +131,7 @@ public class StockR implements StockReader {
             throw new StockException("SQL getImage: " + e.getMessage());
         }
 
-        //DEBUG.trace( "DB StockR: getImage -> %s", filename );
+        //DEBUG.trace( "DB DBStockReader: getImage -> %s", filename );
         return new ImageIcon(filename);
     }
 }

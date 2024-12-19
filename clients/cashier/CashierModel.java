@@ -24,7 +24,7 @@ public class CashierModel {
     private String pn = ""; // Product being processed
 
     private StockReadWriter theStock = null;
-    private OrderProcessing theOrder = null;
+    private OrderProcessor theOrder = null;
 
     /**
      * Construct the model of the Cashier

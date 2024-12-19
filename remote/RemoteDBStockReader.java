@@ -1,6 +1,6 @@
 package remote;
 
-import dbAccess.StockR;
+import dbAccess.DBStockReader;
 import middle.StockException;
 
 import java.rmi.RemoteException;
@@ -15,8 +15,8 @@ import java.rmi.RemoteException;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class R_StockR extends StockR implements RemoteStockR_I {
-    public R_StockR() throws RemoteException, StockException {
+public class RemoteDBStockReader extends DBStockReader implements RemoteStockReader {
+    public RemoteDBStockReader() throws RemoteException, StockException {
         super();
     }
 }

@@ -2,7 +2,7 @@ package clients.cashier;
 
 import catalogue.Basket;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.OrderProcessor;
 import middle.StockReadWriter;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ public class CashierView implements PropertyChangeListener {
     private final JButton theBtBought = new JButton(BOUGHT);
 
     private StockReadWriter theStock = null;
-    private OrderProcessing theOrder = null;
+    private OrderProcessor theOrder = null;
     private CashierController cont = null;
 
     /**

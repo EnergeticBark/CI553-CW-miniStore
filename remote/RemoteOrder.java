@@ -11,8 +11,8 @@ import java.rmi.RemoteException;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class R_Order extends Order implements RemoteOrder_I {
-    public R_Order() throws RemoteException, OrderException {
+public class RemoteOrder extends Order implements RemoteOrderProcessor {
+    public RemoteOrder() throws RemoteException, OrderException {
         super();
     }
 }

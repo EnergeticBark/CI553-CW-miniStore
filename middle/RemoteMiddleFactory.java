@@ -28,24 +28,24 @@ public class RemoteMiddleFactory implements MiddleFactory {
      * Return an object to access the database for read only access.
      * Access is via RMI
      */
-    public StockReader makeStockReader() throws StockException {
-        return new F_StockR(theStockR_URL);
+    public StockReader makeStockReader() {
+        return new StockReaderProvider(theStockR_URL);
     }
 
     /**
      * Return an object to access the database for read/write access.
      * Access is via RMI
      */
-    public StockReadWriter makeStockReadWriter() throws StockException {
-        return new F_StockRW(theStockRW_URL);
+    public StockReadWriter makeStockReadWriter() {
+        return new StockReadWriterProvider(theStockRW_URL);
     }
 
     /**
      * Return an object to access the order processing system.
      * Access is via RMI
      */
-    public OrderProcessing makeOrderProcessing() throws OrderException {
-        return new F_Order(theOrder_URL);
+    public OrderProcessor makeOrderProcessing() {
+        return new OrderProcessorProvider(theOrder_URL);
     }
 }
 

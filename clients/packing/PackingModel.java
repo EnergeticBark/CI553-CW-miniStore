@@ -4,7 +4,7 @@ import catalogue.Basket;
 import debug.DEBUG;
 import middle.MiddleFactory;
 import middle.OrderException;
-import middle.OrderProcessing;
+import middle.OrderProcessor;
 import middle.StockReadWriter;
 
 import javax.swing.event.SwingPropertyChangeSupport;
@@ -20,7 +20,7 @@ public class PackingModel {
     private AtomicReference<Basket> theBasket = new AtomicReference<>();
 
     private StockReadWriter theStock = null;
-    private OrderProcessing theOrder = null;
+    private OrderProcessor theOrder = null;
     private String theAction = "";
 
     private StateOf worker = new StateOf();

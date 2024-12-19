@@ -2,7 +2,7 @@ package clients.packing;
 
 import catalogue.Basket;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.OrderProcessor;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +25,7 @@ public class PackingView implements PropertyChangeListener {
     private final JScrollPane theSP = new JScrollPane();
     private final JButton theBtPack = new JButton(PACKED);
 
-    private OrderProcessing theOrder = null;
+    private OrderProcessor theOrder = null;
 
     private PackingController cont = null;
 

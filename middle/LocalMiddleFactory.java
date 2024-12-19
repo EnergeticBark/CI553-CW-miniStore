@@ -5,8 +5,8 @@
 
 package middle;
 
-import dbAccess.StockR;
-import dbAccess.StockRW;
+import dbAccess.DBStockReader;
+import dbAccess.DBStockReadWriter;
 import orders.Order;
 
 /**
@@ -16,8 +16,8 @@ import orders.Order;
 
 // Pattern: Abstract Factory
 public class LocalMiddleFactory implements MiddleFactory {
-    private static StockR aStockR = null;
-    private static StockRW aStockRW = null;
+    private static DBStockReader aDBStockReader = null;
+    private static DBStockReadWriter aStockRW = null;
     private static Order aOrder = null;
 
     /**
@@ -25,10 +25,10 @@ public class LocalMiddleFactory implements MiddleFactory {
      * All users share this same object.
      */
     public StockReader makeStockReader() throws StockException {
-        if (aStockR == null) {
-            aStockR = new StockR();
+        if (aDBStockReader == null) {
+            aDBStockReader = new DBStockReader();
         }
-        return aStockR;
+        return aDBStockReader;
     }
 
     /**
@@ -37,7 +37,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
     public StockReadWriter makeStockReadWriter() throws StockException {
         if (aStockRW == null) {
-            aStockRW = new StockRW();
+            aStockRW = new DBStockReadWriter();
         }
         return aStockRW;
     }
@@ -46,7 +46,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      * Return an object to access the order processing system.
      * All users share this same object.
      */
-    public OrderProcessing makeOrderProcessing() throws OrderException {
+    public OrderProcessor makeOrderProcessing() throws OrderException {
         if (aOrder == null) {
             aOrder = new Order();
         }

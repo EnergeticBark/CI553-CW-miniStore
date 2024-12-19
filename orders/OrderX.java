@@ -5,9 +5,7 @@ import catalogue.Basket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.OrderException;
-import middle.OrderProcessing;
-
-import java.util.stream.Collectors;
+import middle.OrderProcessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,21 +29,21 @@ import java.util.Formatter;
  * @author  Michael Alexander Smith
  * @version 2.0
  */
-public class OrderX implements OrderProcessing {
+public class OrderX implements OrderProcessor {
     private static int theNextNumber = 1; // Start at 1
     // Orders entered but waiting to be processed (picked)
-    private ArrayList<Basket> theWaitingTray = new ArrayList<Basket>();
+    private ArrayList<Basket> theWaitingTray = new ArrayList<>();
 
     // Orders being processed (currently being picked)
-    private ArrayList<Basket> theBeingPickedTray = new ArrayList<Basket>();
+    private ArrayList<Basket> theBeingPickedTray = new ArrayList<>();
 
     // Orders waiting to be collected by the customer
-    private ArrayList<Basket> theToBeCollectedTray = new ArrayList<Basket>();
+    private ArrayList<Basket> theToBeCollectedTray = new ArrayList<>();
 
     /**
      * Used to generate debug information
-     * @Param  basket an instance of a basket
-     * @Return Description of contents
+     * @param  basket an instance of a basket
+     * @return Description of contents
      */
     private String asString(Basket basket) {
         StringBuilder sb = new StringBuilder(1024);
@@ -147,7 +145,7 @@ public class OrderX implements OrderProcessing {
      */
     public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
         DEBUG.trace("DEBUG: get state of order system");
-        Map<String, List<Integer>> res = new HashMap< String, List<Integer> >();
+        Map<String, List<Integer>> res = new HashMap<>();
         res.put("Waiting", orderNos(theWaitingTray));
         res.put("BeingPicked", orderNos(theBeingPickedTray));
         res.put("ToBeCollected", orderNos(theToBeCollectedTray));
@@ -156,7 +154,7 @@ public class OrderX implements OrderProcessing {
     }
 
     private List< Integer > orderNos(ArrayList<Basket> queue) {
-        List<Integer> res = new ArrayList<Integer>();
+        List<Integer> res = new ArrayList<>();
         for (Basket sb: queue) {
             res.add(sb.getOrderNum());
         }

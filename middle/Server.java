@@ -1,8 +1,8 @@
 package middle;
 
-import remote.R_Order;
-import remote.R_StockR;
-import remote.R_StockRW;
+import remote.RemoteOrder;
+import remote.RemoteDBStockReadWriter;
+import remote.RemoteDBStockReader;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
@@ -16,56 +16,52 @@ import java.rmi.server.UnicastRemoteObject;
  */
 class Server {
     public static void main(String[] args) {
-        String stockR = args.length < 1 // URL of stock R
-                ? Names.STOCK_R // default  location
+        String stockReaderURL = args.length < 1
+                ? Names.STOCK_R // default location
                 : args[0]; // supplied location
 
-        String stockRW = args.length < 2 // URL of stock RW
+        String stockReadWriterURL = args.length < 2
                 ? Names.STOCK_RW // default location
                 : args[1]; // supplied location
 
-        String order = args.length < 3 // URL of order manip
+        String orderProcessorURL = args.length < 3
                 ? Names.ORDER // default location
                 : args[2]; // supplied location
 
-        (new Server()).bind(stockR, stockRW, order);
+        (new Server()).bind(stockReaderURL, stockReadWriterURL, orderProcessorURL);
     }
 
-    private void bind(String urlStockR, String urlStockRW, String urlOrder) {
-        R_StockR theStockR; // Remote stock object
-        R_StockRW theStockRW; // Remote stock object
-        R_Order theOrder; // Remote order object
+    private void bind(String stockReaderURL, String stockReadWriterURL, String orderProcessorURL) {
+        RemoteDBStockReader theStockR; // Remote stock object
+        RemoteDBStockReadWriter theStockRW; // Remote stock object
+        RemoteOrder theOrder; // Remote order object
         System.out.println("Server: "); // Introduction
         try {
             LocateRegistry.createRegistry(1099);
-            String IPAddress = InetAddress.getLocalHost().getHostAddress();
-            System.out.println("Server IP address " + IPAddress);
+            String ipAddress = InetAddress.getLocalHost().getHostAddress();
+            System.out.println("Server IP address " + ipAddress);
         } catch (Exception e) {
-            System.out.println("Fail Starting rmiregistry" + e.getMessage());
+            System.out.println("Fail Starting RMI Registry" + e.getMessage());
             System.exit(0);
         }
 
         try {
-            theStockR = new R_StockR(); // Stock R
+            theStockR = new RemoteDBStockReader(); // Stock R
             UnicastRemoteObject.exportObject(theStockR, 0);
-            Naming.rebind(urlStockR, theStockR); // bind to url
-            System.out.println("StockR bound to: " + // Inform world
-                    urlStockR);
+            Naming.rebind(stockReaderURL, theStockR); // bind to url
+            System.out.println("DBStockReader bound to: " + stockReaderURL); // Inform world
 
-            theStockRW = new R_StockRW(); // Stock RW
+            theStockRW = new RemoteDBStockReadWriter(); // Stock RW
             UnicastRemoteObject.exportObject(theStockRW, 0);
-            Naming.rebind(urlStockRW, theStockRW); // bind to url
-            System.out.println("StockRW bound to: " + // Inform world
-                    urlStockRW);
+            Naming.rebind(stockReadWriterURL, theStockRW); // bind to url
+            System.out.println("DBStockReadWriter bound to: " + stockReadWriterURL); // Inform world
 
-            theOrder = new R_Order(); // Order
+            theOrder = new RemoteOrder(); // Order
             UnicastRemoteObject.exportObject(theOrder, 0);
-            Naming.rebind(urlOrder, theOrder); // bind to url
-            System.out.println("Order bound to: " + // Inform world
-                    urlOrder);
-        } catch (Exception err) { // Error
-            System.out.println("Fail Server: " + // Variety of
-                    err.getMessage()); // reasons
+            Naming.rebind(orderProcessorURL, theOrder); // bind to url
+            System.out.println("Order bound to: " + orderProcessorURL); // Inform world
+        } catch (Exception err) {
+            System.out.println("Fail Server: " + err.getMessage()); // Variety of reasons
         }
     }
 }
