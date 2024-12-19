@@ -14,10 +14,10 @@ import java.util.Map;
  * @version 2.0
  */
 public interface RemoteOrder_I extends Remote {
-    public void newOrder(Basket order) throws RemoteException, OrderException;
-    public int uniqueNumber() throws RemoteException, OrderException;
-    public Basket getOrderToPack() throws RemoteException, OrderException;
-    public boolean informOrderPacked(int orderNum) throws RemoteException, OrderException;
-    public boolean informOrderCollected(int orderNum) throws RemoteException, OrderException;
-    public Map<String, List<Integer>> getOrderState() throws RemoteException, OrderException;
+    void newOrder(Basket order) throws RemoteException, OrderException;
+    int uniqueNumber() throws RemoteException, OrderException;
+    Basket getOrderToPack() throws RemoteException, OrderException;
+    boolean informOrderPacked(int orderNum) throws RemoteException, OrderException;
+    boolean informOrderCollected(int orderNum) throws RemoteException, OrderException;
+    Map<String, List<Integer>> getOrderState() throws RemoteException, OrderException;
 }

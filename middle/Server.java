@@ -7,6 +7,7 @@ import remote.R_StockRW;
 import java.net.InetAddress;
 import java.rmi.Naming;
 import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * The server for the middle tier.
@@ -45,17 +46,20 @@ class Server {
         }
 
         try {
-            theStockR = new R_StockR(urlStockR); // Stock R
+            theStockR = new R_StockR(); // Stock R
+            UnicastRemoteObject.exportObject(theStockR, 0);
             Naming.rebind(urlStockR, theStockR); // bind to url
             System.out.println("StockR bound to: " + // Inform world
                     urlStockR);
 
-            theStockRW = new R_StockRW(urlStockRW); // Stock RW
+            theStockRW = new R_StockRW(); // Stock RW
+            UnicastRemoteObject.exportObject(theStockRW, 0);
             Naming.rebind(urlStockRW, theStockRW); // bind to url
             System.out.println("StockRW bound to: " + // Inform world
                     urlStockRW);
 
-            theOrder = new R_Order(urlOrder); // Order
+            theOrder = new R_Order(); // Order
+            UnicastRemoteObject.exportObject(theOrder, 0);
             Naming.rebind(urlOrder, theOrder); // bind to url
             System.out.println("Order bound to: " + // Inform world
                     urlOrder);
