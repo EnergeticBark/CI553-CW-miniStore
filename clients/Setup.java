@@ -12,64 +12,52 @@ import java.util.ArrayList;
  * @version 3.0 Derby
  */
 class Setup {
-    private static String[] sqlStatements = {
-        // " SQL code to set up database tables",
+    // SQL code to set up database tables.
+    private static final String[] sqlStatements = {
+            "DROP TABLE ProductTable",
+            "CREATE TABLE ProductTable ("
+                    + "productNo   CHAR(4),"
+                    + "description VARCHAR(40),"
+                    + "picture     VARCHAR(80),"
+                    + "price       FLOAT)",
 
-        // "drop table ProductList",
-        // "drop table StockList",
+            "INSERT INTO ProductTable VALUES ('0001', '40 inch LED HD TV', 'images/pic0001.jpg', 269.00)",
+            "INSERT INTO ProductTable VALUES ('0002', 'DAB Radio',         'images/pic0002.jpg', 29.99)",
+            "INSERT INTO ProductTable VALUES ('0003', 'Toaster',           'images/pic0003.jpg', 19.99)",
+            "INSERT INTO ProductTable VALUES ('0004', 'Watch',             'images/pic0004.jpg', 29.99)",
+            "INSERT INTO ProductTable VALUES ('0005', 'Digital Camera',    'images/pic0005.jpg', 89.99)",
+            "INSERT INTO ProductTable VALUES ('0006', 'MP3 player',        'images/pic0006.jpg', 7.99)",
+            "INSERT INTO ProductTable VALUES ('0007', '32Gb USB2 drive',   'images/pic0007.jpg', 6.99)",
 
-            "drop table ProductTable",
-            "create table ProductTable ("+
-                    "productNo      Char(4)," +
-                    "description    Varchar(40)," +
-                    "picture        Varchar(80)," +
-                    "price          Float)",
+            "DROP TABLE StockTable",
+            "CREATE TABLE StockTable ("
+                    + "productNo  CHAR(4),"
+                    + "stockLevel INTEGER)",
 
-            "insert into ProductTable values " +
-                    "('0001', '40 inch LED HD TV', 'images/pic0001.jpg', 269.00)",
-            "insert into ProductTable values " +
-                    "('0002', 'DAB Radio',         'images/pic0002.jpg', 29.99)",
-            "insert into ProductTable values " +
-                    "('0003', 'Toaster',           'images/pic0003.jpg', 19.99)",
-            "insert into ProductTable values " +
-                    "('0004', 'Watch',             'images/pic0004.jpg', 29.99)",
-            "insert into ProductTable values " +
-                    "('0005', 'Digital Camera',    'images/pic0005.jpg', 89.99)",
-            "insert into ProductTable values " +
-                    "('0006', 'MP3 player',        'images/pic0006.jpg', 7.99)",
-            "insert into ProductTable values " +
-                    "('0007', '32Gb USB2 drive',   'images/pic0007.jpg', 6.99)",
-        //  "select * from ProductTable",
+            "INSERT INTO StockTable VALUES ('0001', 90)",
+            "INSERT INTO StockTable VALUES ('0002', 20)",
+            "INSERT INTO StockTable VALUES ('0003', 33)",
+            "INSERT INTO StockTable VALUES ('0004', 10)",
+            "INSERT INTO StockTable VALUES ('0005', 17)",
+            "INSERT INTO StockTable VALUES ('0006', 15)",
+            "INSERT INTO StockTable VALUES ('0007', 01)",
 
-            "drop table StockTable",
-            "create table StockTable ("+
-                    "productNo      Char(4)," +
-                    "stockLevel     Integer)",
-
-            "insert into StockTable values ( '0001',  90 )",
-            "insert into StockTable values ( '0002',  20 )",
-            "insert into StockTable values ( '0003',  33 )",
-            "insert into StockTable values ( '0004',  10 )",
-            "insert into StockTable values ( '0005',  17 )",
-            "insert into StockTable values ( '0006',  15 )",
-            "insert into StockTable values ( '0007',  01 )",
-
-            "select * from StockTable, ProductTable " +
-                    " where StockTable.productNo = ProductTable.productNo"
+            "SELECT * FROM StockTable, ProductTable WHERE StockTable.productNo = ProductTable.productNo"
     };
 
     public static void main(String[] args) {
-        Connection theCon = null;      // Connection to database
+        Connection theCon = null; // Connection to database
         DBAccess dbDriver = null;
         DBAccessFactory.setAction("Create");
         System.out.println("Setup CatShop database of stock items");
         try {
             dbDriver = (new DBAccessFactory()).getNewDBAccess();
             dbDriver.loadDriver();
-            theCon = DriverManager.getConnection
-                    (dbDriver.urlOfDatabase(),
-                            dbDriver.username(),
-                            dbDriver.password());
+            theCon = DriverManager.getConnection(
+                    dbDriver.urlOfDatabase(),
+                    dbDriver.username(),
+                    dbDriver.password()
+            );
         } catch (SQLException e) {
             System.err.println("Problem with connection to " + dbDriver.urlOfDatabase());
             System.out.println("SQLException: " + e.getMessage());
@@ -89,18 +77,18 @@ class Setup {
         }
 
         // execute SQL commands to create table, insert data
-        for (String sqlStatement : sqlStatements) {
+        for (String sqlStatement: sqlStatements) {
             try {
                 System.out.println(sqlStatement);
                 switch (sqlStatement.charAt(0)) {
-                    case '/' :
+                    case '/':
                         System.out.println("------------------------------");
                         break;
-                    case 's' :
-                    case 'f' :
+                    case 'S':
+                    case 'F':
                         query(stmt, dbDriver.urlOfDatabase(), sqlStatement);
                         break;
-                    case '*' :
+                    case '*':
                         if (sqlStatement.length() >= 2) {
                             switch (sqlStatement.charAt(1)) {
                                 case 'c':
@@ -123,16 +111,18 @@ class Setup {
                 }
                 //System.out.println();
             } catch (Exception e) {
-                System.out.println("problems with SQL sent to " +
-                        dbDriver.urlOfDatabase() +
-                        "\n" + sqlStatement + "\n" + e.getMessage());
+                System.out.println("problems with SQL sent to "
+                        + dbDriver.urlOfDatabase() + "\n"
+                        + sqlStatement + "\n"
+                        + e.getMessage()
+                );
             }
         }
 
         try {
             theCon.close();
         } catch (Exception e) {
-            System.err.println("problems with close " + ": "+e.getMessage());
+            System.err.println("problems with close: " + e.getMessage());
         }
     }
 

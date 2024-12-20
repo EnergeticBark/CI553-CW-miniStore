@@ -34,7 +34,7 @@ public class DBAccessFactory {
         String os = System.getProperties().getProperty("os.name");
         String arch = System.getProperties().getProperty("os.arch");
         String osVer = System.getProperties().getProperty("os.version");
-        theOS = String.format("%s %s %s",  os, osVer, arch);
+        theOS = String.format("%s %s %s", os, osVer, arch);
         System.out.println(theOS);
         return theOS;
     }
