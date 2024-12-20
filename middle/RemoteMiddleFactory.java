@@ -8,44 +8,44 @@ package middle;
  * Provide access to middle tier components.
  */
 public class RemoteMiddleFactory implements MiddleFactory {
-    private String theStockR_URL = "";
-    private String theStockRW_URL = "";
-    private String theOrder_URL = "";
+    private String stockReaderURL = "";
+    private String stockReadWriterURL = "";
+    private String orderURL = "";
 
     public void setStockRInfo(String url) {
-        theStockR_URL = url;
+        stockReaderURL = url;
     }
 
     public void setStockRWInfo(String url) {
-        theStockRW_URL = url;
+        stockReadWriterURL = url;
     }
 
     public void setOrderInfo(String url) {
-        theOrder_URL = url;
+        orderURL = url;
     }
 
     /**
      * Return an object to access the database for read only access.
      * Access is via RMI
      */
-    public StockReader makeStockReader() throws StockException {
-        return new F_StockR(theStockR_URL);
+    public StockReader makeStockReader() {
+        return new StockReaderProvider(stockReaderURL);
     }
 
     /**
      * Return an object to access the database for read/write access.
      * Access is via RMI
      */
-    public StockReadWriter makeStockReadWriter() throws StockException {
-        return new F_StockRW(theStockRW_URL);
+    public StockReadWriter makeStockReadWriter() {
+        return new StockReadWriterProvider(stockReadWriterURL);
     }
 
     /**
      * Return an object to access the order processing system.
      * Access is via RMI
      */
-    public OrderProcessing makeOrderProcessing() throws OrderException {
-        return new F_Order(theOrder_URL);
+    public OrderProcessor makeOrderProcessing() {
+        return new OrderProcessorProvider(orderURL);
     }
 }
 

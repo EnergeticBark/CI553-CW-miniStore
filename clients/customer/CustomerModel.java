@@ -5,7 +5,7 @@ import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.MiddleFactory;
-import middle.OrderProcessing;
+import middle.OrderProcessor;
 import middle.StockException;
 import middle.StockReader;
 
@@ -25,7 +25,7 @@ public class CustomerModel {
     private String pn = ""; // Product being processed
 
     private StockReader theStock = null;
-    private OrderProcessing theOrder = null;
+    private OrderProcessor theOrder = null;
     private ImageIcon thePic = null;
 
     /*
