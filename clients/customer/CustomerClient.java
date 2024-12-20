@@ -1,8 +1,5 @@
 package clients.customer;
 
-import clients.customer.CustomerController;
-import clients.customer.CustomerModel;
-import clients.customer.CustomerView;
 import middle.MiddleFactory;
 import middle.Names;
 import middle.RemoteMiddleFactory;
@@ -14,7 +11,8 @@ import javax.swing.*;
  */
 public class CustomerClient {
     public static void main(String[] args) {
-        String stockURL = args.length < 1 // URL of stock R
+        // URL of stock reader.
+        String stockURL = args.length < 1
                 ? Names.STOCK_R // default location
                 : args[0]; // supplied location
 
@@ -29,9 +27,9 @@ public class CustomerClient {
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         CustomerModel model = new CustomerModel(mf);
-        CustomerView view = new CustomerView(window, mf, 0, 0);
-        CustomerController cont = new CustomerController(model, view);
-        view.setController(cont);
+        CustomerView view = new CustomerView(window, 0, 0);
+        CustomerController controller = new CustomerController(model);
+        view.setController(controller);
 
         model.addPropertyChangeListener(view); // Add listener to the model
         window.setVisible(true); // Display Scree

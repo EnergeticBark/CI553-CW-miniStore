@@ -1,10 +1,6 @@
 package clients.customer;
 
-import catalogue.Basket;
-import catalogue.BetterBasket;
 import clients.Picture;
-import middle.MiddleFactory;
-import middle.StockReader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,64 +10,75 @@ import java.beans.PropertyChangeListener;
 /**
  * Implements the Customer view.
  */
-
 public class CustomerView implements PropertyChangeListener {
-    class Name { // Names of buttons
-        public static final String CHECK = "Check";
-        public static final String CLEAR = "Clear";
-    }
+    // Width and height of the window in pixels.
+    private static final int WIDTH = 400;
+    private static final int HEIGHT = 300;
 
-    private static final int H = 300; // Height of window pixels
-    private static final int W = 400; // Width  of window pixels
+    // Button labels.
+    private static final String CHECK = "Check";
+    private static final String SEARCH = "Search";
+    private static final String CLEAR = "Clear";
 
-    private final JLabel pageTitle = new JLabel();
+    // Button width and height in pixels.
+    private static final int BUTTON_WIDTH = 80;
+    private static final int BUTTON_HEIGHT = 40;
+
+    // Button height, including margins on the top and bottom.
+    private static final int BUTTON_OUTER_HEIGHT = 50;
+
+    private final Picture thePicture = new Picture(80,80);
     private final JLabel theAction = new JLabel();
     private final JTextField theInput = new JTextField();
     private final JTextArea theOutput = new JTextArea();
-    private final JScrollPane theSP = new JScrollPane();
-    private final JButton theBtCheck = new JButton(Name.CHECK);
-    private final JButton theBtClear = new JButton(Name.CLEAR);
 
-    private Picture thePicture = new Picture(80,80);
-    private StockReader theStock = null;
-    private CustomerController cont = null;
+    private CustomerController controller = null;
 
     /**
      * Construct the view
      * @param rpc   Window in which to construct
-     * @param mf    Factor to deliver order and stock objects
      * @param x     x-coordinate of position of window on screen
      * @param y     y-coordinate of position of window on screen
      */
-    public CustomerView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
-        try {
-            theStock = mf.makeStockReader(); // Database Access
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
+    public CustomerView(RootPaneContainer rpc, int x, int y) {
         Container cp = rpc.getContentPane(); // Content Pane
         Container rootWindow = (Container) rpc; // Root Window
         cp.setLayout(null); // No layout manager
-        rootWindow.setSize(W, H); // Size of Window
+        rootWindow.setSize(WIDTH, HEIGHT); // Size of Window
         rootWindow.setLocation(x, y);
 
-        Font f = new Font("Monospaced", Font.PLAIN, 12); // Font f is
-
-        pageTitle.setBounds(110, 0 , 270, 20);
-        pageTitle.setText("Search products");
+        JLabel pageTitle = new JLabel("Search products");
+        pageTitle.setBounds(110, 0, 270, 20);
         cp.add(pageTitle);
 
-        theBtCheck.setBounds(16, 25 + 60 * 0, 80, 40); // Check button
-        theBtCheck.addActionListener( // Call back code
-                e -> cont.doCheck(theInput.getText())
+        // Check button.
+        JButton checkButton = new JButton(CHECK);
+        checkButton.setBounds(16, 25, BUTTON_WIDTH, BUTTON_HEIGHT);
+        checkButton.addActionListener( // Callback code
+                _ -> controller.doCheck(theInput.getText())
         );
-        cp.add(theBtCheck); // Add to canvas
+        cp.add(checkButton); // Add to canvas
 
-        theBtClear.setBounds(16, 25 + 60 * 1, 80, 40); // Clear button
-        theBtClear.addActionListener( // Call back code
-                e -> cont.doClear()
+        // Search button.
+        JButton searchButton = new JButton(SEARCH);
+        searchButton.setBounds(16, 25 + BUTTON_OUTER_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
+        /*searchButton.addActionListener( // Callback code
+                _ -> cont.search()
+        );*/
+        cp.add(searchButton); // Add to canvas
+
+        // Clear button.
+        JButton clearButton = new JButton(CLEAR);
+        clearButton.setBounds(16, 25 + BUTTON_OUTER_HEIGHT * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
+        clearButton.addActionListener( // Callback code
+                _ -> controller.doClear()
         );
-        cp.add(theBtClear); // Add to canvas
+        cp.add(clearButton); // Add to canvas
+
+        // Picture area.
+        thePicture.setBounds(16, 25 + BUTTON_OUTER_HEIGHT * 3, 80, 80);
+        cp.add(thePicture); // Add to canvas
+        thePicture.clear();
 
         theAction.setBounds(110, 25 , 270, 20); // Message area
         theAction.setText(" "); // blank
@@ -81,15 +88,14 @@ public class CustomerView implements PropertyChangeListener {
         theInput.setText(""); // Blank
         cp.add(theInput); // Add to canvas
 
-        theSP.setBounds(110, 100, 270, 160); // Scrolling pane
+        // Scrolling pane
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBounds(110, 100, 270, 160);
+        Font font = new Font("Monospaced", Font.PLAIN, 12);
         theOutput.setText(""); // Blank
-        theOutput.setFont(f); // Uses font
-        cp.add(theSP); // Add to canvas
-        theSP.getViewport().add(theOutput); // In TextArea
-
-        thePicture.setBounds(16, 25 + 60 * 2, 80, 80); // Picture area
-        cp.add(thePicture); // Add to canvas
-        thePicture.clear();
+        theOutput.setFont(font); // Uses font
+        cp.add(scrollPane); // Add to canvas
+        scrollPane.getViewport().add(theOutput); // In TextArea
 
         rootWindow.setVisible(true); // Make visible;
         theInput.requestFocus(); // Focus is here
@@ -97,10 +103,10 @@ public class CustomerView implements PropertyChangeListener {
 
     /**
      * The controller object, used so that an interaction can be passed to the controller
-     * @param c   The controller
+     * @param controller   The controller
      */
-    public void setController(CustomerController c) {
-        cont = c;
+    public void setController(CustomerController controller) {
+        this.controller = controller;
     }
 
     /**

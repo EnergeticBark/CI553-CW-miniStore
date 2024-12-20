@@ -5,7 +5,6 @@ import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
 import middle.MiddleFactory;
-import middle.OrderProcessor;
 import middle.StockException;
 import middle.StockReader;
 
@@ -19,13 +18,9 @@ import java.beans.PropertyChangeListener;
 public class CustomerModel {
     private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
 
-    private Product theProduct = null; // Current product
     private Basket theBasket = null; // Bought items
 
-    private String pn = ""; // Product being processed
-
     private StockReader theStock = null;
-    private OrderProcessor theOrder = null;
     private ImageIcon thePic = null;
 
     /*
@@ -36,7 +31,11 @@ public class CustomerModel {
         try {
             theStock = mf.makeStockReader(); // Database access
         } catch (Exception e) {
-            DEBUG.error("CustomerModel.constructor\n" + "Database not created?\n%s\n", e.getMessage());
+            DEBUG.error("""
+                    CustomerModel.constructor
+                    Database not created?
+                    %s
+                    """, e.getMessage());
         }
         theBasket = makeBasket(); // Initial Basket
     }
@@ -46,7 +45,6 @@ public class CustomerModel {
     }
 
     /**
-     * return the Basket of products
      * @return the basket of products
      */
     public Basket getBasket() {
@@ -60,32 +58,29 @@ public class CustomerModel {
     public void doCheck(String productNum) {
         theBasket.clear(); // Clear s. list
         String theAction = "";
-        pn = productNum.trim(); // Product no.
-        int amount = 1; // & quantity
+        String pn = productNum.trim(); // Product no.
+        final int amount = 1; // & quantity
         try {
             if (theStock.exists(pn)) { // Stock Exists?
-                // T
                 Product pr = theStock.getDetails(pn); // Product
                 if (pr.getQuantity() >= amount) { // In stock?
-                    theAction = // Display
-                            String.format("%s : %7.2f (%2d) ",
-                                    pr.getDescription(), // description
-                                    pr.getPrice(), // price
-                                    pr.getQuantity() // quantity
-                            );
+                    // Display
+                    theAction = String.format(
+                            "%s : %7.2f (%2d) ",
+                            pr.getDescription(),
+                            pr.getPrice(),
+                            pr.getQuantity()
+                    );
                     pr.setQuantity(amount); // Require 1
                     theBasket.add(pr); // Add to basket
                     thePic = theStock.getImage(pn); // product
                 } else {
-                    // F
-                    theAction = // Inform
-                            pr.getDescription() + // product not
-                                    " not in stock" ; // in stock
+                    // Inform product not in stock
+                    theAction = pr.getDescription() + " not in stock";
                 }
             } else {
-                // F
-                theAction = // Inform Unknown
-                        "Unknown product number " + pn; // product number
+                // Inform unknown product number.
+                theAction = "Unknown product number " + pn;
             }
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
@@ -97,9 +92,8 @@ public class CustomerModel {
      * Clear the products from the basket
      */
     public void doClear() {
-        String theAction = "";
         theBasket.clear(); // Clear s. list
-        theAction = "Enter Product Number"; // Set display
+        String theAction = "Enter Product Number"; // Set display
         thePic = null; // No picture
         this.pcs.firePropertyChange("action", null, theAction);
     }
@@ -110,13 +104,6 @@ public class CustomerModel {
      */
     public ImageIcon getPicture() {
         return thePic;
-    }
-
-    /**
-     * ask for update of view called at start
-     */
-    private void askForUpdate() {
-        this.pcs.firePropertyChange("action", null, "START only"); // Notify
     }
 
     /**

@@ -54,8 +54,8 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         CustomerModel model = new CustomerModel(mlf);
-        CustomerView view = new CustomerView(window, mlf, pos.width, pos.height);
-        CustomerController cont = new CustomerController(model, view);
+        CustomerView view = new CustomerView(window, pos.width, pos.height);
+        CustomerController cont = new CustomerController(model);
         view.setController(cont);
 
         // Add listener to the model - view is listener, model has PropertyChangeSupport
