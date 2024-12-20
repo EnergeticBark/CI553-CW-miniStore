@@ -7,6 +7,7 @@ import middle.StockReader;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.List;
 
 // There can only be 1 ResultSet opened per statement
 // so no simultaneous use of the statement object
@@ -74,6 +75,30 @@ public class DBStockReader implements StockReader {
             return res;
         } catch (SQLException e) {
             throw new StockException("SQL exists: " + e.getMessage());
+        }
+    }
+
+    public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
+        final String query = """
+                SELECT StockTable.productNo, description, price, stockLevel
+                FROM ProductTable, StockTable
+                WHERE UPPER(description) LIKE UPPER(?)
+                AND StockTable.productNo = ProductTable.productNo
+                """;
+        try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
+            Product dt = new Product("0", "", 0.00, 0);
+            statement.setString(1, "%" + searchQuery + "%");
+            ResultSet rs = statement.executeQuery();
+
+            if (rs.next()) {
+                dt.setProductNum(rs.getString("productNo"));
+                dt.setDescription(rs.getString("description"));
+                dt.setPrice(rs.getDouble("price"));
+                dt.setQuantity(rs.getInt("stockLevel"));
+            }
+            return List.of(dt);
+        } catch (SQLException e) {
+            throw new StockException("SQL getDetails: " + e.getMessage());
         }
     }
 

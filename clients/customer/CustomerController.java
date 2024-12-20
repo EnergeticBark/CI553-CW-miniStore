@@ -22,6 +22,10 @@ public class CustomerController {
         model.doCheck(pn);
     }
 
+    public void search(String searchQuery) {
+        model.search(searchQuery);
+    }
+
     /**
      * Clear interaction from view
      */

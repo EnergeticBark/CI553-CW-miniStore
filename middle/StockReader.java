@@ -3,6 +3,7 @@ package middle;
 import catalogue.Product;
 
 import javax.swing.*;
+import java.util.List;
 
 /**
  * Interface for read access to the stock list.
@@ -18,6 +19,14 @@ public interface StockReader {
      * @throws StockException if issue
      */
     boolean exists(String pNum) throws StockException;
+
+    /**
+     * Search for products based on keywords in their descriptions.
+     * @param searchQuery The search query e.g. "TV", "Radio" or "Watch".
+     * @return A possibly empty list of search results.
+     * @throws StockException If there was an issue.
+     */
+    List<Product> searchByDescription(String searchQuery) throws StockException;
 
     /**
      * Returns details about the product in the stock list

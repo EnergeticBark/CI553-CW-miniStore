@@ -11,6 +11,7 @@ import middle.StockReader;
 import javax.swing.*;
 import javax.swing.event.SwingPropertyChangeSupport;
 import java.beans.PropertyChangeListener;
+import java.util.List;
 
 /**
  * Implements the Model of the customer client
@@ -18,10 +19,9 @@ import java.beans.PropertyChangeListener;
 public class CustomerModel {
     private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
 
-    private Basket theBasket = null; // Bought items
-
-    private StockReader theStock = null;
-    private ImageIcon thePic = null;
+    private Basket basket = null; // Bought items
+    private StockReader stockReader = null;
+    private ImageIcon picture = null;
 
     /*
      * Construct the model of the Customer
@@ -29,7 +29,7 @@ public class CustomerModel {
      */
     public CustomerModel(MiddleFactory mf) {
         try {
-            theStock = mf.makeStockReader(); // Database access
+            stockReader = mf.makeStockReader(); // Database access
         } catch (Exception e) {
             DEBUG.error("""
                     CustomerModel.constructor
@@ -37,7 +37,7 @@ public class CustomerModel {
                     %s
                     """, e.getMessage());
         }
-        theBasket = makeBasket(); // Initial Basket
+        basket = makeBasket(); // Initial Basket
     }
 
     public void addPropertyChangeListener(PropertyChangeListener listener) {
@@ -48,7 +48,7 @@ public class CustomerModel {
      * @return the basket of products
      */
     public Basket getBasket() {
-        return theBasket;
+        return basket;
     }
 
     /**
@@ -56,13 +56,13 @@ public class CustomerModel {
      * @param productNum The product number
      */
     public void doCheck(String productNum) {
-        theBasket.clear(); // Clear s. list
+        basket.clear(); // Clear s. list
         String theAction = "";
         String pn = productNum.trim(); // Product no.
         final int amount = 1; // & quantity
         try {
-            if (theStock.exists(pn)) { // Stock Exists?
-                Product pr = theStock.getDetails(pn); // Product
+            if (stockReader.exists(pn)) { // Stock Exists?
+                Product pr = stockReader.getDetails(pn); // Product
                 if (pr.getQuantity() >= amount) { // In stock?
                     // Display
                     theAction = String.format(
@@ -72,8 +72,8 @@ public class CustomerModel {
                             pr.getQuantity()
                     );
                     pr.setQuantity(amount); // Require 1
-                    theBasket.add(pr); // Add to basket
-                    thePic = theStock.getImage(pn); // product
+                    basket.add(pr); // Add to basket
+                    picture = stockReader.getImage(pn); // product
                 } else {
                     // Inform product not in stock
                     theAction = pr.getDescription() + " not in stock";
@@ -89,12 +89,46 @@ public class CustomerModel {
     }
 
     /**
+     * Search for a product by its description.
+     * @param searchQuery The search query.
+     */
+    public void search(String searchQuery) {
+        basket.clear(); // Clear s. list
+        String theAction = "";
+        String trimmedQuery = searchQuery.trim();
+        final int amount = 1; // & quantity
+        try {
+            List<Product> products = stockReader.searchByDescription(trimmedQuery);
+            Product pr = products.getFirst();
+
+            if (pr.getQuantity() >= amount) { // In stock?
+                // Display
+                theAction = String.format(
+                        "%s : %7.2f (%2d) ",
+                        pr.getDescription(),
+                        pr.getPrice(),
+                        pr.getQuantity()
+                );
+                pr.setQuantity(amount); // Require 1
+                basket.add(pr); // Add to basket
+                picture = stockReader.getImage(pr.getProductNum()); // product
+            } else {
+                // Inform product not in stock
+                theAction = pr.getDescription() + " not in stock";
+            }
+        } catch (StockException e) {
+            DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
+        }
+        this.pcs.firePropertyChange("action", null, theAction);
+    }
+
+    /**
      * Clear the products from the basket
      */
     public void doClear() {
-        theBasket.clear(); // Clear s. list
+        basket.clear(); // Clear s. list
         String theAction = "Enter Product Number"; // Set display
-        thePic = null; // No picture
+        picture = null; // No picture
         this.pcs.firePropertyChange("action", null, theAction);
     }
 
@@ -103,7 +137,7 @@ public class CustomerModel {
      * @return An instance of an ImageIcon
      */
     public ImageIcon getPicture() {
-        return thePic;
+        return picture;
     }
 
     /**

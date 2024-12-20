@@ -7,6 +7,7 @@ import remote.RemoteStockReader;
 import javax.swing.*;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.List;
 
 /**
  * Facade for read access to the stock list.
@@ -47,6 +48,19 @@ public class StockReaderProvider implements StockReader {
                 connect();
             }
             return stub.exists(number);
+        } catch (RemoteException e) {
+            stub = null;
+            throw new StockException("Net: " + e.getMessage());
+        }
+    }
+
+    public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
+        DEBUG.trace("StockReaderProvider:searchByDescription()");
+        try {
+            if (stub == null) {
+                connect();
+            }
+            return stub.searchByDescription(searchQuery);
         } catch (RemoteException e) {
             stub = null;
             throw new StockException("Net: " + e.getMessage());

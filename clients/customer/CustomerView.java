@@ -62,9 +62,9 @@ public class CustomerView implements PropertyChangeListener {
         // Search button.
         JButton searchButton = new JButton(SEARCH);
         searchButton.setBounds(16, 25 + BUTTON_OUTER_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
-        /*searchButton.addActionListener( // Callback code
-                _ -> cont.search()
-        );*/
+        searchButton.addActionListener( // Callback code
+                _ -> controller.search(theInput.getText())
+        );
         cp.add(searchButton); // Add to canvas
 
         // Clear button.
