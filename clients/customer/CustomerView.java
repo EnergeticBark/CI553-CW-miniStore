@@ -27,10 +27,10 @@ public class CustomerView implements PropertyChangeListener {
     // Button height, including margins on the top and bottom.
     private static final int BUTTON_OUTER_HEIGHT = 50;
 
-    private final Picture thePicture = new Picture(80,80);
-    private final JLabel theAction = new JLabel();
-    private final JTextField theInput = new JTextField();
-    private final JTextArea theOutput = new JTextArea();
+    private final Picture picture = new Picture(80,80);
+    private final JLabel actionLabel = new JLabel();
+    private final JTextField inputField = new JTextField();
+    private final JTextArea outputText = new JTextArea();
 
     private CustomerController controller = null;
 
@@ -55,7 +55,7 @@ public class CustomerView implements PropertyChangeListener {
         JButton checkButton = new JButton(CHECK);
         checkButton.setBounds(16, 25, BUTTON_WIDTH, BUTTON_HEIGHT);
         checkButton.addActionListener( // Callback code
-                _ -> controller.checkStock(theInput.getText())
+                _ -> controller.checkStock(inputField.getText())
         );
         cp.add(checkButton); // Add to canvas
 
@@ -63,7 +63,7 @@ public class CustomerView implements PropertyChangeListener {
         JButton searchButton = new JButton(SEARCH);
         searchButton.setBounds(16, 25 + BUTTON_OUTER_HEIGHT, BUTTON_WIDTH, BUTTON_HEIGHT);
         searchButton.addActionListener( // Callback code
-                _ -> controller.search(theInput.getText())
+                _ -> controller.search(inputField.getText())
         );
         cp.add(searchButton); // Add to canvas
 
@@ -76,29 +76,26 @@ public class CustomerView implements PropertyChangeListener {
         cp.add(clearButton); // Add to canvas
 
         // Picture area.
-        thePicture.setBounds(16, 25 + BUTTON_OUTER_HEIGHT * 3, 80, 80);
-        cp.add(thePicture); // Add to canvas
-        thePicture.clear();
+        picture.setBounds(16, 25 + BUTTON_OUTER_HEIGHT * 3, 80, 80);
+        cp.add(picture); // Add to canvas
+        picture.clear();
 
-        theAction.setBounds(110, 25 , 270, 20); // Message area
-        theAction.setText(" "); // blank
-        cp.add(theAction); // Add to canvas
+        actionLabel.setBounds(110, 25 , 270, 20); // Message area
+        cp.add(actionLabel); // Add to canvas
 
-        theInput.setBounds(110, 50, 270, 40); // Product no area
-        theInput.setText(""); // Blank
-        cp.add(theInput); // Add to canvas
+        inputField.setBounds(110, 50, 270, 40); // Product no area
+        cp.add(inputField); // Add to canvas
 
         // Scrolling pane
         JScrollPane scrollPane = new JScrollPane();
         scrollPane.setBounds(110, 100, 270, 160);
         Font font = new Font("Monospaced", Font.PLAIN, 12);
-        theOutput.setText(""); // Blank
-        theOutput.setFont(font); // Uses font
+        outputText.setFont(font); // Uses font
         cp.add(scrollPane); // Add to canvas
-        scrollPane.getViewport().add(theOutput); // In TextArea
+        scrollPane.getViewport().add(outputText); // In TextArea
 
         rootWindow.setVisible(true); // Make visible;
-        theInput.requestFocus(); // Focus is here
+        inputField.requestFocus(); // Focus is here
     }
 
     /**
@@ -116,14 +113,14 @@ public class CustomerView implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         CustomerModel model = (CustomerModel) evt.getSource();
         String message = (String) evt.getNewValue();
-        theAction.setText(message);
+        actionLabel.setText(message);
         ImageIcon image = model.getPicture(); // Image of product
         if (image == null) {
-            thePicture.clear(); // Clear picture
+            picture.clear(); // Clear picture
         } else {
-            thePicture.set(image); // Display picture
+            picture.set(image); // Display picture
         }
-        theOutput.setText(model.getBasket().getDetails());
-        theInput.requestFocus(); // Focus is here
+        outputText.setText(model.getBasket().getDetails());
+        inputField.requestFocus(); // Focus is here
     }
 }
