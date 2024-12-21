@@ -93,12 +93,13 @@ public class DBStockReader implements StockReader {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                Product product = new Product("0", "", "", 0.00, 0);
-                product.setProductNum(rs.getString("productNo"));
-                product.setDescription(rs.getString("description"));
-                product.setPicture(rs.getString("picture"));
-                product.setPrice(rs.getDouble("price"));
-                product.setQuantity(rs.getInt("stockLevel"));
+                final Product product = new Product(
+                        rs.getString("productNo"),
+                        rs.getString("description"),
+                        rs.getString("picture"),
+                        rs.getDouble("price"),
+                        rs.getInt("stockLevel")
+                );
 
                 foundProducts.add(product);
             }
@@ -111,7 +112,7 @@ public class DBStockReader implements StockReader {
 
     /**
      * Returns details about the product in the stock list.
-     *  Assumed to exist in database.
+     * Assumed to exist in database.
      * @param pNum The product number
      * @return Details in an instance of a Product
      */
@@ -122,19 +123,19 @@ public class DBStockReader implements StockReader {
                 WHERE ProductTable.productNo = ?
                 AND StockTable.productNo = ProductTable.productNo
                 """;
+
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            Product dt = new Product("0", "", "",0.00, 0);
             statement.setString(1, pNum);
             ResultSet rs = statement.executeQuery();
 
-            if (rs.next()) {
-                dt.setProductNum(pNum);
-                dt.setDescription(rs.getString("description"));
-                dt.setPicture(rs.getString("picture"));
-                dt.setPrice(rs.getDouble("price"));
-                dt.setQuantity(rs.getInt("stockLevel"));
-            }
-            return dt;
+            rs.next();
+            return new Product(
+                    pNum,
+                    rs.getString("description"),
+                    rs.getString("picture"),
+                    rs.getDouble("price"),
+                    rs.getInt("stockLevel")
+            );
         } catch (SQLException e) {
             throw new StockException("SQL getDetails: " + e.getMessage());
         }
