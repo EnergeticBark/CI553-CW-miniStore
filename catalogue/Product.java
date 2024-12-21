@@ -15,6 +15,7 @@ public class Product implements Serializable {
     private static final long serialVersionUID = 20092506;
     private String theProductNum; // Product number
     private String theDescription; // Description of product
+    private String picture = "default.jpg"; // Filename of the product picture
     private double thePrice; // Price of product
     private int theQuantity; // Quantity involved
 
@@ -27,6 +28,14 @@ public class Product implements Serializable {
      * @param aPrice The price of the product
      * @param aQuantity The Quantity of the product involved
      */
+    public Product(String aProductNum, String aDescription, String picture, double aPrice, int aQuantity) {
+        theProductNum = aProductNum; // Product number
+        theDescription = aDescription; // Description of product
+        this.picture = picture;
+        thePrice = aPrice; // Price of product
+        theQuantity = aQuantity; // Quantity involved
+    }
+
     public Product(String aProductNum, String aDescription, double aPrice, int aQuantity) {
         theProductNum = aProductNum; // Product number
         theDescription = aDescription; // Description of product
@@ -40,6 +49,9 @@ public class Product implements Serializable {
     public String getDescription() {
         return theDescription;
     }
+    public String getPicture() {
+        return picture;
+    }
     public double getPrice() {
         return thePrice;
     }
@@ -50,15 +62,15 @@ public class Product implements Serializable {
     public void setProductNum(String aProductNum) {
         theProductNum = aProductNum;
     }
-
     public void setDescription(String aDescription) {
         theDescription = aDescription;
     }
-
+    public void setPicture(String picture) {
+        this.picture = picture;
+    }
     public void setPrice(double aPrice) {
         thePrice = aPrice;
     }
-
     public void setQuantity(int aQuantity) {
         theQuantity = aQuantity;
     }

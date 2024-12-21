@@ -5,7 +5,6 @@ import debug.DEBUG;
 import middle.StockException;
 import middle.StockReader;
 
-import javax.swing.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -94,9 +93,10 @@ public class DBStockReader implements StockReader {
             ResultSet rs = statement.executeQuery();
 
             while (rs.next()) {
-                Product product = new Product("0", "", 0.00, 0);
+                Product product = new Product("0", "", "", 0.00, 0);
                 product.setProductNum(rs.getString("productNo"));
                 product.setDescription(rs.getString("description"));
+                product.setPicture(rs.getString("picture"));
                 product.setPrice(rs.getDouble("price"));
                 product.setQuantity(rs.getInt("stockLevel"));
 
@@ -117,19 +117,20 @@ public class DBStockReader implements StockReader {
      */
     public synchronized Product getDetails(String pNum) throws StockException {
         final String query = """
-                SELECT description, price, stockLevel
+                SELECT description, picture, price, stockLevel
                 FROM ProductTable, StockTable
                 WHERE ProductTable.productNo = ?
                 AND StockTable.productNo = ProductTable.productNo
                 """;
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            Product dt = new Product("0", "", 0.00, 0);
+            Product dt = new Product("0", "", "",0.00, 0);
             statement.setString(1, pNum);
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {
                 dt.setProductNum(pNum);
                 dt.setDescription(rs.getString("description"));
+                dt.setPicture(rs.getString("picture"));
                 dt.setPrice(rs.getDouble("price"));
                 dt.setQuantity(rs.getInt("stockLevel"));
             }
@@ -137,32 +138,5 @@ public class DBStockReader implements StockReader {
         } catch (SQLException e) {
             throw new StockException("SQL getDetails: " + e.getMessage());
         }
-    }
-
-    /**
-     * Returns 'image' of the product
-     * @param pNum The product number
-     *  Assumed to exist in database.
-     * @return ImageIcon representing the image
-     */
-    public synchronized ImageIcon getImage(String pNum) throws StockException {
-        final String query = "SELECT picture FROM ProductTable WHERE ProductTable.productNo = ?";
-
-        String filename = "default.jpg";
-        try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            statement.setString(1, pNum);
-            ResultSet rs = statement.executeQuery();
-
-            boolean res = rs.next();
-            if (res) {
-                filename = rs.getString("picture");
-            }
-        } catch (SQLException e) {
-            DEBUG.error("getImage()\n%s\n", e.getMessage());
-            throw new StockException("SQL getImage: " + e.getMessage());
-        }
-
-        //DEBUG.trace( "DB DBStockReader: getImage -> %s", filename );
-        return new ImageIcon(filename);
     }
 }

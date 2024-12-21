@@ -3,7 +3,6 @@ package remote;
 import catalogue.Product;
 import middle.StockException;
 
-import javax.swing.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -18,5 +17,4 @@ public interface RemoteStockReader extends Remote {
     boolean exists(String number) throws RemoteException, StockException;
     List<Product> searchByDescription(String searchQuery) throws RemoteException, StockException;
     Product getDetails(String number) throws RemoteException, StockException;
-    ImageIcon getImage(String number) throws RemoteException, StockException;
 }

@@ -2,7 +2,6 @@ package middle;
 
 import catalogue.Product;
 
-import javax.swing.*;
 import java.util.List;
 
 /**
@@ -35,12 +34,4 @@ public interface StockReader {
      * @throws StockException if issue
      */
     Product getDetails(String pNum) throws StockException;
-
-    /**
-     * Returns an image of the product in the stock list
-     * @param pNum Product number
-     * @return Image
-     * @throws StockException if issue
-     */
-    ImageIcon getImage(String pNum) throws StockException;
 }

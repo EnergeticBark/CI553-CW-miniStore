@@ -84,7 +84,7 @@ public class CustomerModel {
             );
             product.setQuantity(1); // Require 1
             basket.add(product); // Add to basket
-            picture = stockReader.getImage(trimmedProductNumber);
+            picture = new ImageIcon(product.getPicture());
             fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
@@ -120,7 +120,7 @@ public class CustomerModel {
             );
             pr.setQuantity(1); // Require 1
             basket.add(pr); // Add to basket
-            picture = stockReader.getImage(pr.getProductNum());
+            picture = new ImageIcon(pr.getPicture());
             fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.search()\n%s", e.getMessage());

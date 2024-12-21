@@ -4,7 +4,6 @@ import catalogue.Product;
 import debug.DEBUG;
 import remote.RemoteStockReader;
 
-import javax.swing.*;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -78,19 +77,6 @@ public class StockReaderProvider implements StockReader {
                 connect();
             }
             return stub.getDetails(number);
-        } catch (RemoteException e) {
-            stub = null;
-            throw new StockException("Net: " + e.getMessage());
-        }
-    }
-
-    public synchronized ImageIcon getImage(String number) throws StockException {
-        DEBUG.trace("StockReaderProvider:getImage()");
-        try {
-            if (stub == null) {
-                connect();
-            }
-            return stub.getImage(number);
         } catch (RemoteException e) {
             stub = null;
             throw new StockException("Net: " + e.getMessage());
