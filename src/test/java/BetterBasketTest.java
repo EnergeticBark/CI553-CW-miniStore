@@ -1,6 +1,8 @@
-package catalogue;
+import catalogue.BetterBasket;
+import catalogue.Product;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 class BetterBasketTest {
 
     @org.junit.jupiter.api.Test
