@@ -55,7 +55,7 @@ public class CustomerView implements PropertyChangeListener {
         JButton checkButton = new JButton(CHECK);
         checkButton.setBounds(16, 25, BUTTON_WIDTH, BUTTON_HEIGHT);
         checkButton.addActionListener( // Callback code
-                _ -> controller.doCheck(theInput.getText())
+                _ -> controller.checkStock(theInput.getText())
         );
         cp.add(checkButton); // Add to canvas
 
@@ -71,7 +71,7 @@ public class CustomerView implements PropertyChangeListener {
         JButton clearButton = new JButton(CLEAR);
         clearButton.setBounds(16, 25 + BUTTON_OUTER_HEIGHT * 2, BUTTON_WIDTH, BUTTON_HEIGHT);
         clearButton.addActionListener( // Callback code
-                _ -> controller.doClear()
+                _ -> controller.clear()
         );
         cp.add(clearButton); // Add to canvas
 

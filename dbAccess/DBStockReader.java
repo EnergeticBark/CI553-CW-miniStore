@@ -7,6 +7,7 @@ import middle.StockReader;
 
 import javax.swing.*;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 // There can only be 1 ResultSet opened per statement
@@ -79,27 +80,33 @@ public class DBStockReader implements StockReader {
     }
 
     public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
+        // Make the search case-insensitive by converting the description and search query to uppercase.
         final String query = """
                 SELECT StockTable.productNo, description, price, stockLevel
                 FROM ProductTable, StockTable
                 WHERE UPPER(description) LIKE UPPER(?)
                 AND StockTable.productNo = ProductTable.productNo
                 """;
+        List<Product> foundProducts = new ArrayList<>();
+
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            Product dt = new Product("0", "", 0.00, 0);
             statement.setString(1, "%" + searchQuery + "%");
             ResultSet rs = statement.executeQuery();
 
-            if (rs.next()) {
-                dt.setProductNum(rs.getString("productNo"));
-                dt.setDescription(rs.getString("description"));
-                dt.setPrice(rs.getDouble("price"));
-                dt.setQuantity(rs.getInt("stockLevel"));
+            while (rs.next()) {
+                Product product = new Product("0", "", 0.00, 0);
+                product.setProductNum(rs.getString("productNo"));
+                product.setDescription(rs.getString("description"));
+                product.setPrice(rs.getDouble("price"));
+                product.setQuantity(rs.getInt("stockLevel"));
+
+                foundProducts.add(product);
             }
-            return List.of(dt);
         } catch (SQLException e) {
-            throw new StockException("SQL getDetails: " + e.getMessage());
+            throw new StockException("SQL searchByDescription: " + e.getMessage());
         }
+
+        return foundProducts;
     }
 
     /**
@@ -113,12 +120,11 @@ public class DBStockReader implements StockReader {
                 SELECT description, price, stockLevel
                 FROM ProductTable, StockTable
                 WHERE ProductTable.productNo = ?
-                AND StockTable.productNo = ?
+                AND StockTable.productNo = ProductTable.productNo
                 """;
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
             Product dt = new Product("0", "", 0.00, 0);
             statement.setString(1, pNum);
-            statement.setString(2, pNum);
             ResultSet rs = statement.executeQuery();
 
             if (rs.next()) {

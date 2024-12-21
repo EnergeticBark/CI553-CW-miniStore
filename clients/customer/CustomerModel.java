@@ -44,6 +44,11 @@ public class CustomerModel {
         this.pcs.addPropertyChangeListener(listener);
     }
 
+    // Tell the CustomerView that the model has changed, so it needs to redraw.
+    private void fireAction(String actionMessage) {
+        this.pcs.firePropertyChange("action", null, actionMessage);
+    }
+
     /**
      * @return the basket of products
      */
@@ -53,39 +58,37 @@ public class CustomerModel {
 
     /**
      * Check if the product is in Stock
-     * @param productNum The product number
+     * @param productNumber The product number
      */
-    public void doCheck(String productNum) {
-        basket.clear(); // Clear s. list
-        String theAction = "";
-        String pn = productNum.trim(); // Product no.
-        final int amount = 1; // & quantity
+    public void checkStock(String productNumber) {
+        basket.clear(); // Clear stock list.
+        final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
-            if (stockReader.exists(pn)) { // Stock Exists?
-                Product pr = stockReader.getDetails(pn); // Product
-                if (pr.getQuantity() >= amount) { // In stock?
-                    // Display
-                    theAction = String.format(
-                            "%s : %7.2f (%2d) ",
-                            pr.getDescription(),
-                            pr.getPrice(),
-                            pr.getQuantity()
-                    );
-                    pr.setQuantity(amount); // Require 1
-                    basket.add(pr); // Add to basket
-                    picture = stockReader.getImage(pn); // product
-                } else {
-                    // Inform product not in stock
-                    theAction = pr.getDescription() + " not in stock";
-                }
-            } else {
-                // Inform unknown product number.
-                theAction = "Unknown product number " + pn;
+            if (!stockReader.exists(trimmedProductNumber)) { // Product doesn't exist?
+                fireAction("Unknown product number " + trimmedProductNumber);
+                return;
             }
+
+            Product product = stockReader.getDetails(trimmedProductNumber);
+            if (product.getQuantity() < 1) { // Out of stock?
+                fireAction(product.getDescription() + " not in stock");
+                return;
+            }
+
+            // Display
+            final String actionMessage = String.format(
+                    "%s : %7.2f (%2d) ",
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getQuantity()
+            );
+            product.setQuantity(1); // Require 1
+            basket.add(product); // Add to basket
+            picture = stockReader.getImage(trimmedProductNumber);
+            fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 
     /**
@@ -93,43 +96,44 @@ public class CustomerModel {
      * @param searchQuery The search query.
      */
     public void search(String searchQuery) {
-        basket.clear(); // Clear s. list
-        String theAction = "";
-        String trimmedQuery = searchQuery.trim();
-        final int amount = 1; // & quantity
+        basket.clear(); // Clear stock list.
+        final String trimmedQuery = searchQuery.trim();
         try {
             List<Product> products = stockReader.searchByDescription(trimmedQuery);
-            Product pr = products.getFirst();
-
-            if (pr.getQuantity() >= amount) { // In stock?
-                // Display
-                theAction = String.format(
-                        "%s : %7.2f (%2d) ",
-                        pr.getDescription(),
-                        pr.getPrice(),
-                        pr.getQuantity()
-                );
-                pr.setQuantity(amount); // Require 1
-                basket.add(pr); // Add to basket
-                picture = stockReader.getImage(pr.getProductNum()); // product
-            } else {
-                // Inform product not in stock
-                theAction = pr.getDescription() + " not in stock";
+            if (products.isEmpty()) { // No search results?
+                fireAction("No results for \"" + searchQuery + "\"");
+                return;
             }
+
+            Product pr = products.getFirst();
+            if (pr.getQuantity() < 1) { // Out of stock?
+                fireAction(pr.getDescription() + " not in stock");
+                return;
+            }
+
+            // Display
+            final String actionMessage = String.format(
+                    "%s : %7.2f (%2d) ",
+                    pr.getDescription(),
+                    pr.getPrice(),
+                    pr.getQuantity()
+            );
+            pr.setQuantity(1); // Require 1
+            basket.add(pr); // Add to basket
+            picture = stockReader.getImage(pr.getProductNum());
+            fireAction(actionMessage);
         } catch (StockException e) {
-            DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
+            DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 
     /**
      * Clear the products from the basket
      */
-    public void doClear() {
-        basket.clear(); // Clear s. list
-        String theAction = "Enter Product Number"; // Set display
-        picture = null; // No picture
-        this.pcs.firePropertyChange("action", null, theAction);
+    public void clear() {
+        basket.clear(); // Clear stock list.
+        picture = null; // No picture.
+        fireAction("Enter Product Number");
     }
 
     /**

@@ -16,10 +16,10 @@ public class CustomerController {
 
     /**
      * Check interaction from view
-     * @param pn The product number to be checked
+     * @param productNumber The product number to be checked
      */
-    public void doCheck(String pn) {
-        model.doCheck(pn);
+    public void checkStock(String productNumber) {
+        model.checkStock(productNumber);
     }
 
     public void search(String searchQuery) {
@@ -29,7 +29,7 @@ public class CustomerController {
     /**
      * Clear interaction from view
      */
-    public void doClear() {
-        model.doClear();
+    public void clear() {
+        model.clear();
     }
 }
