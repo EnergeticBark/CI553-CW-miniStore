@@ -54,13 +54,13 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         CustomerModel model = new CustomerModel(mlf);
-        CustomerView view = new CustomerView(window, pos.width, pos.height);
+        /*CustomerView view = new CustomerView(window, pos.width, pos.height);
         CustomerController cont = new CustomerController(model);
         view.setController(cont);
 
         // Add listener to the model - view is listener, model has PropertyChangeSupport
         model.addPropertyChangeListener(view);
-        window.setVisible(true); // start Screen
+        window.setVisible(true); // start Screen*/
     }
 
     /**

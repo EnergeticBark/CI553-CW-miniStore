@@ -8,7 +8,6 @@ import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReader;
 
-import javax.swing.*;
 import javax.swing.event.SwingPropertyChangeSupport;
 import java.beans.PropertyChangeListener;
 import java.util.List;
@@ -21,7 +20,7 @@ public class CustomerModel {
 
     private Basket basket = null; // Bought items
     private StockReader stockReader = null;
-    private ImageIcon picture = null;
+    private String picture = null;
 
     /*
      * Construct the model of the Customer
@@ -84,7 +83,7 @@ public class CustomerModel {
             );
             product.setQuantity(1); // Require 1
             basket.add(product); // Add to basket
-            picture = new ImageIcon(product.getPicture());
+            picture = product.getPicture();
             fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
@@ -120,7 +119,7 @@ public class CustomerModel {
             );
             pr.setQuantity(1); // Require 1
             basket.add(pr); // Add to basket
-            picture = new ImageIcon(pr.getPicture());
+            picture = pr.getPicture();
             fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
@@ -140,7 +139,7 @@ public class CustomerModel {
      * Return a picture of the product
      * @return An instance of an ImageIcon
      */
-    public ImageIcon getPicture() {
+    public String getPicture() {
         return picture;
     }
 
