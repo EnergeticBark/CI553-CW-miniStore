@@ -2,10 +2,7 @@ package clients.customer;
 
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -21,7 +18,11 @@ import java.beans.PropertyChangeListener;
 public class CustomerView implements PropertyChangeListener {
     // Width and height of the window in pixels.
     private static final int WIDTH = 420;
-    private static final int HEIGHT = 280;
+    private static final int HEIGHT = 270;
+
+    // Width and height of the window in pixels.
+    private static final int BUTTON_WIDTH = 80;
+    private static final int BUTTON_HEIGHT = 35;
 
     private final ImageView picture = new ImageView();
     private final Label actionLabel = new Label();
@@ -44,13 +45,16 @@ public class CustomerView implements PropertyChangeListener {
         // Check button.
         Button checkButton = new Button("Check");
         checkButton.setOnAction(_ -> controller.checkStock(inputField.getText()));
-        checkButton.setPrefSize(80, 35);
+        checkButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
+        checkButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         Button searchButton = new Button("Search");
         searchButton.setOnAction(_ -> controller.search(inputField.getText()));
-        searchButton.setPrefSize(80, 35);
+        searchButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
+        searchButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         Button clearButton = new Button("Clear");
         clearButton.setOnAction(_ -> controller.clear());
-        clearButton.setPrefSize(80, 35);
+        clearButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
+        clearButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         final Pane pictureFrame = new Pane(picture);
         pictureFrame.setStyle("-fx-background-color: white;");
         pictureFrame.setMinSize(80, 80);
