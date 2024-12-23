@@ -23,10 +23,8 @@ public class CustomerClient extends Application {
         stage.setTitle("Customer Client (MVC RMI)");
 
         CustomerModel model = new CustomerModel(rmf);
-        CustomerView view = new CustomerView(stage, 0, 0);
+        CustomerView view = new CustomerView(stage, model, 0, 0);
         CustomerController controller = new CustomerController(model);
         view.setController(controller);
-
-        model.addPropertyChangeListener(view); // Add listener to the model
     }
 }

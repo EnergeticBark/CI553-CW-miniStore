@@ -9,13 +9,10 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-
 /**
  * Implements the Customer view.
  */
-public class CustomerView implements PropertyChangeListener {
+public class CustomerView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 420;
     private static final int HEIGHT = 270;
@@ -24,10 +21,7 @@ public class CustomerView implements PropertyChangeListener {
     private static final int BUTTON_WIDTH = 80;
     private static final int BUTTON_HEIGHT = 35;
 
-    private final ImageView picture = new ImageView();
-    private final Label actionLabel = new Label();
     private final TextField inputField = new TextField();
-    private final TextArea outputText = new TextArea();
 
     private CustomerController controller = null;
 
@@ -37,7 +31,7 @@ public class CustomerView implements PropertyChangeListener {
      * @param x     x-coordinate of position of window on screen
      * @param y     y-coordinate of position of window on screen
      */
-    public CustomerView(Stage stage, int x, int y) {
+    public CustomerView(Stage stage, CustomerModel model, int x, int y) {
         // Set window location.
         stage.setX(x);
         stage.setY(y);
@@ -55,6 +49,14 @@ public class CustomerView implements PropertyChangeListener {
         clearButton.setOnAction(_ -> controller.clear());
         clearButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
         clearButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        final ImageView picture = new ImageView();
+        model.picture.addListener((_, _, image) -> {
+            if (image == null) {
+                picture.setImage(null); // Clear picture
+            } else {
+                picture.setImage(new Image(image)); // Display picture
+            }
+        });
         final Pane pictureFrame = new Pane(picture);
         pictureFrame.setStyle("-fx-background-color: white;");
         pictureFrame.setMinSize(80, 80);
@@ -64,7 +66,11 @@ public class CustomerView implements PropertyChangeListener {
         leftVBox.setSpacing(16);
         leftVBox.setPadding(new Insets(25, 0, 25, 0));
 
-        Label pageTitle = new Label("Search products");
+        final Label pageTitle = new Label("Search products");
+        final Label actionLabel = new Label();
+        actionLabel.textProperty().bind(model.action);
+        final TextArea outputText = new TextArea();
+        outputText.textProperty().bind(model.output);
         outputText.setFont(Font.font("Monospaced", 12));
 
         VBox rightVBox = new VBox();
@@ -90,23 +96,5 @@ public class CustomerView implements PropertyChangeListener {
      */
     public void setController(CustomerController controller) {
         this.controller = controller;
-    }
-
-    /**
-     * Update the view
-     * @param evt The event source and property that has changed
-     */
-    public void propertyChange(PropertyChangeEvent evt) {
-        CustomerModel model = (CustomerModel) evt.getSource();
-        String message = (String) evt.getNewValue();
-        actionLabel.setText(message);
-        String image = model.getPicture(); // Image of product
-        if (image == null) {
-            picture.setImage(null); // Clear picture
-        } else {
-            picture.setImage(new Image(image)); // Display picture
-        }
-        outputText.setText(model.getBasket().getDetails());
-        inputField.requestFocus(); // Focus is here
     }
 }
