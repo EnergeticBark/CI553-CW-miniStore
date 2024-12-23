@@ -1,5 +1,6 @@
 package clients.customer;
 
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -7,8 +8,7 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
@@ -20,8 +20,8 @@ import java.beans.PropertyChangeListener;
  */
 public class CustomerView implements PropertyChangeListener {
     // Width and height of the window in pixels.
-    private static final int WIDTH = 400;
-    private static final int HEIGHT = 300;
+    private static final int WIDTH = 420;
+    private static final int HEIGHT = 280;
 
     private final ImageView picture = new ImageView();
     private final Label actionLabel = new Label();
@@ -41,30 +41,39 @@ public class CustomerView implements PropertyChangeListener {
         stage.setX(x);
         stage.setY(y);
 
-        GridPane gridPane = new GridPane();
-
         // Check button.
         Button checkButton = new Button("Check");
         checkButton.setOnAction(_ -> controller.checkStock(inputField.getText()));
+        checkButton.setPrefSize(80, 35);
         Button searchButton = new Button("Search");
         searchButton.setOnAction(_ -> controller.search(inputField.getText()));
+        searchButton.setPrefSize(80, 35);
         Button clearButton = new Button("Clear");
         clearButton.setOnAction(_ -> controller.clear());
-        picture.setFitWidth(80);
+        clearButton.setPrefSize(80, 35);
+        final Pane pictureFrame = new Pane(picture);
+        pictureFrame.setStyle("-fx-background-color: white;");
+        pictureFrame.setMinSize(80, 80);
 
         VBox leftVBox = new VBox();
-        leftVBox.getChildren().addAll(checkButton, searchButton, clearButton, picture);
-        gridPane.add(leftVBox, 0, 0);
+        leftVBox.getChildren().addAll(checkButton, searchButton, clearButton, pictureFrame);
+        leftVBox.setSpacing(16);
+        leftVBox.setPadding(new Insets(25, 0, 25, 0));
 
         Label pageTitle = new Label("Search products");
         outputText.setFont(Font.font("Monospaced", 12));
 
         VBox rightVBox = new VBox();
         rightVBox.getChildren().addAll(pageTitle, actionLabel, inputField, outputText);
-        gridPane.add(rightVBox, 1, 0);
+        rightVBox.setSpacing(10);
+
+        HBox hBox = new HBox();
+        hBox.setPadding(new Insets(0, 16, 0, 16));
+        hBox.setSpacing(16);
+        hBox.getChildren().addAll(leftVBox, rightVBox);
 
         // Create scene, specifying the size of the window.
-        Scene scene = new Scene(gridPane, WIDTH, HEIGHT);
+        Scene scene = new Scene(hBox, WIDTH, HEIGHT);
         stage.setScene(scene);
 
         inputField.requestFocus();
