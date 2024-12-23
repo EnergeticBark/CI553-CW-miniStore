@@ -74,11 +74,11 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         CashierModel model = new CashierModel(mlf);
-        CashierView view = new CashierView(window, mlf, pos.width, pos.height);
+        /*CashierView view = new CashierView(window, pos.width, pos.height);
         CashierController cont = new CashierController(model, view);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add listener to the model
+        model.addPropertyChangeListener(view); // Add listener to the model*/
         window.setVisible(true); // Make window visible
         model.askForUpdate(); // Initial display
     }

@@ -14,7 +14,7 @@ public class CustomerClient extends Application {
     @Override
     public void start(Stage stage) {
         final List<String> args = getParameters().getRaw();
-        // If it exists, use the first argument as StockReader's URL, otherwise use the default URL.
+        // If the first argument exists, use it as StockReader's URL, otherwise use the default URL.
         final String stockURL = args.isEmpty() ? Names.STOCK_R : args.getFirst();
 
         RemoteMiddleFactory rmf = new RemoteMiddleFactory();

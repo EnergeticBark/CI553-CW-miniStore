@@ -13,7 +13,7 @@ javafx {
 }
 
 application {
-    mainClass = 'clients.customer.CustomerClient'
+    mainClass = 'clients.cashier.CashierClient'
 }
 
 dependencies {

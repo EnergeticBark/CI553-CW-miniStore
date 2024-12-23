@@ -17,7 +17,7 @@ public class CustomerView {
     private static final int WIDTH = 420;
     private static final int HEIGHT = 270;
 
-    // Width and height of the window in pixels.
+    // Width and height of the button in pixels.
     private static final int BUTTON_WIDTH = 80;
     private static final int BUTTON_HEIGHT = 35;
 
@@ -36,19 +36,37 @@ public class CustomerView {
         stage.setX(x);
         stage.setY(y);
 
-        // Check button.
+        HBox hBox = new HBox(
+                makeLeftPane(model),
+                makeRightPane(model)
+        );
+        hBox.setPadding(new Insets(0, 16, 0, 16));
+        hBox.setSpacing(16);
+
+        // Create scene, specifying the size of the window.
+        Scene scene = new Scene(hBox, WIDTH, HEIGHT);
+        stage.setScene(scene);
+
+        inputField.requestFocus();
+        stage.show();
+    }
+
+    private VBox makeLeftPane(CustomerModel model) {
         Button checkButton = new Button("Check");
         checkButton.setOnAction(_ -> controller.checkStock(inputField.getText()));
         checkButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
         checkButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+
         Button searchButton = new Button("Search");
         searchButton.setOnAction(_ -> controller.search(inputField.getText()));
         searchButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
         searchButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+
         Button clearButton = new Button("Clear");
         clearButton.setOnAction(_ -> controller.clear());
         clearButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
         clearButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+
         final ImageView picture = new ImageView();
         model.picture.addListener((_, _, image) -> {
             if (image == null) {
@@ -61,11 +79,13 @@ public class CustomerView {
         pictureFrame.setStyle("-fx-background-color: white;");
         pictureFrame.setMinSize(80, 80);
 
-        VBox leftVBox = new VBox();
-        leftVBox.getChildren().addAll(checkButton, searchButton, clearButton, pictureFrame);
-        leftVBox.setSpacing(16);
-        leftVBox.setPadding(new Insets(25, 0, 25, 0));
+        VBox vBox = new VBox(checkButton, searchButton, clearButton, pictureFrame);
+        vBox.setSpacing(16);
+        vBox.setPadding(new Insets(25, 0, 25, 0));
+        return vBox;
+    }
 
+    private VBox makeRightPane(CustomerModel model) {
         final Label pageTitle = new Label("Search products");
         final Label actionLabel = new Label();
         actionLabel.textProperty().bind(model.action);
@@ -73,21 +93,9 @@ public class CustomerView {
         outputText.textProperty().bind(model.output);
         outputText.setFont(Font.font("Monospaced", 12));
 
-        VBox rightVBox = new VBox();
-        rightVBox.getChildren().addAll(pageTitle, actionLabel, inputField, outputText);
-        rightVBox.setSpacing(10);
-
-        HBox hBox = new HBox();
-        hBox.setPadding(new Insets(0, 16, 0, 16));
-        hBox.setSpacing(16);
-        hBox.getChildren().addAll(leftVBox, rightVBox);
-
-        // Create scene, specifying the size of the window.
-        Scene scene = new Scene(hBox, WIDTH, HEIGHT);
-        stage.setScene(scene);
-
-        inputField.requestFocus();
-        stage.show();
+        VBox vBox = new VBox(pageTitle, actionLabel, inputField, outputText);
+        vBox.setSpacing(10);
+        return vBox;
     }
 
     /**
