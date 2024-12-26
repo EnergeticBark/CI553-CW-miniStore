@@ -115,11 +115,11 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         BackDoorModel model = new BackDoorModel(mlf);
-        BackDoorView view = new BackDoorView(window, mlf, pos.width, pos.height);
-        BackDoorController cont = new BackDoorController(model, view);
+        /*BackDoorView view = new BackDoorView(window, mlf, pos.width, pos.height);
+        BackDoorController cont = new BackDoorController(model);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add listener to the model
+        model.addPropertyChangeListener(view); // Add listener to the model*/
         window.setVisible(true); // Make window visible
     }
 }

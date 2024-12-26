@@ -1,42 +1,33 @@
 package clients.backDoor;
 
-import middle.MiddleFactory;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import middle.Names;
 import middle.RemoteMiddleFactory;
 
-import javax.swing.*;
+import java.util.List;
 
 /**
  * The standalone BackDoor Client
  */
-public class BackDoorClient {
-    public static void main(String[] args) {
-        String stockURL = args.length < 1 // URL of stock RW
-                ? Names.STOCK_RW // default location
-                : args[0]; // supplied location
-        String orderURL = args.length < 2 // URL of order
-                ? Names.ORDER // default location
-                : args[1]; // supplied location
+public class BackDoorClient extends Application {
+    @Override
+    public void start(Stage stage) {
+        final List<String> args = getParameters().getRaw();
+        // If the first or second arguments exist, use them as StockReader and Order's URLs.
+        // Otherwise, use their default URLs.
+        String stockURL = args.isEmpty() ? Names.STOCK_RW : args.getFirst();
+        String orderURL = args.size() < 2 ? Names.ORDER : args.get(1);
 
-        RemoteMiddleFactory mrf = new RemoteMiddleFactory();
-        mrf.setStockRWInfo(stockURL);
-        mrf.setOrderInfo(orderURL);
-        displayGUI(mrf); // Create GUI
-    }
+        RemoteMiddleFactory rmf = new RemoteMiddleFactory();
+        rmf.setStockRWInfo(stockURL);
+        rmf.setOrderInfo(orderURL);
 
-    private static void displayGUI(MiddleFactory mf) {
-        JFrame window = new JFrame();
+        stage.setTitle("BackDoor Client (MVC RMI)");
 
-        window.setTitle("BackDoor Client (MVC RMI)");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        BackDoorModel model = new BackDoorModel(mf);
-        BackDoorView view = new BackDoorView(window, mf, 0, 0);
-        BackDoorController cont = new BackDoorController(model, view);
+        BackDoorModel model = new BackDoorModel(rmf);
+        BackDoorView view = new BackDoorView(stage, model, 0, 0);
+        BackDoorController cont = new BackDoorController(model);
         view.setController(cont);
-
-        // Add listener to the model - view is listener, model has PropertyChangeSupport
-        model.addPropertyChangeListener(view);
-        window.setVisible(true); // Display Screen
     }
 }
