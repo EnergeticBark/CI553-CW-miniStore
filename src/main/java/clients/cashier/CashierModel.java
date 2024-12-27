@@ -37,7 +37,7 @@ public class CashierModel {
         theState = State.process; // Current state
     }
 
-    // Tell the CustomerView that the model has changed, so it needs to redraw.
+    // Tell the CashierView that the model has changed, so it needs to redraw.
     private void fireAction(String actionMessage) {
         this.action.setValue(actionMessage);
         if (getBasket() == null) {

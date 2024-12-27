@@ -95,11 +95,11 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         PackingModel model = new PackingModel(mlf);
-        PackingView view = new PackingView(window, mlf, pos.width, pos.height);
+        /*PackingView view = new PackingView(window, mlf, pos.width, pos.height);
         PackingController cont = new PackingController(model, view);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add observer to the model
+        model.addPropertyChangeListener(view); // Add observer to the model*/
         window.setVisible(true); // Make window visible
     }
 

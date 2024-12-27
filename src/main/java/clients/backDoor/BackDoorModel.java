@@ -34,7 +34,7 @@ public class BackDoorModel {
         theBasket = makeBasket(); // Initial Basket
     }
 
-    // Tell the CustomerView that the model has changed, so it needs to redraw.
+    // Tell the BackDoorView that the model has changed, so it needs to redraw.
     private void fireAction(String actionMessage) {
         this.action.setValue(actionMessage);
         this.output.setValue(getBasket().getDetails());

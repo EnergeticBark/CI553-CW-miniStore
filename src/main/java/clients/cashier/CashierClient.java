@@ -14,7 +14,7 @@ public class CashierClient extends Application {
     @Override
     public void start(Stage stage) {
         final List<String> args = getParameters().getRaw();
-        // If the first or second arguments exist, use them as StockReader and Order's URLs.
+        // If the first or second arguments exist, use them as StockReadWriter and Order's URLs.
         // Otherwise, use their default URLs.
         String stockURL = args.isEmpty() ? Names.STOCK_RW : args.getFirst();
         String orderURL = args.size() < 2 ? Names.ORDER : args.get(1);

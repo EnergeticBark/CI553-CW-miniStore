@@ -13,7 +13,7 @@ javafx {
 }
 
 application {
-    mainClass = 'clients.backDoor.BackDoorClient'
+    mainClass = 'clients.packing.PackingClient'
 }
 
 dependencies {

@@ -2,28 +2,26 @@ package clients.packing;
 
 import catalogue.Basket;
 import debug.DEBUG;
+import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.OrderException;
 import middle.OrderProcessor;
-import middle.StockReadWriter;
 
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * Implements the Model of the warehouse packing client
  */
 public class PackingModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
+    private final AtomicReference<Basket> theBasket = new AtomicReference<>();
 
-    private AtomicReference<Basket> theBasket = new AtomicReference<>();
-
-    private StockReadWriter theStock = null;
     private OrderProcessor theOrder = null;
-    private String theAction = "";
 
-    private StateOf worker = new StateOf();
+    final SimpleStringProperty action = new SimpleStringProperty();
+    final SimpleStringProperty output = new SimpleStringProperty();
+
+    private final StateOf worker = new StateOf();
 
     /*
      * Construct the model of the warehouse Packing client
@@ -31,7 +29,6 @@ public class PackingModel {
      */
     public PackingModel(MiddleFactory mf) {
         try {
-            theStock = mf.makeStockReadWriter();  // Database access
             theOrder = mf.makeOrderProcessing();  // Process order
         } catch (Exception e) {
             DEBUG.error("CustomerModel.constructor\n%s", e.getMessage());
@@ -39,11 +36,17 @@ public class PackingModel {
 
         theBasket.set(null); // Initial Basket
         // Start a background check to see when a new order can be packed
-        new Thread(() -> checkForNewOrder()).start();
+        new Thread(this::checkForNewOrder).start();
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
+    // Tell the PackingView that the model has changed, so it needs to redraw.
+    private void fireAction(String actionMessage) {
+        this.action.setValue(actionMessage);
+        if (getBasket() == null) {
+            output.setValue("");
+        } else {
+            output.setValue(getBasket().getDetails());
+        }
     }
 
 
@@ -51,7 +54,7 @@ public class PackingModel {
      * Semaphore used to only allow 1 order
      * to be packed at once by this person
      */
-    class StateOf {
+    static class StateOf {
         private boolean held = false;
 
         /**
@@ -80,25 +83,23 @@ public class PackingModel {
         while (true) {
             try {
                 boolean isFree = worker.claim(); // Are we free
-                if (isFree) {
-                    // T
-                    Basket sb = theOrder.getOrderToPack(); // Order
-                    if (sb != null) { // Order to pack
-                        // T
-                        theBasket.set(sb); // Working on
-                        theAction = "Bought Receipt"; // what to do
-                    } else {
-                        // F
-                        worker.free(); // Free
-                        theAction = "";
-                    }
-                    this.pcs.firePropertyChange("action", null, theAction);
+                if (!isFree) {
+                    Thread.sleep(2000);
+                    continue;
                 }
+
+                Basket sb = theOrder.getOrderToPack(); // Order
+                if (sb != null) { // Order to pack
+                    theBasket.set(sb); // Working on
+                    Platform.runLater(() -> fireAction("Bought Receipt"));
+                } else {
+                    worker.free(); // Free
+                    Platform.runLater(() -> fireAction(""));
+                }
+
                 Thread.sleep(2000); // idle
             } catch (Exception e) {
-                DEBUG.error("%s\n%s", // Eek!
-                        "BackGroundCheck.run()\n%s",
-                        e.getMessage());
+                DEBUG.error("%s\n%s", "BackGroundCheck.run()\n%s", e.getMessage());
             }
         }
     }
@@ -115,26 +116,21 @@ public class PackingModel {
      * Process a packed Order
      */
     public void doPacked() {
-        String theAction = "";
         try {
             Basket basket = theBasket.get(); // Basket being packed
-            if (basket != null) {
-                // T
-                theBasket.set(null); // packed
-                int no = basket.getOrderNum(); // Order no
-                theOrder.informOrderPacked(no); // Tell system
-                theAction = ""; // Inform picker
-                worker.free(); // Can pack some more
-            } else {
-                // F
-                theAction = "No order"; // Not packed order
+            if (basket == null) {
+                fireAction("No order"); // Not packed order
+                return;
             }
-            this.pcs.firePropertyChange("action", null, theAction);
+
+            theBasket.set(null); // packed
+            int no = basket.getOrderNum(); // Order no
+            theOrder.informOrderPacked(no); // Tell system
+            worker.free(); // Can pack some more
+            fireAction(""); // Inform picker
         } catch (OrderException e) { // Error
-            // Of course
-            DEBUG.error("ReceiptModel.doOk()\n%s\n",// should not
-                    e.getMessage()); //  happen
+            // Of course should not happen
+            DEBUG.error("ReceiptModel.doOk()\n%s\n", e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 }
