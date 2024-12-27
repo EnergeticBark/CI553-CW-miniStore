@@ -1,1 +1,9 @@
 rootProject.name = 'miniStore'
+
+include('shared')
+include('server')
+include('cashier')
+include('backDoor')
+include('customer')
+include('packing')
+include('setup')

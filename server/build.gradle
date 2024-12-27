@@ -1,19 +1,13 @@
 plugins {
     id 'application'
-    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 repositories {
     mavenCentral()
 }
 
-javafx {
-    version = '23.0.1'
-    modules = ['javafx.controls']
-}
-
 application {
-    mainClass = 'Main'
+    mainClass = 'Server'
 }
 
 dependencies {
@@ -22,10 +16,6 @@ dependencies {
     runtimeOnly('org.apache.derby:derbytools:10.17.1.0')
 
     implementation project(':shared')
-    implementation project(':cashier')
-    implementation project(':backDoor')
-    implementation project(':customer')
-    implementation project(':packing')
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
@@ -33,4 +23,8 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+tasks.named('run') {
+    workingDir = rootDir.getPath()
 }

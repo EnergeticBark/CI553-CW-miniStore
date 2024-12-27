@@ -13,19 +13,11 @@ javafx {
 }
 
 application {
-    mainClass = 'Main'
+    mainClass = 'PackingClient'
 }
 
 dependencies {
-    runtimeOnly('org.apache.derby:derby:10.17.1.0')
-    runtimeOnly('org.apache.derby:derbyshared:10.17.1.0')
-    runtimeOnly('org.apache.derby:derbytools:10.17.1.0')
-
     implementation project(':shared')
-    implementation project(':cashier')
-    implementation project(':backDoor')
-    implementation project(':customer')
-    implementation project(':packing')
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'

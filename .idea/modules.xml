@@ -2,8 +2,15 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/backDoor/miniStore.backDoor.main.iml" filepath="$PROJECT_DIR$/.idea/modules/backDoor/miniStore.backDoor.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/cashier/miniStore.cashier.main.iml" filepath="$PROJECT_DIR$/.idea/modules/cashier/miniStore.cashier.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/customer/miniStore.customer.main.iml" filepath="$PROJECT_DIR$/.idea/modules/customer/miniStore.customer.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/miniStore.main.iml" filepath="$PROJECT_DIR$/.idea/modules/miniStore.main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/miniStore.test.iml" filepath="$PROJECT_DIR$/.idea/modules/miniStore.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/packing/miniStore.packing.main.iml" filepath="$PROJECT_DIR$/.idea/modules/packing/miniStore.packing.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/server/miniStore.server.main.iml" filepath="$PROJECT_DIR$/.idea/modules/server/miniStore.server.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/setup/miniStore.setup.main.iml" filepath="$PROJECT_DIR$/.idea/modules/setup/miniStore.setup.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared/miniStore.shared.main.iml" filepath="$PROJECT_DIR$/.idea/modules/shared/miniStore.shared.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/shared/miniStore.shared.test.iml" filepath="$PROJECT_DIR$/.idea/modules/shared/miniStore.shared.test.iml" />
     </modules>
   </component>
 </project>
