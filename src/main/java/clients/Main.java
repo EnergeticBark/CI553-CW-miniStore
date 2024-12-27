@@ -54,13 +54,13 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         CustomerModel model = new CustomerModel(mlf);
-        CustomerView view = new CustomerView(window, pos.width, pos.height);
+        /*CustomerView view = new CustomerView(window, pos.width, pos.height);
         CustomerController cont = new CustomerController(model);
         view.setController(cont);
 
         // Add listener to the model - view is listener, model has PropertyChangeSupport
         model.addPropertyChangeListener(view);
-        window.setVisible(true); // start Screen
+        window.setVisible(true); // start Screen*/
     }
 
     /**
@@ -74,11 +74,11 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         CashierModel model = new CashierModel(mlf);
-        CashierView view = new CashierView(window, mlf, pos.width, pos.height);
+        /*CashierView view = new CashierView(window, pos.width, pos.height);
         CashierController cont = new CashierController(model, view);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add listener to the model
+        model.addPropertyChangeListener(view); // Add listener to the model*/
         window.setVisible(true); // Make window visible
         model.askForUpdate(); // Initial display
     }
@@ -95,11 +95,11 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         PackingModel model = new PackingModel(mlf);
-        PackingView view = new PackingView(window, mlf, pos.width, pos.height);
+        /*PackingView view = new PackingView(window, mlf, pos.width, pos.height);
         PackingController cont = new PackingController(model, view);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add observer to the model
+        model.addPropertyChangeListener(view); // Add observer to the model*/
         window.setVisible(true); // Make window visible
     }
 
@@ -115,11 +115,11 @@ class Main {
         Dimension pos = PosOnScreen.getPos();
 
         BackDoorModel model = new BackDoorModel(mlf);
-        BackDoorView view = new BackDoorView(window, mlf, pos.width, pos.height);
-        BackDoorController cont = new BackDoorController(model, view);
+        /*BackDoorView view = new BackDoorView(window, mlf, pos.width, pos.height);
+        BackDoorController cont = new BackDoorController(model);
         view.setController(cont);
 
-        model.addPropertyChangeListener(view); // Add listener to the model
+        model.addPropertyChangeListener(view); // Add listener to the model*/
         window.setVisible(true); // Make window visible
     }
 }

@@ -4,27 +4,24 @@ import catalogue.Basket;
 import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
+import javafx.beans.property.SimpleStringProperty;
 import middle.*;
-
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 
 /**
  * Implements the Model of the cashier client
  */
 public class CashierModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
     private enum State { process, checked }
 
-    private State theState = State.process; // Current state
+    private State theState; // Current state
     private Product theProduct = null; // Current product
     private Basket theBasket = null; // Bought items
 
-    private String pn = ""; // Product being processed
-
     private StockReadWriter theStock = null;
     private OrderProcessor theOrder = null;
+
+    final SimpleStringProperty action = new SimpleStringProperty();
+    final SimpleStringProperty output = new SimpleStringProperty();
 
     /**
      * Construct the model of the Cashier
@@ -40,8 +37,14 @@ public class CashierModel {
         theState = State.process; // Current state
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
+    // Tell the CashierView that the model has changed, so it needs to redraw.
+    private void fireAction(String actionMessage) {
+        this.action.setValue(actionMessage);
+        if (getBasket() == null) {
+            output.setValue("Customers order");
+        } else {
+            output.setValue(getBasket().getDetails());
+        }
     }
 
     /**
@@ -54,101 +57,85 @@ public class CashierModel {
 
     /**
      * Check if the product is in Stock
-     * @param productNum The product number
+     * @param productNumber The product number
      */
-    public void doCheck(String productNum) {
-        String theAction = "";
+    public void checkStock(String productNumber) {
         theState = State.process; // State process
-        pn = productNum.trim(); // Product no.
-        int amount = 1; // & quantity
+        final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
-            if (theStock.exists(pn)) { // Stock Exists?
-                // T
-                Product pr = theStock.getDetails(pn); // Get details
-                if (pr.getQuantity() >= amount) { // In stock?
-                    // T
-                    theAction = // Display
-                            String.format("%s : %7.2f (%2d) ",
-                                    pr.getDescription(), // description
-                                    pr.getPrice(), // price
-                                    pr.getQuantity() // quantity
-                            );
-                    theProduct = pr; // Remember prod.
-                    theProduct.setQuantity(amount); // & quantity
-                    theState = State.checked; // OK await BUY
-                } else {
-                    // F
-                    theAction = // Not in Stock
-                            pr.getDescription() + " not in stock";
-                }
-            } else {
-                // F Stock exists
-                theAction = // Unknown
-                        "Unknown product number " + pn; // product no.
+            if (!theStock.exists(trimmedProductNumber)) { // Product doesn't exist?
+                fireAction("Unknown product number " + trimmedProductNumber);
+                return;
             }
+
+            Product product = theStock.getDetails(trimmedProductNumber);
+            if (product.getQuantity() < 1) { // Out of stock?
+                fireAction(product.getDescription() + " not in stock");
+                return;
+            }
+
+            theProduct = product; // Remember prod.
+            theProduct.setQuantity(1); // & quantity
+            theState = State.checked; // OK await BUY
+            // Display product in action label.
+            fireAction(String.format("%s : %7.2f (%2d) ",
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getQuantity()
+            ));
         } catch (StockException e) {
             DEBUG.error("%s\n%s", "CashierModel.doCheck", e.getMessage());
-            theAction = e.getMessage();
+            fireAction(e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 
     /**
      * Buy the product
      */
-    public void doBuy() {
-        String theAction = "";
-        int amount  = 1; // & quantity
+    public void buy() {
         try {
             if (theState != State.checked) { // Not checked
                 // with customer
-                theAction = "please check its availability";
-            } else {
-                boolean stockBought = // Buy
-                        theStock.buyStock( // however
-                                theProduct.getProductNum(), // may fail
-                                theProduct.getQuantity()
-                        );
-                if (stockBought) { // Stock bought
-                    // T
-                    makeBasketIfReq(); // new Basket ?
-                    theBasket.add(theProduct); // Add to bought
-                    theAction = "Purchased " + // details
-                            theProduct.getDescription();
-                } else {
-                    // F
-                    theAction = "!!! Not in stock"; // Now no stock
-                }
+                fireAction("please check its availability");
+                return;
             }
+
+            boolean stockBought = theStock.buyStock(
+                    theProduct.getProductNum(),
+                    theProduct.getQuantity()
+            );
+            // Buy however may fail
+            if (!stockBought) { // Stock not bought
+                fireAction("!!! Not in stock"); // Now no stock
+                return;
+            }
+
+            makeBasketIfReq(); // new Basket ?
+            theBasket.add(theProduct); // Add to bought
+            fireAction("Purchased " + theProduct.getDescription());
         } catch (StockException e) {
             DEBUG.error("%s\n%s", "CashierModel.doBuy", e.getMessage());
-            theAction = e.getMessage();
+            fireAction(e.getMessage());
         }
         theState = State.process; // All Done
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 
     /**
      * Customer pays for the contents of the basket
      */
-    public void doBought() {
-        String theAction = "";
-        int amount = 1; // & quantity
+    public void bought() {
         try {
-            if (theBasket != null && theBasket.size() >= 1) { // items > 1
+            if (theBasket != null && !theBasket.isEmpty()) { // items > 1
                 // T
                 theOrder.newOrder(theBasket); // Process order
-                theBasket = null; // reset
             }
-            theAction = "Start New Order"; // New order
-            theState = State.process; // All Done
             theBasket = null;
+            theState = State.process; // All Done
+            fireAction("Start New Order");
         } catch (OrderException e) {
             DEBUG.error("%s\n%s", "CashierModel.doCancel", e.getMessage());
-            theAction = e.getMessage();
+            fireAction(e.getMessage());
         }
-        theBasket = null;
-        this.pcs.firePropertyChange("action", null, theAction); // Notify
     }
 
     /**
@@ -156,7 +143,7 @@ public class CashierModel {
      * or after system reset
      */
     public void askForUpdate() {
-        this.pcs.firePropertyChange("action", null, "Welcome");
+        fireAction("Welcome");
     }
 
     /**
@@ -167,9 +154,13 @@ public class CashierModel {
             try {
                 int uon = theOrder.uniqueNumber(); // Unique order num.
                 theBasket = makeBasket(); // basket list
-                theBasket.setOrderNum( uon ); // Add an order number
+                theBasket.setOrderNum(uon); // Add an order number
             } catch (OrderException e) {
-                DEBUG.error("Communications failure\n" + "CashierModel.makeBasket()\n%s", e.getMessage());
+                DEBUG.error("""
+                        Communications failure
+                        CashierModel.makeBasket()
+                        %s
+                        """, e.getMessage());
             }
         }
     }

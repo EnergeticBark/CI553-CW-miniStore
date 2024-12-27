@@ -4,24 +4,23 @@ import catalogue.Basket;
 import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
+import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReader;
 
-import javax.swing.*;
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 import java.util.List;
 
 /**
  * Implements the Model of the customer client
  */
 public class CustomerModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
     private Basket basket = null; // Bought items
     private StockReader stockReader = null;
-    private ImageIcon picture = null;
+
+    final SimpleStringProperty picture = new SimpleStringProperty();
+    final SimpleStringProperty action = new SimpleStringProperty();
+    final SimpleStringProperty output = new SimpleStringProperty();
 
     /*
      * Construct the model of the Customer
@@ -40,13 +39,10 @@ public class CustomerModel {
         basket = makeBasket(); // Initial Basket
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
-    }
-
     // Tell the CustomerView that the model has changed, so it needs to redraw.
     private void fireAction(String actionMessage) {
-        this.pcs.firePropertyChange("action", null, actionMessage);
+        this.action.setValue(actionMessage);
+        this.output.setValue(getBasket().getDetails());
     }
 
     /**
@@ -84,7 +80,7 @@ public class CustomerModel {
             );
             product.setQuantity(1); // Require 1
             basket.add(product); // Add to basket
-            picture = new ImageIcon(product.getPicture());
+            picture.setValue(product.getPicture());
             fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
@@ -120,7 +116,7 @@ public class CustomerModel {
             );
             pr.setQuantity(1); // Require 1
             basket.add(pr); // Add to basket
-            picture = new ImageIcon(pr.getPicture());
+            picture.setValue(pr.getPicture());
             fireAction(actionMessage);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
@@ -132,16 +128,8 @@ public class CustomerModel {
      */
     public void clear() {
         basket.clear(); // Clear stock list.
-        picture = null; // No picture.
+        picture.setValue(null); // No picture.
         fireAction("Enter Product Number");
-    }
-
-    /**
-     * Return a picture of the product
-     * @return An instance of an ImageIcon
-     */
-    public ImageIcon getPicture() {
-        return picture;
     }
 
     /**

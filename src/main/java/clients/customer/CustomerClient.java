@@ -1,37 +1,30 @@
 package clients.customer;
 
-import middle.MiddleFactory;
+import javafx.application.Application;
+import javafx.stage.Stage;
 import middle.Names;
 import middle.RemoteMiddleFactory;
 
-import javax.swing.*;
+import java.util.List;
 
 /**
  * The standalone Customer Client
  */
-public class CustomerClient {
-    public static void main(String[] args) {
-        // URL of stock reader.
-        String stockURL = args.length < 1
-                ? Names.STOCK_R // default location
-                : args[0]; // supplied location
+public class CustomerClient extends Application {
+    @Override
+    public void start(Stage stage) {
+        final List<String> args = getParameters().getRaw();
+        // If the first argument exists, use it as StockReader's URL, otherwise use the default URL.
+        final String stockURL = args.isEmpty() ? Names.STOCK_R : args.getFirst();
 
-        RemoteMiddleFactory mrf = new RemoteMiddleFactory();
-        mrf.setStockRInfo(stockURL);
-        displayGUI(mrf); // Create GUI
-    }
+        RemoteMiddleFactory rmf = new RemoteMiddleFactory();
+        rmf.setStockRInfo(stockURL);
 
-    private static void displayGUI(MiddleFactory mf) {
-        JFrame window = new JFrame();
-        window.setTitle("Customer Client (MVC RMI)");
-        window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        stage.setTitle("Customer Client (MVC RMI)");
 
-        CustomerModel model = new CustomerModel(mf);
-        CustomerView view = new CustomerView(window, 0, 0);
+        CustomerModel model = new CustomerModel(rmf);
+        CustomerView view = new CustomerView(stage, model, 0, 0);
         CustomerController controller = new CustomerController(model);
         view.setController(controller);
-
-        model.addPropertyChangeListener(view); // Add listener to the model
-        window.setVisible(true); // Display Scree
     }
 }

@@ -1,98 +1,89 @@
 package clients.cashier;
 
-import catalogue.Basket;
-import middle.MiddleFactory;
-import middle.OrderProcessor;
-import middle.StockReadWriter;
-
-import javax.swing.*;
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import javafx.geometry.Insets;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 /**
  * View of the model 
  */
-public class CashierView implements PropertyChangeListener {
-    private static final int H = 300; // Height of window pixels
-    private static final int W = 400; // Width of window pixels
+public class CashierView {
+    // Width and height of the window in pixels.
+    private static final int WIDTH = 420;
+    private static final int HEIGHT = 270;
 
-    private static final String CHECK = "Check";
-    private static final String BUY = "Buy";
-    private static final String BOUGHT = "Bought/Pay";
+    // Width and height of the button in pixels.
+    private static final int BUTTON_WIDTH = 80;
+    private static final int BUTTON_HEIGHT = 35;
 
-    private final JLabel pageTitle = new JLabel();
-    private final JLabel theAction = new JLabel();
-    private final JTextField theInput = new JTextField();
-    private final JTextArea theOutput = new JTextArea();
-    private final JScrollPane theSP = new JScrollPane();
-    private final JButton theBtCheck = new JButton(CHECK);
-    private final JButton theBtBuy = new JButton(BUY);
-    private final JButton theBtBought = new JButton(BOUGHT);
+    private final TextField inputField = new TextField();
 
-    private StockReadWriter theStock = null;
-    private OrderProcessor theOrder = null;
-    private CashierController cont = null;
+    private CashierController controller = null;
 
     /**
      * Construct the view
-     * @param rpc Window in which to construct
-     * @param mf Factor to deliver order and stock objects
+     * @param stage Window in which to construct
      * @param x x-coordinate of position of window on screen
      * @param y y-coordinate of position of window on screen
      */
-    public CashierView(RootPaneContainer rpc, MiddleFactory mf, int x, int y) {
-        try {
-            theStock = mf.makeStockReadWriter(); // Database access
-            theOrder = mf.makeOrderProcessing(); // Process order
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
-        Container cp = rpc.getContentPane(); // Content Pane
-        Container rootWindow = (Container) rpc; // Root Window
-        cp.setLayout(null); // No layout manager
-        rootWindow.setSize(W, H); // Size of Window
-        rootWindow.setLocation(x, y);
+    public CashierView(Stage stage, CashierModel model, int x, int y) {
+        // Set window location.
+        stage.setX(x);
+        stage.setY(y);
 
-        Font f = new Font("Monospaced", Font.PLAIN, 12); // Font f is
-
-        pageTitle.setBounds(110, 0 , 270, 20);
-        pageTitle.setText("Thank You for Shopping at MiniStore");
-        cp.add(pageTitle);
-
-        theBtCheck.setBounds(16, 25 + 60 * 0, 80, 40); // Check Button
-        theBtCheck.addActionListener( // Call back code
-                e -> cont.doCheck(theInput.getText())
+        HBox hBox = new HBox(
+                makeLeftPane(),
+                makeRightPane(model)
         );
-        cp.add(theBtCheck); // Add to canvas
+        hBox.setPadding(new Insets(0, 16, 0, 16));
+        hBox.setSpacing(16);
 
-        theBtBuy.setBounds(16, 25 + 60 * 1, 80, 40); // Buy button
-        theBtBuy.addActionListener( // Call back code
-                e -> cont.doBuy()
-        );
-        cp.add(theBtBuy); // Add to canvas
+        Scene scene = new Scene(hBox, WIDTH, HEIGHT);
+        stage.setScene(scene);
+        inputField.requestFocus();
+        stage.show();
+    }
 
-        theBtBought.setBounds(16, 25 + 60 * 3, 80, 40); // Bought Button
-        theBtBought.addActionListener( // Call back code
-                e -> cont.doBought()
-        );
-        cp.add(theBtBought); // Add to canvas
+    private VBox makeLeftPane() {
+        Button checkButton = new Button("Check");
+        checkButton.setOnAction(_ -> controller.checkStock(inputField.getText()));
+        checkButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
+        checkButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        theAction.setBounds(110, 25 , 270, 20); // Message area
-        theAction.setText(""); // Blank
-        cp.add(theAction); // Add to canvas
+        Button buyButton = new Button("Buy");
+        buyButton.setOnAction(_ -> controller.buy());
+        buyButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
+        buyButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        theInput.setBounds(110, 50, 270, 40); // Input Area
-        theInput.setText(""); // Blank
-        cp.add(theInput); // Add to canvas
+        Button boughtButton = new Button("Bought/Pay");
+        boughtButton.setOnAction(_ -> controller.bought());
+        boughtButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
+        boughtButton.setPrefSize(BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        theSP.setBounds(110, 100, 270, 160); // Scrolling pane
-        theOutput.setText(""); // Blank
-        theOutput.setFont(f); // Uses font
-        cp.add(theSP); // Add to canvas
-        theSP.getViewport().add(theOutput); // In TextArea
-        rootWindow.setVisible(true); // Make visible
-        theInput.requestFocus(); // Focus is here
+        VBox vBox = new VBox(checkButton, buyButton, boughtButton);
+        vBox.setSpacing(16);
+        vBox.setPadding(new Insets(25, 0, 25, 0));
+        return vBox;
+    }
+
+    private VBox makeRightPane(CashierModel model) {
+        Label pageTitle = new Label("Thank You for Shopping at MiniStore");
+
+        Label actionLabel = new Label();
+        actionLabel.textProperty().bind(model.action);
+
+        TextArea outputText = new TextArea();
+
+        outputText.textProperty().bind(model.output);
+        outputText.setFont(Font.font("Monospaced", 12));
+
+        VBox vBox = new VBox(pageTitle, actionLabel, inputField, outputText);
+        vBox.setSpacing(10);
+        return vBox;
     }
 
     /**
@@ -100,25 +91,6 @@ public class CashierView implements PropertyChangeListener {
      * @param c The controller
      */
     public void setController(CashierController c) {
-        cont = c;
-    }
-
-    /**
-     * Update the view
-     * @param evt The event source and property that has changed
-     */
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        CashierModel model = (CashierModel) evt.getSource();
-        String message = (String) evt.getNewValue();
-        theAction.setText(message);
-        Basket basket = model.getBasket();
-        if (basket == null) {
-            theOutput.setText("Customers order");
-        } else {
-            theOutput.setText(basket.getDetails());
-        }
-
-        theInput.requestFocus(); // Focus is here
+        controller = c;
     }
 }

@@ -4,23 +4,21 @@ import catalogue.Basket;
 import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
+import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReadWriter;
-
-import javax.swing.event.SwingPropertyChangeSupport;
-import java.beans.PropertyChangeListener;
 
 /**
  * Implements the Model of the back door client
  */
 public class BackDoorModel {
-    private final SwingPropertyChangeSupport pcs = new SwingPropertyChangeSupport(this);
-
     private Basket theBasket = null; // Bought items
-    private String pn = ""; // Product being processed
 
     private StockReadWriter theStock = null;
+
+    final SimpleStringProperty action = new SimpleStringProperty();
+    final SimpleStringProperty output = new SimpleStringProperty();
 
     /*
      * Construct the model of the back door client
@@ -36,8 +34,10 @@ public class BackDoorModel {
         theBasket = makeBasket(); // Initial Basket
     }
 
-    public void addPropertyChangeListener(PropertyChangeListener listener) {
-        this.pcs.addPropertyChangeListener(listener);
+    // Tell the BackDoorView that the model has changed, so it needs to redraw.
+    private void fireAction(String actionMessage) {
+        this.action.setValue(actionMessage);
+        this.output.setValue(getBasket().getDetails());
     }
 
     /**
@@ -49,90 +49,66 @@ public class BackDoorModel {
     }
 
     /**
-     * Check The current stock level
-     * @param productNum The product number
-     */
-    public void doCheck(String productNum) {
-        pn = productNum.trim(); // Product no.
-    }
-
-    /**
      * Query
-     * @param productNum The product number of the item
+     * @param productNumber The product number of the item
      */
-    public void doQuery(String productNum) {
-        String theAction = "";
-        pn = productNum.trim(); // Product no.
-        try { // & quantity
-            if (theStock.exists(pn)) { // Stock Exists?
-                // T
-                Product pr = theStock.getDetails(pn); // Product
-                theAction = // Display
-                        String.format( "%s : %7.2f (%2d) ",
-                                pr.getDescription(), // description
-                                pr.getPrice(), // price
-                                pr.getQuantity() // quantity
-                        );
-            } else {
-                // F
-                theAction = // Inform
-                        "Unknown product number " + pn; // product number
+    public void query(String productNumber) {
+        String trimmedProductNumber = productNumber.trim();
+        try {
+            if (!theStock.exists(trimmedProductNumber)) { // Product doesn't exist?
+                fireAction("Unknown product number " + trimmedProductNumber);
+                return;
             }
+
+            Product product = theStock.getDetails(trimmedProductNumber);
+            fireAction(String.format("%s : %7.2f (%2d) ",
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getQuantity()
+            ));
         } catch (StockException e) {
-            theAction = e.getMessage();
+            fireAction(e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 
     /**
      * Re stock
-     * @param productNum The product number of the item
+     * @param productNumber The product number of the item
      * @param quantity How many to be added
      */
-    public void doRStock(String productNum, String quantity) {
-        String theAction = "";
+    public void restock(String productNumber, String quantity) {
         theBasket = makeBasket();
-        pn = productNum.trim(); // Product no.
-        String pn = productNum.trim(); // Product no.
-        int amount = 0;
+        String trimmedProductNumber = productNumber.trim();
+        String trimmedQuantity = quantity.trim();
+        int amount;
         try {
-            String aQuantity = quantity.trim();
-            try {
-                amount = Integer.parseInt(aQuantity); // Convert
-                if (amount < 0) {
-                    throw new NumberFormatException("-ve");
-                }
-            } catch (Exception err) {
-                theAction = "Invalid quantity";
-                this.pcs.firePropertyChange("action", null, theAction);
+            amount = Integer.parseUnsignedInt(trimmedQuantity);
+        } catch (NumberFormatException e) {
+            fireAction("Invalid quantity");
+            return;
+        }
+
+        try {
+            if (!theStock.exists(trimmedProductNumber)) { // Product doesn't exist?
+                fireAction("Unknown product number " + trimmedProductNumber);
                 return;
             }
 
-            if (theStock.exists(pn)) { // Stock Exists?
-                // T
-                theStock.addStock(pn, amount); // Re stock
-                Product pr = theStock.getDetails(pn); // Get details
-                theBasket.add(pr);
-                theAction = ""; // Display
-            } else {
-                // F
-                theAction = // Inform Unknown
-                        "Unknown product number " + pn; // product number
-            }
+            theStock.addStock(trimmedProductNumber, amount); // Re stock
+            Product product = theStock.getDetails(trimmedProductNumber); // Get details
+            theBasket.add(product);
+            fireAction("");
         } catch (StockException e) {
-            theAction = e.getMessage();
+            fireAction(e.getMessage());
         }
-        this.pcs.firePropertyChange("action", null, theAction);
     }
 
     /**
      * Clear the product()
      */
-    public void doClear() {
-        String theAction = "";
+    public void clear() {
         theBasket.clear(); // Clear s. list
-        theAction = "Enter Product Number"; // Set display
-        this.pcs.firePropertyChange("action", null, theAction); // inform the listener view that model changed
+        fireAction("Enter Product Number"); // Set display
     }
 
     /**

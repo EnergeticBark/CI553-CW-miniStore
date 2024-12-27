@@ -1,19 +1,25 @@
 plugins {
     id 'application'
+    id 'org.openjfx.javafxplugin' version '0.1.0'
 }
 
 repositories {
     mavenCentral()
 }
 
+javafx {
+    version = '23.0.1'
+    modules = ['javafx.controls']
+}
+
 application {
-    mainClass = "clients/Main"
+    mainClass = 'clients.packing.PackingClient'
 }
 
 dependencies {
-    runtimeOnly("org.apache.derby:derby:10.17.1.0")
-    runtimeOnly("org.apache.derby:derbyshared:10.17.1.0")
-    runtimeOnly("org.apache.derby:derbytools:10.17.1.0")
+    runtimeOnly('org.apache.derby:derby:10.17.1.0')
+    runtimeOnly('org.apache.derby:derbyshared:10.17.1.0')
+    runtimeOnly('org.apache.derby:derbytools:10.17.1.0')
 
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
