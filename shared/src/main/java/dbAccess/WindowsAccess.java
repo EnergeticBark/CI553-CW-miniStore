@@ -6,11 +6,14 @@ package dbAccess;
  * @version 2.0
  */
 class WindowsAccess extends DBAccess {
+    private static final String URL = "jdbc:odbc:cshop";
+    private static final String DRIVER = "sun.jdbc.odbc.JdbcOdbcDriver";
+
     public void loadDriver() throws Exception {
-        Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+        Class.forName(DRIVER);
     }
 
     public String urlOfDatabase() {
-        return "jdbc:odbc:cshop";
+        return URL;
     }
 }
