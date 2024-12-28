@@ -29,7 +29,7 @@ public class PackingClient extends Application {
 
         PackingModel model = new PackingModel(rmf);
         PackingView view = new PackingView(stage, model, 0, 0);
-        PackingController cont = new PackingController(model, view);
+        PackingController cont = new PackingController(model);
         view.setController(cont);
     }
 }

@@ -7,8 +7,8 @@ import java.awt.*;
  * @version 1.0
  */
 class PosOnScreen {
-    private final static int clientW = 400;
-    private final static int clientH = 300;
+    private final static int clientW = 420;
+    private final static int clientH = 270;
 
     private static final int maxX; // Width of screen
     private static final int maxY; // Height of screen

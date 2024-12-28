@@ -2,16 +2,13 @@
  * The Packing Controller
  */
 public class PackingController {
-    private PackingModel model = null;
-    private PackingView view = null;
+    private final PackingModel model;
 
     /**
      * Constructor
      * @param model The model
-     * @param view  The view from which the interaction came
      */
-    public PackingController(PackingModel model, PackingView view) {
-        this.view = view;
+    public PackingController(PackingModel model) {
         this.model = model;
     }
 
