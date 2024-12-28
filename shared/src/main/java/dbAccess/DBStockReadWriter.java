@@ -4,6 +4,7 @@ import catalogue.Product;
 import debug.DEBUG;
 import middle.StockException;
 import middle.StockReadWriter;
+import remote.RemoteStockReadWriter;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -19,7 +20,7 @@ import java.sql.SQLException;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockReadWriter extends DBStockReader implements StockReadWriter {
+public class DBStockReadWriter extends DBStockReader implements StockReadWriter, RemoteStockReadWriter {
     /*
      * Connects to database
      */

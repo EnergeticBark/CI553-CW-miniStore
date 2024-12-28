@@ -5,6 +5,7 @@ import catalogue.Product;
 import debug.DEBUG;
 import middle.OrderException;
 import middle.OrderProcessor;
+import remote.RemoteOrderProcessor;
 
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ import java.util.*;
  * @author  Mike Smith University of Brighton
  * @version 3.0
  */
-public class Order implements OrderProcessor {
+public class Order implements OrderProcessor, RemoteOrderProcessor {
     private enum State {Waiting, BeingPacked, ToBeCollected}
     /**
      * Wraps a Basket and its state into a folder

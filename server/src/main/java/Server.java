@@ -1,7 +1,10 @@
+import dbAccess.DBStockReadWriter;
+import dbAccess.DBStockReader;
 import middle.Names;
-import remote.RemoteOrder;
-import remote.RemoteDBStockReadWriter;
-import remote.RemoteDBStockReader;
+import orders.Order;
+import remote.RemoteOrderProcessor;
+import remote.RemoteStockReadWriter;
+import remote.RemoteStockReader;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
@@ -31,9 +34,9 @@ class Server {
     }
 
     private void bind(String stockReaderURL, String stockReadWriterURL, String orderProcessorURL) {
-        RemoteDBStockReader theStockR; // Remote stock object
-        RemoteDBStockReadWriter theStockRW; // Remote stock object
-        RemoteOrder theOrder; // Remote order object
+        RemoteStockReader theStockR; // Remote stock object
+        RemoteStockReadWriter theStockRW; // Remote stock object
+        RemoteOrderProcessor theOrder; // Remote order object
         System.out.println("Server: "); // Introduction
         try {
             LocateRegistry.createRegistry(1099);
@@ -45,17 +48,17 @@ class Server {
         }
 
         try {
-            theStockR = new RemoteDBStockReader(); // Stock R
+            theStockR = new DBStockReader(); // Stock R
             UnicastRemoteObject.exportObject(theStockR, 0);
             Naming.rebind(stockReaderURL, theStockR); // bind to url
             System.out.println("DBStockReader bound to: " + stockReaderURL); // Inform world
 
-            theStockRW = new RemoteDBStockReadWriter(); // Stock RW
+            theStockRW = new DBStockReadWriter(); // Stock RW
             UnicastRemoteObject.exportObject(theStockRW, 0);
             Naming.rebind(stockReadWriterURL, theStockRW); // bind to url
             System.out.println("DBStockReadWriter bound to: " + stockReadWriterURL); // Inform world
 
-            theOrder = new RemoteOrder(); // Order
+            theOrder = new Order(); // Order
             UnicastRemoteObject.exportObject(theOrder, 0);
             Naming.rebind(orderProcessorURL, theOrder); // bind to url
             System.out.println("Order bound to: " + orderProcessorURL); // Inform world

@@ -4,6 +4,7 @@ import catalogue.Product;
 import debug.DEBUG;
 import middle.StockException;
 import middle.StockReader;
+import remote.RemoteStockReader;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockReader implements StockReader {
+public class DBStockReader implements StockReader, RemoteStockReader {
     final private Connection theCon; // Connection to database
 
     /**
