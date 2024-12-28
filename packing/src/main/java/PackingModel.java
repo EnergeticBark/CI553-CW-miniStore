@@ -33,8 +33,12 @@ public class PackingModel {
         }
 
         theBasket.set(null); // Initial Basket
+
         // Start a background check to see when a new order can be packed
-        new Thread(this::checkForNewOrder).start();
+        Thread pollOrders = new Thread(this::checkForNewOrder);
+        // Let the JVM exit without waiting for this thread to terminate.
+        pollOrders.setDaemon(true);
+        pollOrders.start();
     }
 
     // Tell the PackingView that the model has changed, so it needs to redraw.
