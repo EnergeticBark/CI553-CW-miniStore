@@ -1,4 +1,6 @@
-import java.awt.*;
+import javafx.geometry.Point2D;
+import javafx.geometry.Rectangle2D;
+import javafx.stage.Screen;
 
 /**
  * Returns a position for the client window on the screen
@@ -19,9 +21,9 @@ class PosOnScreen {
     // class initializer
     // Will be called (once) when the class is loaded
     static {
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        maxX = (int) dimension.getWidth();
-        maxY = (int) dimension.getHeight();
+        Rectangle2D bounds = Screen.getPrimary().getVisualBounds();
+        maxX = (int) bounds.getMaxX();
+        maxY = (int) bounds.getMaxY();
     }
 
     /**
@@ -41,12 +43,10 @@ class PosOnScreen {
 
     /**
      * return position for new window on screen
-     *  slight misuse of the inbuilt Dimension class
-     *  as used to hold an x,y co-ordinate pair
      * @return position for new window
      */
-    public static Dimension getPos() {
-        Dimension pos = new Dimension(cX, cY);
+    public static Point2D getPos() {
+        Point2D pos = new Point2D(cX, cY);
         next();
         return pos;
     }

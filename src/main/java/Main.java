@@ -1,8 +1,8 @@
 import javafx.application.Application;
+import javafx.geometry.Point2D;
 import javafx.stage.Stage;
 import middle.LocalMiddleFactory;
 import middle.MiddleFactory;
-import java.awt.*;
 
 /**
  * Starts all the clients (user interface)  as a single application.
@@ -34,10 +34,10 @@ public class Main extends Application {
     public void startCustomerGUI_MVC(MiddleFactory mlf) {
         Stage stage = new Stage();
         stage.setTitle("Customer Client MVC");
-        Dimension pos = PosOnScreen.getPos();
+        Point2D pos = PosOnScreen.getPos();
 
         CustomerModel model = new CustomerModel(mlf);
-        CustomerView view = new CustomerView(stage, model, pos.width, pos.height);
+        CustomerView view = new CustomerView(stage, model, (int) pos.getX(), (int) pos.getY());
         CustomerController cont = new CustomerController(model);
         view.setController(cont);
     }
@@ -49,10 +49,10 @@ public class Main extends Application {
     public void startCashierGUI_MVC(MiddleFactory mlf) {
         Stage stage = new Stage();
         stage.setTitle("Cashier Client MVC");
-        Dimension pos = PosOnScreen.getPos();
+        Point2D pos = PosOnScreen.getPos();
 
         CashierModel model = new CashierModel(mlf);
-        CashierView view = new CashierView(stage, model, pos.width, pos.height);
+        CashierView view = new CashierView(stage, model, (int) pos.getX(), (int) pos.getY());
         CashierController cont = new CashierController(model);
         view.setController(cont);
 
@@ -66,10 +66,10 @@ public class Main extends Application {
     public void startPackingGUI_MVC(MiddleFactory mlf) {
         Stage stage = new Stage();
         stage.setTitle("Packing Client MVC");
-        Dimension pos = PosOnScreen.getPos();
+        Point2D pos = PosOnScreen.getPos();
 
         PackingModel model = new PackingModel(mlf);
-        PackingView view = new PackingView(stage, model, pos.width, pos.height);
+        PackingView view = new PackingView(stage, model, (int) pos.getX(), (int) pos.getY());
         PackingController cont = new PackingController(model);
         view.setController(cont);
     }
@@ -81,10 +81,10 @@ public class Main extends Application {
     public void startBackDoorGUI_MVC(MiddleFactory mlf) {
         Stage stage = new Stage();
         stage.setTitle("BackDoor Client MVC");
-        Dimension pos = PosOnScreen.getPos();
+        Point2D pos = PosOnScreen.getPos();
 
         BackDoorModel model = new BackDoorModel(mlf);
-        BackDoorView view = new BackDoorView(stage, model, pos.width, pos.height);
+        BackDoorView view = new BackDoorView(stage, model, (int) pos.getX(), (int) pos.getY());
         BackDoorController cont = new BackDoorController(model);
         view.setController(cont);
     }
