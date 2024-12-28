@@ -81,7 +81,7 @@ public class DBStockReader implements StockReader {
     public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
         // Make the search case-insensitive by converting the description and search query to uppercase.
         final String query = """
-                SELECT StockTable.productNo, description, price, stockLevel
+                SELECT StockTable.productNo, description, picture, price, stockLevel
                 FROM ProductTable, StockTable
                 WHERE UPPER(description) LIKE UPPER(?)
                 AND StockTable.productNo = ProductTable.productNo
