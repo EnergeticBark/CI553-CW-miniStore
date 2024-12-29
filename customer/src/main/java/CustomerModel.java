@@ -2,10 +2,13 @@ import catalogue.Basket;
 import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
+import exceptions.ProductDoesNotExistException;
+import exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReader;
+import usecases.GetStockIfAvailable;
 
 import java.util.List;
 
@@ -58,16 +61,7 @@ public class CustomerModel {
         basket.clear(); // Clear stock list.
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
-            if (!stockReader.exists(trimmedProductNumber)) { // Product doesn't exist?
-                fireAction("Unknown product number " + trimmedProductNumber);
-                return;
-            }
-
-            Product product = stockReader.getDetails(trimmedProductNumber);
-            if (product.getQuantity() < 1) { // Out of stock?
-                fireAction(product.getDescription() + " not in stock");
-                return;
-            }
+            Product product = new GetStockIfAvailable(stockReader).run(trimmedProductNumber, 1);
 
             // Display
             final String actionMessage = String.format(
@@ -76,10 +70,13 @@ public class CustomerModel {
                     product.getPrice(),
                     product.getQuantity()
             );
-            product.setQuantity(1); // Require 1
             basket.add(product); // Add to basket
             picture.setValue(product.getPicture());
             fireAction(actionMessage);
+        } catch (ProductOutOfStockException e) {
+            fireAction(e.getMessage() + " not in stock");
+        } catch (ProductDoesNotExistException _) {
+            fireAction("Unknown product number " + trimmedProductNumber);
         } catch (StockException e) {
             DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
         }

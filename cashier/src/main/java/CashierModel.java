@@ -2,8 +2,11 @@ import catalogue.Basket;
 import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
+import exceptions.ProductDoesNotExistException;
+import exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.*;
+import usecases.GetStockIfAvailable;
 
 /**
  * Implements the Model of the cashier client
@@ -61,26 +64,19 @@ public class CashierModel {
         theState = State.process; // State process
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
-            if (!theStock.exists(trimmedProductNumber)) { // Product doesn't exist?
-                fireAction("Unknown product number " + trimmedProductNumber);
-                return;
-            }
-
-            Product product = theStock.getDetails(trimmedProductNumber);
-            if (product.getQuantity() < 1) { // Out of stock?
-                fireAction(product.getDescription() + " not in stock");
-                return;
-            }
-
-            theProduct = product; // Remember prod.
-            theProduct.setQuantity(1); // & quantity
+            // Remember prod.
+            theProduct = new GetStockIfAvailable(theStock).run(trimmedProductNumber, 1);
             theState = State.checked; // OK await BUY
             // Display product in action label.
             fireAction(String.format("%s : %7.2f (%2d) ",
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getQuantity()
+                    theProduct.getDescription(),
+                    theProduct.getPrice(),
+                    theProduct.getQuantity()
             ));
+        } catch (ProductOutOfStockException e) {
+            fireAction(e.getMessage() + " not in stock");
+        } catch (ProductDoesNotExistException _) {
+            fireAction("Unknown product number " + trimmedProductNumber);
         } catch (StockException e) {
             DEBUG.error("%s\n%s", "CashierModel.doCheck", e.getMessage());
             fireAction(e.getMessage());
