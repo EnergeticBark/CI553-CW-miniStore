@@ -72,7 +72,7 @@ public class Basket extends ArrayList<Product> implements Serializable {
         if (this.size() > 0) {
             for (Product pr: this) {
                 int number = pr.getQuantity();
-                fr.format("%-7s", pr.getProductNum());
+                fr.format("%-7s", pr.getProductNumber());
                 fr.format("%-14.14s ", pr.getDescription());
                 fr.format("(%3d) ", number);
                 fr.format("%s%7.2f", cSign, pr.getPrice() * number);

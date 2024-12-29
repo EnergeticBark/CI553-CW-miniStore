@@ -33,6 +33,6 @@ class BetterBasketTest {
         betterBasket.add(product2);
         betterBasket.add(product3);
         betterBasket.add(product4);
-        assertEquals("0001", betterBasket.getFirst().getProductNum(), "Incorrect position after sort");
+        assertEquals("0001", betterBasket.getFirst().getProductNumber(), "Incorrect position after sort");
     }
 }

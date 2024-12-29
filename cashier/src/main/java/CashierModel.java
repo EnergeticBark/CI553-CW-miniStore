@@ -95,7 +95,7 @@ public class CashierModel {
             }
 
             boolean stockBought = theStock.buyStock(
-                    theProduct.getProductNum(),
+                    theProduct.getProductNumber(),
                     theProduct.getQuantity()
             );
             // Buy however may fail

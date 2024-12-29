@@ -90,20 +90,20 @@ public class DBStockReadWriter extends DBStockReader implements StockReadWriter,
         final String updateProductQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
         final String updateStockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
 
-        DEBUG.trace("DB DBStockReadWriter: modifyStock(%s)", detail.getProductNum());
+        DEBUG.trace("DB DBStockReadWriter: modifyStock(%s)", detail.getProductNumber());
         try {
-            if (!exists(detail.getProductNum())) {
+            if (!exists(detail.getProductNumber())) {
                 try (
                         PreparedStatement insertProductStatement = getConnectionObject()
                                 .prepareStatement(insertProductQuery);
                         PreparedStatement insertStockStatement = getConnectionObject()
                                 .prepareStatement(insertStockQuery)
                 ) {
-                    insertProductStatement.setString(1, detail.getProductNum());
+                    insertProductStatement.setString(1, detail.getProductNumber());
                     insertProductStatement.setString(2, detail.getDescription());
                     insertProductStatement.setString(
                             3,
-                            "images/Pic" + detail.getProductNum() + ".jpg"
+                            "images/Pic" + detail.getProductNumber() + ".jpg"
                     );
                     insertProductStatement.setDouble(
                             4,
@@ -111,7 +111,7 @@ public class DBStockReadWriter extends DBStockReader implements StockReadWriter,
                     );
                     insertProductStatement.executeUpdate();
 
-                    insertStockStatement.setString(1, detail.getProductNum());
+                    insertStockStatement.setString(1, detail.getProductNumber());
                     insertStockStatement.setInt(2, detail.getQuantity());
                     insertStockStatement.executeUpdate();
                 }
@@ -124,11 +124,11 @@ public class DBStockReadWriter extends DBStockReader implements StockReadWriter,
                 ) {
                     updateProductStatement.setString(1, detail.getDescription());
                     updateProductStatement.setDouble(2, detail.getPrice());
-                    updateProductStatement.setString(3, detail.getProductNum());
+                    updateProductStatement.setString(3, detail.getProductNumber());
                     updateProductStatement.executeUpdate();
 
                     updateStockStatement.setInt(1, detail.getQuantity());
-                    updateStockStatement.setString(2, detail.getProductNum());
+                    updateStockStatement.setString(2, detail.getProductNumber());
                     updateStockStatement.executeUpdate();
                 }
             }

@@ -25,7 +25,7 @@ public class BetterBasket extends Basket implements Serializable {
     public boolean add(Product product) {
         // Look for another Product in the basket with the same product number.
         Optional<Product> duplicate = this.stream()
-                .filter((productInBasket) -> productInBasket.getProductNum().equals(product.getProductNum()))
+                .filter((productInBasket) -> productInBasket.getProductNumber().equals(product.getProductNumber()))
                 .findAny();
 
         if (duplicate.isPresent()) {

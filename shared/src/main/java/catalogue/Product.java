@@ -13,65 +13,65 @@ import java.util.Comparator;
 public class Product implements Serializable {
     @Serial
     private static final long serialVersionUID = 20092506;
-    private String theProductNum; // Product number
-    private String theDescription; // Description of product
+    private String productNumber; // Product number
+    private String description; // Description of product
     private String picture = "default.jpg"; // Filename of the product picture
-    private double thePrice; // Price of product
-    private int theQuantity; // Quantity involved
+    private double price; // Price of product
+    private int quantity; // Quantity involved
 
-    public static final Comparator<Product> sortByNumber = Comparator.comparing(Product::getProductNum);
+    public static final Comparator<Product> sortByNumber = Comparator.comparing(Product::getProductNumber);
 
     /**
      * Construct a product details
-     * @param aProductNum Product number
-     * @param aDescription Description of product
-     * @param aPrice The price of the product
-     * @param aQuantity The Quantity of the product involved
+     * @param productNumber Product number
+     * @param description Description of product
+     * @param price The price of the product
+     * @param quantity The quantity of the product involved
      */
-    public Product(String aProductNum, String aDescription, String picture, double aPrice, int aQuantity) {
-        theProductNum = aProductNum; // Product number
-        theDescription = aDescription; // Description of product
+    public Product(String productNumber, String description, String picture, double price, int quantity) {
+        this.productNumber = productNumber;
+        this.description = description; // Description of product
         this.picture = picture;
-        thePrice = aPrice; // Price of product
-        theQuantity = aQuantity; // Quantity involved
+        this.price = price; // Price of product
+        this.quantity = quantity; // Quantity involved
     }
 
-    public Product(String aProductNum, String aDescription, double aPrice, int aQuantity) {
-        theProductNum = aProductNum; // Product number
-        theDescription = aDescription; // Description of product
-        thePrice = aPrice; // Price of product
-        theQuantity = aQuantity; // Quantity involved
+    public Product(String productNumber, String description, double price, int quantity) {
+        this.productNumber = productNumber;
+        this.description = description; // Description of product
+        this.price = price; // Price of product
+        this.quantity = quantity; // Quantity involved
     }
 
-    public String getProductNum() {
-        return theProductNum;
+    public String getProductNumber() {
+        return productNumber;
     }
     public String getDescription() {
-        return theDescription;
+        return description;
     }
     public String getPicture() {
         return picture;
     }
     public double getPrice() {
-        return thePrice;
+        return price;
     }
     public int getQuantity() {
-        return theQuantity;
+        return quantity;
     }
 
-    public void setProductNum(String aProductNum) {
-        theProductNum = aProductNum;
+    public void setProductNumber(String productNumber) {
+        this.productNumber = productNumber;
     }
-    public void setDescription(String aDescription) {
-        theDescription = aDescription;
+    public void setDescription(String description) {
+        this.description = description;
     }
     public void setPicture(String picture) {
         this.picture = picture;
     }
-    public void setPrice(double aPrice) {
-        thePrice = aPrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
-    public void setQuantity(int aQuantity) {
-        theQuantity = aQuantity;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 }
