@@ -2,7 +2,7 @@ package middle;
 
 import catalogue.Product;
 import debug.DEBUG;
-import remote.RemoteStockReader;
+import remote.RemoteStockDAO;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -17,7 +17,7 @@ import java.util.List;
  * @version 2.0
  */
 public class StockDAOProvider implements StockDAO {
-    private RemoteStockReader stub = null;
+    private RemoteStockDAO stub = null;
     private final String url;
 
     public StockDAOProvider(String url) {
@@ -28,7 +28,7 @@ public class StockDAOProvider implements StockDAO {
     private void connect() throws StockException {
         // Setup connection
         try {
-            stub = (RemoteStockReader) Naming.lookup(url); // Stub returned
+            stub = (RemoteStockDAO) Naming.lookup(url); // Stub returned
         } catch (Exception e) {
             // Failure to attach to the object.
             stub = null;

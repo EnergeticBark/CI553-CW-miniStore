@@ -4,7 +4,7 @@ import catalogue.Product;
 import debug.DEBUG;
 import middle.StockException;
 import middle.StockDAO;
-import remote.RemoteStockReader;
+import remote.RemoteStockDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockDAO implements StockDAO, RemoteStockReader {
+public class DBStockDAO implements StockDAO, RemoteStockDAO {
     final private Connection theCon; // Connection to database
 
     /**

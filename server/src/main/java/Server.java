@@ -2,7 +2,7 @@ import dataaccess.DBStockDAO;
 import middle.Names;
 import orders.Order;
 import remote.RemoteOrderProcessor;
-import remote.RemoteStockReader;
+import remote.RemoteStockDAO;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
@@ -28,7 +28,7 @@ class Server {
     }
 
     private void bind(String stockReaderURL, String orderProcessorURL) {
-        RemoteStockReader theStockR; // Remote stock object
+        RemoteStockDAO theStockR; // Remote stock object
         RemoteOrderProcessor theOrder; // Remote order object
         System.out.println("Server: "); // Introduction
         try {

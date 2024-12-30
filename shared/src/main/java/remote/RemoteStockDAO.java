@@ -13,7 +13,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public interface RemoteStockReader extends Remote {
+public interface RemoteStockDAO extends Remote {
     boolean exists(String number) throws RemoteException, StockException;
     List<Product> searchByDescription(String searchQuery) throws RemoteException, StockException;
     Product getDetails(String number) throws RemoteException, StockException;
