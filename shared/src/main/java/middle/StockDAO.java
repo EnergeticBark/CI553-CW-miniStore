@@ -9,7 +9,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public interface StockReader {
+public interface StockDAO {
 
     /**
      * Checks if the product exits in the stock list
@@ -34,4 +34,12 @@ public interface StockReader {
      * @throws StockException if issue
      */
     Product getDetails(String pNum) throws StockException;
+
+    /**
+     * Modifies Stock details for a given product number.
+     * Information modified: Description, Price
+     * @param detail Replace with this version of product
+     * @throws middle.StockException if issue
+     */
+    void modifyStock(Product detail) throws StockException;
 }

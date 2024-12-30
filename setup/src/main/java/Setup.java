@@ -1,5 +1,5 @@
-import dbAccess.DBAccess;
-import dbAccess.DBAccessFactory;
+import dataaccess.DBAccess;
+import dataaccess.DBAccessFactory;
 
 import java.sql.*;
 import java.util.ArrayList;

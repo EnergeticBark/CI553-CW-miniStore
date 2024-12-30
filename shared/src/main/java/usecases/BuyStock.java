@@ -2,25 +2,25 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductOutOfStockException;
+import middle.StockDAO;
 import middle.StockException;
-import middle.StockReadWriter;
 
 public class BuyStock {
-    private final StockReadWriter stockReadWriter;
+    private final StockDAO stockDAO;
 
-    public BuyStock(StockReadWriter stockReadWriter) {
-        this.stockReadWriter = stockReadWriter;
+    public BuyStock(StockDAO stockDAO) {
+        this.stockDAO = stockDAO;
     }
 
     public Product run(String productNumber, int amount) throws
             ProductOutOfStockException,
             StockException {
 
-        Product inventory = stockReadWriter.getDetails(productNumber);
+        Product inventory = stockDAO.getDetails(productNumber);
         new EnsureEnoughStock().run(inventory, amount);
         Product customersProducts = inventory.take(amount);
 
-        stockReadWriter.modifyStock(inventory);
+        stockDAO.modifyStock(inventory);
         return customersProducts;
     }
 }

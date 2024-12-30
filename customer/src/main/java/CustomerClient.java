@@ -12,11 +12,11 @@ public class CustomerClient extends Application {
     @Override
     public void start(Stage stage) {
         final List<String> args = getParameters().getRaw();
-        // If the first argument exists, use it as StockReader's URL, otherwise use the default URL.
-        final String stockURL = args.isEmpty() ? Names.STOCK_R : args.getFirst();
+        // If the first argument exists, use it as StockDAO's URL, otherwise use the default URL.
+        final String stockURL = args.isEmpty() ? Names.STOCK_DAO : args.getFirst();
 
         RemoteMiddleFactory rmf = new RemoteMiddleFactory();
-        rmf.setStockRInfo(stockURL);
+        rmf.setStockURL(stockURL);
 
         stage.setTitle("Customer Client (MVC RMI)");
 

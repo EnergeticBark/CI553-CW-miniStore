@@ -2,21 +2,21 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductDoesNotExistException;
+import middle.StockDAO;
 import middle.StockException;
-import middle.StockReadWriter;
 
 public class RestockProduct {
-    private final StockReadWriter stockReadWriter;
+    private final StockDAO stockDAO;
 
-    public RestockProduct(StockReadWriter stockReadWriter) {
-        this.stockReadWriter = stockReadWriter;
+    public RestockProduct(StockDAO stockReadWriter) {
+        this.stockDAO = stockReadWriter;
     }
 
     public Product run(String productNumber, int amount) throws StockException, ProductDoesNotExistException {
-        Product inventory = new GetProductByNumber(stockReadWriter).run(productNumber);
+        Product inventory = new GetProductByNumber(stockDAO).run(productNumber);
         new AddStock().run(inventory, amount);
 
-        stockReadWriter.modifyStock(inventory);
+        stockDAO.modifyStock(inventory);
         return inventory;
     }
 }

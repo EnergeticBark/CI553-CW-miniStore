@@ -1,13 +1,10 @@
-package dbAccess;
+package dataaccess;
 
 /**
  * Implements generic management of a database.
+ * Base class that defines the access to the database driver
  * @author  Mike Smith University of Brighton
  * @version 2.0
- */
-
-/**
- * Base class that defines the access to the database driver
  */
 public class DBAccess {
     public void loadDriver() throws Exception {

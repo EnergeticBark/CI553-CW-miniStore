@@ -3,19 +3,19 @@ package usecases;
 import catalogue.Product;
 import exceptions.ProductDoesNotExistException;
 import middle.StockException;
-import middle.StockReader;
+import middle.StockDAO;
 
 import java.util.List;
 
 public class GetProductsBySearch {
-    private final StockReader stockReader;
+    private final StockDAO stockDAO;
 
-    public GetProductsBySearch(StockReader stockReader) {
-        this.stockReader = stockReader;
+    public GetProductsBySearch(StockDAO stockDAO) {
+        this.stockDAO = stockDAO;
     }
 
     public List<Product> run(String productNumber) throws ProductDoesNotExistException, StockException {
-        List<Product> products = stockReader.searchByDescription(productNumber);
+        List<Product> products = stockDAO.searchByDescription(productNumber);
         if (products.isEmpty()) {
             throw new ProductDoesNotExistException();
         }

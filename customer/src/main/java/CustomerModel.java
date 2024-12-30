@@ -7,7 +7,7 @@ import exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
-import middle.StockReader;
+import middle.StockDAO;
 import usecases.EnsureEnoughStock;
 import usecases.GetProductByNumber;
 import usecases.GetProductsBySearch;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class CustomerModel {
     private Basket basket = null; // Bought items
-    private StockReader stockReader = null;
+    private StockDAO stockDAO = null;
 
     final SimpleStringProperty picture = new SimpleStringProperty();
     final SimpleStringProperty action = new SimpleStringProperty();
@@ -31,7 +31,7 @@ public class CustomerModel {
      */
     public CustomerModel(MiddleFactory mf) {
         try {
-            stockReader = mf.makeStockReader(); // Database access
+            stockDAO = mf.makeStockDAO(); // Database access
         } catch (Exception e) {
             DEBUG.error("""
                     CustomerModel.constructor
@@ -63,7 +63,7 @@ public class CustomerModel {
         basket.clear(); // Clear stock list.
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
-            Product product = new GetProductByNumber(stockReader).run(trimmedProductNumber);
+            Product product = new GetProductByNumber(stockDAO).run(trimmedProductNumber);
             new EnsureEnoughStock().run(product, 1);
 
             // Display
@@ -89,7 +89,7 @@ public class CustomerModel {
         basket.clear(); // Clear stock list.
         final String trimmedQuery = searchQuery.trim();
         try {
-            List<Product> products = new GetProductsBySearch(stockReader).run(trimmedQuery);
+            List<Product> products = new GetProductsBySearch(stockDAO).run(trimmedQuery);
             Product firstResult = products.getFirst();
             new EnsureEnoughStock().run(firstResult, 1);
 

@@ -1,4 +1,4 @@
-package dbAccess;
+package dataaccess;
 
 /**
  * Apache Derby database access

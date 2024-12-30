@@ -13,10 +13,10 @@ public class BackDoorClient extends Application {
     public void start(Stage stage) {
         final List<String> args = getParameters().getRaw();
         // If the first argument exists, use it as StockReadWriter's URL, otherwise use the default URL.
-        final String stockURL = args.isEmpty() ? Names.STOCK_RW : args.getFirst();
+        final String stockURL = args.isEmpty() ? Names.STOCK_DAO : args.getFirst();
 
         RemoteMiddleFactory rmf = new RemoteMiddleFactory();
-        rmf.setStockRWInfo(stockURL);
+        rmf.setStockURL(stockURL);
 
         stage.setTitle("BackDoor Client (MVC RMI)");
 

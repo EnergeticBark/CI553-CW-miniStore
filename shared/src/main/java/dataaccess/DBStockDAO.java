@@ -1,9 +1,9 @@
-package dbAccess;
+package dataaccess;
 
 import catalogue.Product;
 import debug.DEBUG;
 import middle.StockException;
-import middle.StockReader;
+import middle.StockDAO;
 import remote.RemoteStockReader;
 
 import java.sql.*;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockReader implements StockReader, RemoteStockReader {
+public class DBStockDAO implements StockDAO, RemoteStockReader {
     final private Connection theCon; // Connection to database
 
     /**
@@ -31,7 +31,7 @@ public class DBStockReader implements StockReader, RemoteStockReader {
      * Uses a factory method to help set up the connection
      * @throws StockException if problem
      */
-    public DBStockReader() throws StockException {
+    public DBStockDAO() throws StockException {
         try {
             DBAccess dbDriver = (new DBAccessFactory()).getNewDBAccess();
             dbDriver.loadDriver();
@@ -72,7 +72,7 @@ public class DBStockReader implements StockReader, RemoteStockReader {
             ResultSet rs = statement.executeQuery();
 
             boolean res = rs.next();
-            DEBUG.trace("DB DBStockReader: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
+            DEBUG.trace("DB DBStockDAO: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
             return res;
         } catch (SQLException e) {
             throw new StockException("SQL exists: " + e.getMessage());
@@ -139,6 +139,66 @@ public class DBStockReader implements StockReader, RemoteStockReader {
             );
         } catch (SQLException e) {
             throw new StockException("SQL getDetails: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Modifies Stock details for a given product number.
+     *  Assumed to exist in database.
+     * Information modified: Description, Price
+     * @param detail Product details to change stock list to
+     */
+    public synchronized void modifyStock(Product detail) throws StockException {
+        final String insertProductQuery = "INSERT INTO ProductTable VALUES (?, ?, ?, ?)";
+        final String insertStockQuery = "INSERT INTO StockTable VALUES (?, ?)";
+
+        final String updateProductQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
+        final String updateStockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
+
+        DEBUG.trace("DB DBStockReadWriter: modifyStock(%s)", detail.getProductNumber());
+        try {
+            if (!exists(detail.getProductNumber())) {
+                try (
+                        PreparedStatement insertProductStatement = getConnectionObject()
+                                .prepareStatement(insertProductQuery);
+                        PreparedStatement insertStockStatement = getConnectionObject()
+                                .prepareStatement(insertStockQuery)
+                ) {
+                    insertProductStatement.setString(1, detail.getProductNumber());
+                    insertProductStatement.setString(2, detail.getDescription());
+                    insertProductStatement.setString(
+                            3,
+                            "images/Pic" + detail.getProductNumber() + ".jpg"
+                    );
+                    insertProductStatement.setDouble(
+                            4,
+                            detail.getPrice()
+                    );
+                    insertProductStatement.executeUpdate();
+
+                    insertStockStatement.setString(1, detail.getProductNumber());
+                    insertStockStatement.setInt(2, detail.getQuantity());
+                    insertStockStatement.executeUpdate();
+                }
+            } else {
+                try (
+                        PreparedStatement updateProductStatement = getConnectionObject()
+                                .prepareStatement(updateProductQuery);
+                        PreparedStatement updateStockStatement = getConnectionObject()
+                                .prepareStatement(updateStockQuery)
+                ) {
+                    updateProductStatement.setString(1, detail.getDescription());
+                    updateProductStatement.setDouble(2, detail.getPrice());
+                    updateProductStatement.setString(3, detail.getProductNumber());
+                    updateProductStatement.executeUpdate();
+
+                    updateStockStatement.setInt(1, detail.getQuantity());
+                    updateStockStatement.setString(2, detail.getProductNumber());
+                    updateStockStatement.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            throw new StockException("SQL modifyStock: " + e.getMessage());
         }
     }
 }

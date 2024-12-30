@@ -1,4 +1,4 @@
-package dbAccess;
+package dataaccess;
 
 /**
  * Implements management of an Apache Derby database.

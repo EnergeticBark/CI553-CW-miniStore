@@ -2,20 +2,20 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductDoesNotExistException;
+import middle.StockDAO;
 import middle.StockException;
-import middle.StockReader;
 
 public class GetProductByNumber {
-    private final StockReader stockReader;
+    private final StockDAO stockDAO;
 
-    public GetProductByNumber(StockReader stockReader) {
-        this.stockReader = stockReader;
+    public GetProductByNumber(StockDAO stockDAO) {
+        this.stockDAO = stockDAO;
     }
 
     public Product run(String productNumber) throws ProductDoesNotExistException, StockException {
-        if (!stockReader.exists(productNumber)) {
+        if (!stockDAO.exists(productNumber)) {
             throw new ProductDoesNotExistException();
         }
-        return stockReader.getDetails(productNumber);
+        return stockDAO.getDetails(productNumber);
     }
 }

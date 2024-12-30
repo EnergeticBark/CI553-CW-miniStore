@@ -1,9 +1,7 @@
-import dbAccess.DBStockReadWriter;
-import dbAccess.DBStockReader;
+import dataaccess.DBStockDAO;
 import middle.Names;
 import orders.Order;
 import remote.RemoteOrderProcessor;
-import remote.RemoteStockReadWriter;
 import remote.RemoteStockReader;
 
 import java.net.InetAddress;
@@ -19,23 +17,18 @@ import java.rmi.server.UnicastRemoteObject;
 class Server {
     public static void main(String[] args) {
         String stockReaderURL = args.length < 1
-                ? Names.STOCK_R // default location
+                ? Names.STOCK_DAO // default location
                 : args[0]; // supplied location
 
-        String stockReadWriterURL = args.length < 2
-                ? Names.STOCK_RW // default location
+        String orderProcessorURL = args.length < 2
+                ? Names.ORDER // default location
                 : args[1]; // supplied location
 
-        String orderProcessorURL = args.length < 3
-                ? Names.ORDER // default location
-                : args[2]; // supplied location
-
-        (new Server()).bind(stockReaderURL, stockReadWriterURL, orderProcessorURL);
+        (new Server()).bind(stockReaderURL, orderProcessorURL);
     }
 
-    private void bind(String stockReaderURL, String stockReadWriterURL, String orderProcessorURL) {
+    private void bind(String stockReaderURL, String orderProcessorURL) {
         RemoteStockReader theStockR; // Remote stock object
-        RemoteStockReadWriter theStockRW; // Remote stock object
         RemoteOrderProcessor theOrder; // Remote order object
         System.out.println("Server: "); // Introduction
         try {
@@ -48,15 +41,10 @@ class Server {
         }
 
         try {
-            theStockR = new DBStockReader(); // Stock R
+            theStockR = new DBStockDAO(); // Stock R
             UnicastRemoteObject.exportObject(theStockR, 0);
             Naming.rebind(stockReaderURL, theStockR); // bind to url
-            System.out.println("DBStockReader bound to: " + stockReaderURL); // Inform world
-
-            theStockRW = new DBStockReadWriter(); // Stock RW
-            UnicastRemoteObject.exportObject(theStockRW, 0);
-            Naming.rebind(stockReadWriterURL, theStockRW); // bind to url
-            System.out.println("DBStockReadWriter bound to: " + stockReadWriterURL); // Inform world
+            System.out.println("DBStockDAO bound to: " + stockReaderURL); // Inform world
 
             theOrder = new Order(); // Order
             UnicastRemoteObject.exportObject(theOrder, 0);

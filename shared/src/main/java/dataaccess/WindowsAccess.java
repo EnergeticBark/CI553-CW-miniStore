@@ -1,4 +1,4 @@
-package dbAccess;
+package dataaccess;
 
 /**
  * Implements management of a Microsoft Access database.

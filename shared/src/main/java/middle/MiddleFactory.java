@@ -13,18 +13,11 @@ package middle;
 // Pattern: Abstract Factory
 public interface MiddleFactory {
     /**
-     * Return an object to access the database for read only access
-     * @return instance of StockReader
+     * Return an object to access the database.
+     * @return instance of StockDAO
      * @throws StockException if issue
      */
-    StockReader makeStockReader() throws StockException;
-
-    /**
-     * Return an object to access the database for read/write access
-     * @return instance of StockReadWriter
-     * @throws StockException if issue
-     */
-    StockReadWriter makeStockReadWriter() throws StockException;
+    StockDAO makeStockDAO() throws StockException;
 
     /**
      * Return an object to access the order processing system

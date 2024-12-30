@@ -16,12 +16,12 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class StockReaderProvider implements StockReader {
+public class StockDAOProvider implements StockDAO {
     private RemoteStockReader stub = null;
     private final String url;
 
-    public StockReaderProvider(String url) {
-        DEBUG.trace("StockReaderProvider: %s", url);
+    public StockDAOProvider(String url) {
+        DEBUG.trace("StockDAOProvider: %s", url);
         this.url = url;
     }
 
@@ -41,7 +41,7 @@ public class StockReaderProvider implements StockReader {
      * @return true if exists otherwise false
      */
     public synchronized boolean exists(String number) throws StockException {
-        DEBUG.trace("StockReaderProvider:exists()");
+        DEBUG.trace("StockDAOProvider:exists()");
         try {
             if (stub == null) {
                 connect();
@@ -54,7 +54,7 @@ public class StockReaderProvider implements StockReader {
     }
 
     public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
-        DEBUG.trace("StockReaderProvider:searchByDescription()");
+        DEBUG.trace("StockDAOProvider:searchByDescription()");
         try {
             if (stub == null) {
                 connect();
@@ -71,12 +71,31 @@ public class StockReaderProvider implements StockReader {
      * @return StockNumber, Description, Price, Quantity
      */
     public synchronized Product getDetails(String number) throws StockException {
-        DEBUG.trace("StockReaderProvider:getDetails()");
+        DEBUG.trace("StockDAOProvider:getDetails()");
         try {
             if (stub == null) {
                 connect();
             }
             return stub.getDetails(number);
+        } catch (RemoteException e) {
+            stub = null;
+            throw new StockException("Net: " + e.getMessage());
+        }
+    }
+
+    /**
+     * Modifies Stock details for a given product number.
+     * Information modified: Description, Price
+     * @param detail Replace with this version of product
+     * @throws middle.StockException if issue
+     */
+    public synchronized void modifyStock(Product detail) throws StockException {
+        DEBUG.trace("StockDAOProvider:modifyStock()");
+        try {
+            if (stub == null) {
+                connect();
+            }
+            stub.modifyStock(detail);
         } catch (RemoteException e) {
             stub = null;
             throw new StockException("Net: " + e.getMessage());

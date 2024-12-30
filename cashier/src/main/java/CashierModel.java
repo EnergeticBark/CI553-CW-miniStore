@@ -20,7 +20,7 @@ public class CashierModel {
     private Product product = null; // Current product
     private Basket theBasket = null; // Bought items
 
-    private StockReadWriter theStock = null;
+    private StockDAO stockDAO = null;
     private OrderProcessor theOrder = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
@@ -32,7 +32,7 @@ public class CashierModel {
      */
     public CashierModel(MiddleFactory mf) {
         try {
-            theStock = mf.makeStockReadWriter(); // Database access
+            stockDAO = mf.makeStockDAO(); // Database access
             theOrder = mf.makeOrderProcessing(); // Process order
         } catch (Exception e) {
             DEBUG.error("CashierModel.constructor\n%s", e.getMessage());
@@ -67,7 +67,7 @@ public class CashierModel {
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
             // Remember prod.
-            product = new GetProductByNumber(theStock).run(trimmedProductNumber);
+            product = new GetProductByNumber(stockDAO).run(trimmedProductNumber);
             new EnsureEnoughStock().run(product, 1);
 
             state = State.checked; // OK await BUY
@@ -94,7 +94,7 @@ public class CashierModel {
                 return;
             }
 
-            new BuyStock(theStock).run(product.getProductNumber(), 1);
+            new BuyStock(stockDAO).run(product.getProductNumber(), 1);
 
             makeBasketIfReq(); // new Basket ?
             theBasket.add(product); // Add to bought

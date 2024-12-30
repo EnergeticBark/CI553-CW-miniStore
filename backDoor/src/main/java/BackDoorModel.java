@@ -5,8 +5,8 @@ import debug.DEBUG;
 import exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
+import middle.StockDAO;
 import middle.StockException;
-import middle.StockReadWriter;
 import usecases.GetProductByNumber;
 import usecases.RestockProduct;
 
@@ -16,7 +16,7 @@ import usecases.RestockProduct;
 public class BackDoorModel {
     private Basket theBasket = null; // Bought items
 
-    private StockReadWriter theStock = null;
+    private StockDAO stockDAO = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
@@ -27,7 +27,7 @@ public class BackDoorModel {
      */
     public BackDoorModel(MiddleFactory mf) {
         try {
-            theStock = mf.makeStockReadWriter(); // Database access
+            stockDAO = mf.makeStockDAO(); // Database access
         } catch (Exception e) {
             DEBUG.error("CustomerModel.constructor\n%s", e.getMessage());
         }
@@ -56,7 +56,7 @@ public class BackDoorModel {
     public void query(String productNumber) {
         String trimmedProductNumber = productNumber.trim();
         try {
-            Product product = new GetProductByNumber(theStock).run(trimmedProductNumber);
+            Product product = new GetProductByNumber(stockDAO).run(trimmedProductNumber);
             fireAction(product.showDetails());
         } catch (ProductDoesNotExistException e) {
             fireAction("Unknown product number " + trimmedProductNumber);
@@ -77,7 +77,7 @@ public class BackDoorModel {
 
         try {
             int amount = Integer.parseUnsignedInt(trimmedQuantity);
-            Product product = new RestockProduct(theStock).run(trimmedProductNumber, amount);
+            Product product = new RestockProduct(stockDAO).run(trimmedProductNumber, amount);
 
             theBasket.add(product);
             fireAction("");

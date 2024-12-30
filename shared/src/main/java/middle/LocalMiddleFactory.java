@@ -5,8 +5,7 @@
 
 package middle;
 
-import dbAccess.DBStockReader;
-import dbAccess.DBStockReadWriter;
+import dataaccess.DBStockDAO;
 import orders.Order;
 
 /**
@@ -16,30 +15,18 @@ import orders.Order;
 
 // Pattern: Abstract Factory
 public class LocalMiddleFactory implements MiddleFactory {
-    private static DBStockReader dbStockReader = null;
-    private static DBStockReadWriter dbStockReadWriter = null;
+    private static DBStockDAO dbStockReader = null;
     private static Order order = null;
 
     /**
-     * Return an object to access the database for read only access.
+     * Return an object to access the database.
      * All users share this same object.
      */
-    public StockReader makeStockReader() throws StockException {
+    public StockDAO makeStockDAO() throws StockException {
         if (dbStockReader == null) {
-            dbStockReader = new DBStockReader();
+            dbStockReader = new DBStockDAO();
         }
         return dbStockReader;
-    }
-
-    /**
-     * Return an object to access the database for read/write access.
-     * All users share this same object.
-     */
-    public StockReadWriter makeStockReadWriter() throws StockException {
-        if (dbStockReadWriter == null) {
-            dbStockReadWriter = new DBStockReadWriter();
-        }
-        return dbStockReadWriter;
     }
 
     /**

@@ -18,12 +18,12 @@ public class PackingClient extends Application {
         final List<String> args = getParameters().getRaw();
         // If the first or second arguments exist, use them as StockReadWriter and Order's URLs.
         // Otherwise, use their default URLs.
-        String stockURL = args.isEmpty() ? Names.STOCK_RW : args.getFirst();
+        String stockURL = args.isEmpty() ? Names.STOCK_DAO : args.getFirst();
         String orderURL = args.size() < 2 ? Names.ORDER : args.get(1);
 
         RemoteMiddleFactory rmf = new RemoteMiddleFactory();
-        rmf.setStockRWInfo(stockURL);
-        rmf.setOrderInfo(orderURL);
+        rmf.setStockURL(stockURL);
+        rmf.setOrderURL(orderURL);
 
         stage.setTitle("Packing Client (RMI MVC)");
 
