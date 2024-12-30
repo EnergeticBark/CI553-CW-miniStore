@@ -13,10 +13,10 @@ import java.util.Comparator;
 public class Product implements Serializable {
     @Serial
     private static final long serialVersionUID = 20092506;
-    private String productNumber; // Product number
-    private String description; // Description of product
+    private final String productNumber; // Product number
+    private final String description; // Description of product
     private String picture = "default.jpg"; // Filename of the product picture
-    private double price; // Price of product
+    private final double price; // Price of product
     private int quantity; // Quantity involved
 
     public static final Comparator<Product> sortByNumber = Comparator.comparing(Product::getProductNumber);
@@ -59,18 +59,20 @@ public class Product implements Serializable {
         return quantity;
     }
 
-    public void setProductNumber(String productNumber) {
-        this.productNumber = productNumber;
+    public Product take(int amount) {
+        quantity -= amount;
+        return new Product(productNumber, description, picture, price, amount);
     }
-    public void setDescription(String description) {
-        this.description = description;
+
+    public String showDetails() {
+        return String.format(
+                "%s : %7.2f (%2d) ",
+                getDescription(),
+                getPrice(),
+                getQuantity()
+        );
     }
-    public void setPicture(String picture) {
-        this.picture = picture;
-    }
-    public void setPrice(double price) {
-        this.price = price;
-    }
+
     public void setQuantity(int quantity) {
         this.quantity = quantity;
     }

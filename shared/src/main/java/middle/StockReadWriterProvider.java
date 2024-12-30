@@ -36,24 +36,6 @@ public class StockReadWriterProvider extends StockReaderProvider implements Stoc
     }
 
     /**
-     * Buys stock and hence decrements number in stock list
-     * @return StockNumber, Description, Price, Quantity
-     * @throws StockException if remote exception
-     */
-    public boolean buyStock(String number, int amount) throws StockException {
-        DEBUG.trace("StockReadWriterProvider:buyStock()");
-        try {
-            if (stub == null) {
-                connect();
-            }
-            return stub.buyStock(number, amount);
-        } catch (RemoteException e) {
-            stub = null;
-            throw new StockException("Net: " + e.getMessage());
-        }
-    }
-
-    /**
      * Adds (Restocks) stock to the product list
      * @param number Stock number
      * @param amount of stock

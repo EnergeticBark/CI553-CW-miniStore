@@ -6,7 +6,9 @@ import exceptions.ProductDoesNotExistException;
 import exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.*;
-import usecases.GetStockIfAvailable;
+import usecases.BuyStock;
+import usecases.EnsureEnoughStock;
+import usecases.GetProductByNumber;
 
 /**
  * Implements the Model of the cashier client
@@ -14,8 +16,8 @@ import usecases.GetStockIfAvailable;
 public class CashierModel {
     private enum State { process, checked }
 
-    private State theState; // Current state
-    private Product theProduct = null; // Current product
+    private State state; // Current state
+    private Product product = null; // Current product
     private Basket theBasket = null; // Bought items
 
     private StockReadWriter theStock = null;
@@ -35,7 +37,7 @@ public class CashierModel {
         } catch (Exception e) {
             DEBUG.error("CashierModel.constructor\n%s", e.getMessage());
         }
-        theState = State.process; // Current state
+        state = State.process; // Current state
     }
 
     // Tell the CashierView that the model has changed, so it needs to redraw.
@@ -61,18 +63,21 @@ public class CashierModel {
      * @param productNumber The product number
      */
     public void checkStock(String productNumber) {
-        theState = State.process; // State process
+        state = State.process; // State process
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
             // Remember prod.
-            theProduct = new GetStockIfAvailable(theStock).run(trimmedProductNumber, 1);
-            theState = State.checked; // OK await BUY
+            product = new GetProductByNumber(theStock).run(trimmedProductNumber);
+            new EnsureEnoughStock().run(product, 1);
+
+            state = State.checked; // OK await BUY
             // Display product in action label.
             fireAction(String.format("%s : %7.2f (%2d) ",
-                    theProduct.getDescription(),
-                    theProduct.getPrice(),
-                    theProduct.getQuantity()
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.getQuantity()
             ));
+            product.setQuantity(1);
         } catch (ProductOutOfStockException e) {
             fireAction(e.getMessage() + " not in stock");
         } catch (ProductDoesNotExistException _) {
@@ -88,30 +93,23 @@ public class CashierModel {
      */
     public void buy() {
         try {
-            if (theState != State.checked) { // Not checked
-                // with customer
+            if (state != State.checked) { // Not checked with customer
                 fireAction("please check its availability");
                 return;
             }
 
-            boolean stockBought = theStock.buyStock(
-                    theProduct.getProductNumber(),
-                    theProduct.getQuantity()
-            );
-            // Buy however may fail
-            if (!stockBought) { // Stock not bought
-                fireAction("!!! Not in stock"); // Now no stock
-                return;
-            }
+            new BuyStock(theStock).run(product.getProductNumber(), 1);
 
             makeBasketIfReq(); // new Basket ?
-            theBasket.add(theProduct); // Add to bought
-            fireAction("Purchased " + theProduct.getDescription());
+            theBasket.add(product); // Add to bought
+            fireAction("Purchased " + product.getDescription());
+        } catch (ProductOutOfStockException _) {
+            fireAction("!!! Not in stock");
         } catch (StockException e) {
             DEBUG.error("%s\n%s", "CashierModel.doBuy", e.getMessage());
             fireAction(e.getMessage());
         }
-        theState = State.process; // All Done
+        state = State.process; // All Done
     }
 
     /**
@@ -124,7 +122,7 @@ public class CashierModel {
                 theOrder.newOrder(theBasket); // Process order
             }
             theBasket = null;
-            theState = State.process; // All Done
+            state = State.process; // All Done
             fireAction("Start New Order");
         } catch (OrderException e) {
             DEBUG.error("%s\n%s", "CashierModel.doCancel", e.getMessage());

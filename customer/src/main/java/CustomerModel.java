@@ -8,7 +8,9 @@ import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReader;
-import usecases.GetStockIfAvailable;
+import usecases.EnsureEnoughStock;
+import usecases.GetProductByNumber;
+import usecases.GetProductsBySearch;
 
 import java.util.List;
 
@@ -61,15 +63,12 @@ public class CustomerModel {
         basket.clear(); // Clear stock list.
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
-            Product product = new GetStockIfAvailable(stockReader).run(trimmedProductNumber, 1);
+            Product product = new GetProductByNumber(stockReader).run(trimmedProductNumber);
+            new EnsureEnoughStock().run(product, 1);
 
             // Display
-            final String actionMessage = String.format(
-                    "%s : %7.2f (%2d) ",
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getQuantity()
-            );
+            final String actionMessage = product.showDetails();
+            product.setQuantity(1); // Shouldn't have to do this, but have to match original behaviour.
             basket.add(product); // Add to basket
             picture.setValue(product.getPicture());
             fireAction(actionMessage);
@@ -90,29 +89,20 @@ public class CustomerModel {
         basket.clear(); // Clear stock list.
         final String trimmedQuery = searchQuery.trim();
         try {
-            List<Product> products = stockReader.searchByDescription(trimmedQuery);
-            if (products.isEmpty()) { // No search results?
-                fireAction("No results for \"" + searchQuery + "\"");
-                return;
-            }
-
-            Product pr = products.getFirst();
-            if (pr.getQuantity() < 1) { // Out of stock?
-                fireAction(pr.getDescription() + " not in stock");
-                return;
-            }
+            List<Product> products = new GetProductsBySearch(stockReader).run(trimmedQuery);
+            Product firstResult = products.getFirst();
+            new EnsureEnoughStock().run(firstResult, 1);
 
             // Display
-            final String actionMessage = String.format(
-                    "%s : %7.2f (%2d) ",
-                    pr.getDescription(),
-                    pr.getPrice(),
-                    pr.getQuantity()
-            );
-            pr.setQuantity(1); // Require 1
-            basket.add(pr); // Add to basket
-            picture.setValue(pr.getPicture());
+            final String actionMessage = firstResult.showDetails();
+            firstResult.setQuantity(1); // Require 1
+            basket.add(firstResult); // Add to basket
+            picture.setValue(firstResult.getPicture());
             fireAction(actionMessage);
+        } catch (ProductOutOfStockException e) {
+            fireAction(e.getMessage() + " not in stock");
+        } catch (ProductDoesNotExistException _) {
+            fireAction("No results for \"" + trimmedQuery + "\"");
         } catch (StockException e) {
             DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
         }

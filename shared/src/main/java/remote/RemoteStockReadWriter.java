@@ -12,7 +12,6 @@ import java.rmi.RemoteException;
  * @version 2.0
  */
 public interface RemoteStockReadWriter extends RemoteStockReader {
-    boolean buyStock(String number, int amount) throws RemoteException, StockException;
     void addStock(String number, int amount) throws RemoteException, StockException;
     void modifyStock(Product detail) throws RemoteException, StockException;
 }

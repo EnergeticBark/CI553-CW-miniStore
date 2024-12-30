@@ -10,16 +10,6 @@ import catalogue.Product;
 
 public interface StockReadWriter extends StockReader {
     /**
-     * Customer buys stock,
-     * stock level is thus decremented by amount bought.
-     * @param pNum Product number
-     * @param amount Quantity of product
-     * @return StockNumber, Description, Price, Quantity
-     * @throws middle.StockException if issue
-     */
-    boolean buyStock(String pNum, int amount) throws StockException;
-
-    /**
      * Adds stock (Restocks) to store.
      * @param pNum Product number
      * @param amount Quantity of product

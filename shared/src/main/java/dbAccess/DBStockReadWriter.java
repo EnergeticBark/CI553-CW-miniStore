@@ -29,33 +29,6 @@ public class DBStockReadWriter extends DBStockReader implements StockReadWriter,
     }
 
     /**
-     * Customer buys stock, quantity decreased if successful.
-     * @param pNum Product number
-     * @param amount Amount of stock bought
-     * @return true if succeeds else false
-     */
-    public synchronized boolean buyStock(String pNum, int amount) throws StockException {
-        final String query = """
-                UPDATE StockTable SET stockLevel = stockLevel - ?
-                WHERE productNo = ? AND stockLevel >= ?
-                """;
-
-        DEBUG.trace("DB DBStockReadWriter: buyStock(%s,%d)", pNum, amount);
-        int updates;
-        try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            statement.setInt(1, amount);
-            statement.setString(2, pNum);
-            statement.setInt(3, amount);
-            statement.executeUpdate();
-            updates = statement.getUpdateCount();
-        } catch (SQLException e) {
-            throw new StockException("SQL buyStock: " + e.getMessage());
-        }
-        DEBUG.trace("buyStock() updates -> %n", updates);
-        return updates > 0; // success?
-    }
-
-    /**
      * Adds stock (Re-stocks) to the store.
      *  Assumed to exist in database.
      * @param pNum Product number
