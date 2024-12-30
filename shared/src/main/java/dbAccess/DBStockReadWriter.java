@@ -29,28 +29,6 @@ public class DBStockReadWriter extends DBStockReader implements StockReadWriter,
     }
 
     /**
-     * Adds stock (Re-stocks) to the store.
-     *  Assumed to exist in database.
-     * @param pNum Product number
-     * @param amount Amount of stock to add
-     */
-    public synchronized void addStock(String pNum, int amount) throws StockException {
-        final String query = """
-                UPDATE StockTable SET stockLevel = stockLevel + ?
-                WHERE productNo = ?
-                """;
-
-        try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            statement.setInt(1, amount);
-            statement.setString(2, pNum);
-            statement.executeUpdate();
-            DEBUG.trace("DB DBStockReadWriter: addStock(%s,%d)", pNum, amount);
-        } catch (SQLException e) {
-            throw new StockException("SQL addStock: " + e.getMessage());
-        }
-    }
-
-    /**
      * Modifies Stock details for a given product number.
      *  Assumed to exist in database.
      * Information modified: Description, Price

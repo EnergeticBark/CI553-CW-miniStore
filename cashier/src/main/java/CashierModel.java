@@ -72,11 +72,7 @@ public class CashierModel {
 
             state = State.checked; // OK await BUY
             // Display product in action label.
-            fireAction(String.format("%s : %7.2f (%2d) ",
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getQuantity()
-            ));
+            fireAction(product.showDetails());
             product.setQuantity(1);
         } catch (ProductOutOfStockException e) {
             fireAction(e.getMessage() + " not in stock");

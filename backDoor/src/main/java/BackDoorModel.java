@@ -2,10 +2,13 @@ import catalogue.Basket;
 import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
+import exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockReadWriter;
+import usecases.GetProductByNumber;
+import usecases.RestockProduct;
 
 /**
  * Implements the Model of the back door client
@@ -53,17 +56,10 @@ public class BackDoorModel {
     public void query(String productNumber) {
         String trimmedProductNumber = productNumber.trim();
         try {
-            if (!theStock.exists(trimmedProductNumber)) { // Product doesn't exist?
-                fireAction("Unknown product number " + trimmedProductNumber);
-                return;
-            }
-
-            Product product = theStock.getDetails(trimmedProductNumber);
-            fireAction(String.format("%s : %7.2f (%2d) ",
-                    product.getDescription(),
-                    product.getPrice(),
-                    product.getQuantity()
-            ));
+            Product product = new GetProductByNumber(theStock).run(trimmedProductNumber);
+            fireAction(product.showDetails());
+        } catch (ProductDoesNotExistException e) {
+            fireAction("Unknown product number " + trimmedProductNumber);
         } catch (StockException e) {
             fireAction(e.getMessage());
         }
@@ -78,24 +74,17 @@ public class BackDoorModel {
         theBasket = makeBasket();
         String trimmedProductNumber = productNumber.trim();
         String trimmedQuantity = quantity.trim();
-        int amount;
-        try {
-            amount = Integer.parseUnsignedInt(trimmedQuantity);
-        } catch (NumberFormatException e) {
-            fireAction("Invalid quantity");
-            return;
-        }
 
         try {
-            if (!theStock.exists(trimmedProductNumber)) { // Product doesn't exist?
-                fireAction("Unknown product number " + trimmedProductNumber);
-                return;
-            }
+            int amount = Integer.parseUnsignedInt(trimmedQuantity);
+            Product product = new RestockProduct(theStock).run(trimmedProductNumber, amount);
 
-            theStock.addStock(trimmedProductNumber, amount); // Re stock
-            Product product = theStock.getDetails(trimmedProductNumber); // Get details
             theBasket.add(product);
             fireAction("");
+        } catch (NumberFormatException e) {
+            fireAction("Invalid quantity");
+        } catch (ProductDoesNotExistException _) {
+            fireAction("Unknown product number " + trimmedProductNumber);
         } catch (StockException e) {
             fireAction(e.getMessage());
         }

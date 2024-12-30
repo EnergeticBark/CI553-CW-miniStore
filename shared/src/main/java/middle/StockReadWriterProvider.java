@@ -36,25 +36,6 @@ public class StockReadWriterProvider extends StockReaderProvider implements Stoc
     }
 
     /**
-     * Adds (Restocks) stock to the product list
-     * @param number Stock number
-     * @param amount of stock
-     * @throws StockException if remote exception
-     */
-    public void addStock(String number, int amount) throws StockException {
-        DEBUG.trace("StockReadWriterProvider:addStock()");
-        try {
-            if (stub == null) {
-                connect();
-            }
-            stub.addStock(number, amount);
-        } catch (RemoteException e) {
-            stub = null;
-            throw new StockException("Net: " + e.getMessage());
-        }
-    }
-
-    /**
      * Modifies Stock details for a given product number.
      * Information modified: Description, Price
      * @param detail Stock details to be modified

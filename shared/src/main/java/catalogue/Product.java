@@ -63,6 +63,9 @@ public class Product implements Serializable {
         quantity -= amount;
         return new Product(productNumber, description, picture, price, amount);
     }
+    public void add(int amount) {
+        this.quantity += amount;
+    }
 
     public String showDetails() {
         return String.format(

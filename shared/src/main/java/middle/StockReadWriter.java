@@ -10,14 +10,6 @@ import catalogue.Product;
 
 public interface StockReadWriter extends StockReader {
     /**
-     * Adds stock (Restocks) to store.
-     * @param pNum Product number
-     * @param amount Quantity of product
-     * @throws middle.StockException if issue
-     */
-    void addStock(String pNum, int amount) throws StockException;
-
-    /**
      * Modifies Stock details for a given product number.
      * Information modified: Description, Price
      * @param detail Replace with this version of product
