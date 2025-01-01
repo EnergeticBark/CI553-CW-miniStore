@@ -1,10 +1,12 @@
 import javafx.geometry.Insets;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
 
 /**
@@ -12,14 +14,8 @@ import javafx.stage.Stage;
  */
 public class CustomerView {
     // Width and height of the window in pixels.
-    private static final int WIDTH = 420;
-    private static final int HEIGHT = 270;
-
-    // Width and height of the button in pixels.
-    private static final int BUTTON_WIDTH = 80;
-    private static final int BUTTON_HEIGHT = 35;
-
-    private final TextField inputField = new TextField();
+    private static final int WIDTH = 500;
+    private static final int HEIGHT = 360;
 
     private CustomerController controller = null;
 
@@ -34,7 +30,46 @@ public class CustomerView {
         stage.setX(x);
         stage.setY(y);
 
-        HBox hBox = new HBox(
+        Label title = new Label("Search by Keyword or Product Number.");
+        title.setId("title");
+        TextField searchBar = new TextField();
+        searchBar.promptTextProperty().setValue("\"TV\" or \"0001\"");
+        HBox.setHgrow(searchBar, Priority.ALWAYS);
+        Button searchButton = new Button("Search");
+        Button clearButton = new Button("Clear");
+        HBox searchControls = new HBox(searchBar, searchButton, clearButton);
+        searchControls.setId("search-controls");
+        VBox searchPane = new VBox(title, searchControls);
+        searchPane.setId("search-pane");
+
+        Separator separator = new Separator();
+
+        ImageView imageView = new ImageView(new Image("images/pic0001.jpg", 90, 90, false, false));
+        Pane pictureFrame = new Pane(imageView);
+        pictureFrame.setId("picture-frame");
+        pictureFrame.setMinSize(80, 80);
+        Label productTitle = new Label("Panasonic Blu-ray");
+        productTitle.setId("product-title");
+        Label productPrice = new Label("$99.00");
+        productPrice.setId("product-price");
+        Label productDescription = new Label("Panasonic Blu-ray ninty-nine dollars. H-H-H-H-H-H-H-H-gregg");
+        productDescription.setId("product-description");
+        Label productQuantity = new Label("Qty. In Stock: 63");
+        Pane spacer = new Pane();
+        spacer.setId("spacer");
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+        productQuantity.setId("product-quantity");
+        Label productNumber = new Label("Product#:  0009");
+        HBox productFooter = new HBox(productQuantity, spacer, productNumber);
+        productFooter.setId("product-footer");
+        VBox productDetails = new VBox(productTitle, productPrice, productDescription, productFooter);
+        HBox productPane = new HBox(pictureFrame, productDetails);
+        productPane.setId("product-pane");
+
+        VBox vBox = new VBox(searchPane, separator, productPane);
+
+
+        /*HBox hBox = new HBox(
                 makeLeftPane(model),
                 makeRightPane(model)
         );
@@ -42,14 +77,20 @@ public class CustomerView {
         hBox.setSpacing(16);
 
         // Create scene, specifying the size of the window.
-        Scene scene = new Scene(hBox, WIDTH, HEIGHT);
+        */Scene scene = new Scene(vBox, WIDTH, HEIGHT);
+        stage.setMinWidth(WIDTH);
+        stage.setMinHeight(HEIGHT);
+        scene.getStylesheets().add("css/customer.css");
         stage.setScene(scene);
+        /*
 
-        inputField.requestFocus();
+        inputField.requestFocus();*/
+
+
         stage.show();
     }
 
-    private VBox makeLeftPane(CustomerModel model) {
+    /*private VBox makeLeftPane(CustomerModel model) {
         Button checkButton = new Button("Check");
         checkButton.setOnAction(_ -> controller.checkStock(inputField.getText()));
         checkButton.setMinSize(Control.USE_PREF_SIZE, Control.USE_PREF_SIZE);
@@ -94,7 +135,7 @@ public class CustomerView {
         VBox vBox = new VBox(pageTitle, actionLabel, inputField, outputText);
         vBox.setSpacing(10);
         return vBox;
-    }
+    }*/
 
     /**
      * The controller object, used so that an interaction can be passed to the controller
