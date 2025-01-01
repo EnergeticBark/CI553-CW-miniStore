@@ -35,7 +35,7 @@
     -fx-background-color: white;
 }
 
-#product-title {
+#product-description {
     -fx-font-size: 26px;
 }
 
@@ -44,13 +44,7 @@
     -fx-font-weight: bold;
 }
 
-#product-description {
-    -fx-wrap-text: true;
-    -fx-min-height: 64px;
-    -fx-alignment: top-left;
-}
-
 #product-footer {
     -fx-font-size: 16px;
-    -fx-alignment: bottom-right;
+    -fx-padding: 16px 0 0 0;
 }
