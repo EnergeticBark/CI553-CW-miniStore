@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Defines the RMI interface for the Order object.
+ * Defines the RMI interface for the OrderProcessor.
  * Like OrderProcessor, but each method could throw a RemoteException.
  * @author  Mike Smith University of Brighton
  * @version 2.0

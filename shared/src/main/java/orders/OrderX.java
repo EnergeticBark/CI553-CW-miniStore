@@ -15,7 +15,7 @@ import java.util.Formatter;
 
 /**
  * <BR>-----------------------------------------
- * <BR>ALTERNATIVE IMPLEMENTATION OF class Order
+ * <BR>ALTERNATIVE IMPLEMENTATION OF class OrderProcessor
  * <BR>-----------------------------------------
  * <P>
  * The order processing system.<BR>
@@ -75,7 +75,7 @@ public class OrderX implements OrderProcessor {
         DEBUG.trace("DEBUG: New order");
         theWaitingTray.add(bought);
         for (Basket bl: theWaitingTray) {
-            DEBUG.trace("Order: " + asString(bl));
+            DEBUG.trace("OrderProcessor: " + asString(bl));
         }
     }
 
@@ -100,11 +100,11 @@ public class OrderX implements OrderProcessor {
      * picked and the products are now being delivered to the
      * collection desk
      * @param  orderNum the order that has been picked
-     * @return true :: Order in system, false -:: no such order
+     * @return true :: OrderProcessor in system, false -:: no such order
      */
     public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
         // You need to modify and fill in the correct code
-        DEBUG.trace("DEBUG: Order picked [%d]", orderNum);
+        DEBUG.trace("DEBUG: OrderProcessorImpl picked [%d]", orderNum);
         for (int i = 0; i < theBeingPickedTray.size(); i++) {
             if (theBeingPickedTray.get(i).getOrderNum() == orderNum) {
                 Basket picked = theBeingPickedTray.remove(i);
@@ -118,11 +118,11 @@ public class OrderX implements OrderProcessor {
     /**
      * Informs the order processing system that the order has been
      * collected by the customer
-     * @return true :: Order in system, false -:: no such order
+     * @return true :: OrderProcessor in system, false -:: no such order
      */
     public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
         // You need to modify and fill in the correct code
-        DEBUG.trace("DEBUG: Order collected [%d]", orderNum);
+        DEBUG.trace("DEBUG: OrderProcessor collected [%d]", orderNum);
         for (int i = 0; i < theToBeCollectedTray.size(); i++) {
             if (theToBeCollectedTray.get(i).getOrderNum() == orderNum) {
                 theToBeCollectedTray.remove(i);

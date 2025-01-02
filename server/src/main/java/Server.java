@@ -1,6 +1,6 @@
 import dataaccess.DBStockDAO;
 import middle.Names;
-import orders.Order;
+import orders.OrderProcessorImpl;
 import remote.RemoteOrderProcessor;
 import remote.RemoteStockDAO;
 
@@ -46,10 +46,10 @@ class Server {
             Naming.rebind(stockReaderURL, theStockR); // bind to url
             System.out.println("DBStockDAO bound to: " + stockReaderURL); // Inform world
 
-            theOrder = new Order(); // Order
+            theOrder = new OrderProcessorImpl(); // OrderProcessorImpl
             UnicastRemoteObject.exportObject(theOrder, 0);
             Naming.rebind(orderProcessorURL, theOrder); // bind to url
-            System.out.println("Order bound to: " + orderProcessorURL); // Inform world
+            System.out.println("OrderProcessorImpl bound to: " + orderProcessorURL); // Inform world
         } catch (Exception err) {
             System.out.println("Fail Server: " + err.getMessage()); // Variety of reasons
         }

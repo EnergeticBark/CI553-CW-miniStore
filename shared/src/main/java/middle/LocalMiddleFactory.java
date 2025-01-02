@@ -6,7 +6,7 @@
 package middle;
 
 import dataaccess.DBStockDAO;
-import orders.Order;
+import orders.OrderProcessorImpl;
 
 /**
  * Provide access to middle tier components.
@@ -16,7 +16,7 @@ import orders.Order;
 // Pattern: Abstract Factory
 public class LocalMiddleFactory implements MiddleFactory {
     private static DBStockDAO dbStockReader = null;
-    private static Order order = null;
+    private static OrderProcessorImpl order = null;
 
     /**
      * Return an object to access the database.
@@ -35,7 +35,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
     public OrderProcessor makeOrderProcessing() {
         if (order == null) {
-            order = new Order();
+            order = new OrderProcessorImpl();
         }
         return order;
     }
