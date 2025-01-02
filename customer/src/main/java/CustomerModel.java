@@ -1,29 +1,31 @@
-import catalogue.Basket;
-import catalogue.BetterBasket;
 import catalogue.Product;
 import debug.DEBUG;
 import exceptions.ProductDoesNotExistException;
-import exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
 import middle.StockException;
 import middle.StockDAO;
-import usecases.EnsureEnoughStock;
 import usecases.GetProductByNumber;
 import usecases.GetProductsBySearch;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Implements the Model of the customer client
  */
 public class CustomerModel {
-    private Basket basket = null; // Bought items
+    private Product product = null;
     private StockDAO stockDAO = null;
 
+    final SimpleStringProperty searchQuery = new SimpleStringProperty();
+
     final SimpleStringProperty picture = new SimpleStringProperty();
-    final SimpleStringProperty action = new SimpleStringProperty();
-    final SimpleStringProperty output = new SimpleStringProperty();
+    final SimpleStringProperty productDescription = new SimpleStringProperty();
+    final SimpleStringProperty productPrice = new SimpleStringProperty();
+    final SimpleStringProperty productQuantity = new SimpleStringProperty();
+    final SimpleStringProperty productNumber = new SimpleStringProperty();
 
     /*
      * Construct the model of the Customer
@@ -39,68 +41,48 @@ public class CustomerModel {
                     %s
                     """, e.getMessage());
         }
-        basket = makeBasket(); // Initial Basket
     }
 
     // Tell the CustomerView that the model has changed, so it needs to redraw.
     private void fireAction(String actionMessage) {
-        this.action.setValue(actionMessage);
-        this.output.setValue(getBasket().getDetails());
-    }
-
-    /**
-     * @return the basket of products
-     */
-    public Basket getBasket() {
-        return basket;
-    }
-
-    /**
-     * Check if the product is in Stock
-     * @param productNumber The product number
-     */
-    public void checkStock(String productNumber) {
-        basket.clear(); // Clear stock list.
-        final String trimmedProductNumber = productNumber.trim(); // Product no.
-        try {
-            Product product = new GetProductByNumber(stockDAO).run(trimmedProductNumber);
-            new EnsureEnoughStock().run(product, 1);
-
-            // Display
-            final String actionMessage = product.showDetails();
-            product.setQuantity(1); // Shouldn't have to do this, but have to match original behaviour.
-            basket.add(product); // Add to basket
-            picture.setValue(product.getPicture());
-            fireAction(actionMessage);
-        } catch (ProductOutOfStockException e) {
-            fireAction(e.getMessage() + " not in stock");
-        } catch (ProductDoesNotExistException _) {
-            fireAction("Unknown product number " + trimmedProductNumber);
-        } catch (StockException e) {
-            DEBUG.error("CustomerClient.doCheck()\n%s", e.getMessage());
+        if (product == null) {
+            picture.setValue(null);
+            productDescription.setValue(actionMessage);
+            productPrice.setValue("");
+            productQuantity.setValue("");
+            productNumber.setValue("");
+            return;
         }
+        picture.setValue(product.getPicture());
+        productDescription.setValue(product.getDescription());
+        productPrice.setValue(
+                NumberFormat.getCurrencyInstance(Locale.UK).format(
+                        product.getPrice()
+                )
+        );
+        productQuantity.setValue(String.format("Qty. In Stock: (%d)", product.getQuantity()));
+        productNumber.setValue(String.format("Product#: %s", product.getProductNumber()));
     }
 
     /**
-     * Search for a product by its description.
+     * Search for a product by its product number or description.
      * @param searchQuery The search query.
      */
     public void search(String searchQuery) {
-        basket.clear(); // Clear stock list.
+        product = null;
         final String trimmedQuery = searchQuery.trim();
         try {
-            List<Product> products = new GetProductsBySearch(stockDAO).run(trimmedQuery);
-            Product firstResult = products.getFirst();
-            new EnsureEnoughStock().run(firstResult, 1);
+            product = new GetProductByNumber(stockDAO).run(trimmedQuery);
+            fireAction("");
+            return;
+        } catch (StockException e) {
+            DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
+        } catch (ProductDoesNotExistException _) {}
 
-            // Display
-            final String actionMessage = firstResult.showDetails();
-            firstResult.setQuantity(1); // Require 1
-            basket.add(firstResult); // Add to basket
-            picture.setValue(firstResult.getPicture());
-            fireAction(actionMessage);
-        } catch (ProductOutOfStockException e) {
-            fireAction(e.getMessage() + " not in stock");
+        try {
+            List<Product> products = new GetProductsBySearch(stockDAO).run(trimmedQuery);
+            product = products.getFirst(); // Show the first search result.
+            fireAction("");
         } catch (ProductDoesNotExistException _) {
             fireAction("No results for \"" + trimmedQuery + "\"");
         } catch (StockException e) {
@@ -109,19 +91,11 @@ public class CustomerModel {
     }
 
     /**
-     * Clear the products from the basket
+     * Clear the product
      */
     public void clear() {
-        basket.clear(); // Clear stock list.
-        picture.setValue(null); // No picture.
+        searchQuery.setValue("");
+        product = null; // Clear the product.
         fireAction("Enter Product Number");
-    }
-
-    /**
-     * Make a new Basket
-     * @return an instance of a new Basket
-     */
-    protected Basket makeBasket() {
-        return new BetterBasket();
     }
 }

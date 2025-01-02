@@ -12,14 +12,6 @@ public class CustomerController {
         this.model = model;
     }
 
-    /**
-     * Check interaction from view
-     * @param productNumber The product number to be checked
-     */
-    public void checkStock(String productNumber) {
-        model.checkStock(productNumber);
-    }
-
     public void search(String searchQuery) {
         model.search(searchQuery);
     }
