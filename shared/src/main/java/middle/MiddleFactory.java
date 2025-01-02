@@ -6,6 +6,8 @@
 
 package middle;
 
+import catalogue.Product;
+
 /**
  * Provide access to middle tier components.
  */
@@ -17,7 +19,7 @@ public interface MiddleFactory {
      * @return instance of StockDAO
      * @throws StockException if issue
      */
-    StockDAO makeStockDAO() throws StockException;
+    DAO<Product> makeStockDAO() throws StockException;
 
     /**
      * Return an object to access the order processing system

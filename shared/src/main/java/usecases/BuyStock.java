@@ -2,13 +2,13 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductOutOfStockException;
-import middle.StockDAO;
+import middle.DAO;
 import middle.StockException;
 
 public class BuyStock {
-    private final StockDAO stockDAO;
+    private final DAO<Product> stockDAO;
 
-    public BuyStock(StockDAO stockDAO) {
+    public BuyStock(DAO<Product> stockDAO) {
         this.stockDAO = stockDAO;
     }
 
@@ -16,11 +16,11 @@ public class BuyStock {
             ProductOutOfStockException,
             StockException {
 
-        Product inventory = stockDAO.getDetails(productNumber);
+        Product inventory = stockDAO.get(productNumber);
         new EnsureEnoughStock().run(inventory, amount);
         Product customersProducts = inventory.take(amount);
 
-        stockDAO.modifyStock(inventory);
+        stockDAO.update(inventory);
         return customersProducts;
     }
 }

@@ -1,8 +1,7 @@
 package middle;
 
-import catalogue.Product;
 import debug.DEBUG;
-import remote.RemoteStockDAO;
+import remote.RemoteDAO;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -16,19 +15,20 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class StockDAOProvider implements StockDAO {
-    private RemoteStockDAO stub = null;
+public class RemoteDAOWrapper<T> implements DAO<T> {
+    private RemoteDAO<T> stub = null;
     private final String url;
 
-    public StockDAOProvider(String url) {
-        DEBUG.trace("StockDAOProvider: %s", url);
+    public RemoteDAOWrapper(String url) {
+        DEBUG.trace("RemoteDAOWrapper: %s", url);
         this.url = url;
     }
 
+    @SuppressWarnings("unchecked")
     private void connect() throws StockException {
         // Setup connection
         try {
-            stub = (RemoteStockDAO) Naming.lookup(url); // Stub returned
+            stub = (RemoteDAO<T>) Naming.lookup(url); // Stub returned
         } catch (Exception e) {
             // Failure to attach to the object.
             stub = null;
@@ -40,8 +40,9 @@ public class StockDAOProvider implements StockDAO {
      * Checks if the product exits in the stock list
      * @return true if exists otherwise false
      */
+    @Override
     public synchronized boolean exists(String number) throws StockException {
-        DEBUG.trace("StockDAOProvider:exists()");
+        DEBUG.trace("RemoteDAOWrapper:exists()");
         try {
             if (stub == null) {
                 connect();
@@ -53,13 +54,14 @@ public class StockDAOProvider implements StockDAO {
         }
     }
 
-    public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
-        DEBUG.trace("StockDAOProvider:searchByDescription()");
+    @Override
+    public synchronized List<T> search(String searchQuery) throws StockException {
+        DEBUG.trace("RemoteDAOWrapper:search()");
         try {
             if (stub == null) {
                 connect();
             }
-            return stub.searchByDescription(searchQuery);
+            return stub.search(searchQuery);
         } catch (RemoteException e) {
             stub = null;
             throw new StockException("Net: " + e.getMessage());
@@ -70,13 +72,14 @@ public class StockDAOProvider implements StockDAO {
      * Returns details about the product in the stock list
      * @return StockNumber, Description, Price, Quantity
      */
-    public synchronized Product getDetails(String number) throws StockException {
-        DEBUG.trace("StockDAOProvider:getDetails()");
+    @Override
+    public synchronized T get(String number) throws StockException {
+        DEBUG.trace("RemoteDAOWrapper:get()");
         try {
             if (stub == null) {
                 connect();
             }
-            return stub.getDetails(number);
+            return stub.get(number);
         } catch (RemoteException e) {
             stub = null;
             throw new StockException("Net: " + e.getMessage());
@@ -89,13 +92,14 @@ public class StockDAOProvider implements StockDAO {
      * @param detail Replace with this version of product
      * @throws middle.StockException if issue
      */
-    public synchronized void modifyStock(Product detail) throws StockException {
-        DEBUG.trace("StockDAOProvider:modifyStock()");
+    @Override
+    public synchronized void update(T detail) throws StockException {
+        DEBUG.trace("RemoteDAOWrapper:update()");
         try {
             if (stub == null) {
                 connect();
             }
-            stub.modifyStock(detail);
+            stub.update(detail);
         } catch (RemoteException e) {
             stub = null;
             throw new StockException("Net: " + e.getMessage());

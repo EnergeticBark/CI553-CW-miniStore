@@ -2,13 +2,13 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductDoesNotExistException;
-import middle.StockDAO;
+import middle.DAO;
 import middle.StockException;
 
 public class GetProductByNumber {
-    private final StockDAO stockDAO;
+    private final DAO<Product> stockDAO;
 
-    public GetProductByNumber(StockDAO stockDAO) {
+    public GetProductByNumber(DAO<Product> stockDAO) {
         this.stockDAO = stockDAO;
     }
 
@@ -16,6 +16,6 @@ public class GetProductByNumber {
         if (!stockDAO.exists(productNumber)) {
             throw new ProductDoesNotExistException();
         }
-        return stockDAO.getDetails(productNumber);
+        return stockDAO.get(productNumber);
     }
 }

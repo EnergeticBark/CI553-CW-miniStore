@@ -5,6 +5,7 @@
 
 package middle;
 
+import catalogue.Product;
 import dataaccess.DBStockDAO;
 import orders.OrderProcessorImpl;
 
@@ -22,7 +23,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      * Return an object to access the database.
      * All users share this same object.
      */
-    public StockDAO makeStockDAO() throws StockException {
+    public DAO<Product> makeStockDAO() throws StockException {
         if (dbStockReader == null) {
             dbStockReader = new DBStockDAO();
         }

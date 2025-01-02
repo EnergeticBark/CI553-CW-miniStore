@@ -1,6 +1,5 @@
 package remote;
 
-import catalogue.Product;
 import middle.StockException;
 
 import java.rmi.Remote;
@@ -13,9 +12,9 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public interface RemoteStockDAO extends Remote {
+public interface RemoteDAO<T> extends Remote {
     boolean exists(String number) throws RemoteException, StockException;
-    List<Product> searchByDescription(String searchQuery) throws RemoteException, StockException;
-    Product getDetails(String number) throws RemoteException, StockException;
-    void modifyStock(Product detail) throws RemoteException, StockException;
+    List<T> search(String searchQuery) throws RemoteException, StockException;
+    T get(String number) throws RemoteException, StockException;
+    void update(T detail) throws RemoteException, StockException;
 }

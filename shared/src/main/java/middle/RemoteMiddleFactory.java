@@ -4,6 +4,8 @@
  */
 package middle;
 
+import catalogue.Product;
+
 /**
  * Provide access to middle tier components.
  */
@@ -22,8 +24,8 @@ public class RemoteMiddleFactory implements MiddleFactory {
      * Return an object to access the database for read only access.
      * Access is via RMI
      */
-    public StockDAO makeStockDAO() {
-        return new StockDAOProvider(stockURL);
+    public DAO<Product> makeStockDAO() {
+        return new RemoteDAOWrapper<>(stockURL);
     }
 
     /**

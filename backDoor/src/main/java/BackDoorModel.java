@@ -4,8 +4,8 @@ import catalogue.Product;
 import debug.DEBUG;
 import exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
+import middle.DAO;
 import middle.MiddleFactory;
-import middle.StockDAO;
 import middle.StockException;
 import usecases.GetProductByNumber;
 import usecases.RestockProduct;
@@ -16,7 +16,7 @@ import usecases.RestockProduct;
 public class BackDoorModel {
     private Basket theBasket = null; // Bought items
 
-    private StockDAO stockDAO = null;
+    private DAO<Product> stockDAO = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();

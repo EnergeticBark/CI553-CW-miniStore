@@ -1,16 +1,8 @@
 package middle;
 
-import catalogue.Product;
-
 import java.util.List;
 
-/**
- * Interface for read access to the stock list.
- * @author  Mike Smith University of Brighton
- * @version 2.0
- */
-public interface StockDAO {
-
+public interface DAO<T> {
     /**
      * Checks if the product exits in the stock list
      * @param pNum Product number
@@ -25,7 +17,7 @@ public interface StockDAO {
      * @return A possibly empty list of search results.
      * @throws StockException If there was an issue.
      */
-    List<Product> searchByDescription(String searchQuery) throws StockException;
+    List<T> search(String searchQuery) throws StockException;
 
     /**
      * Returns details about the product in the stock list
@@ -33,7 +25,7 @@ public interface StockDAO {
      * @return StockNumber, Description, Price, Quantity
      * @throws StockException if issue
      */
-    Product getDetails(String pNum) throws StockException;
+    T get(String identifier) throws StockException;
 
     /**
      * Modifies Stock details for a given product number.
@@ -41,5 +33,5 @@ public interface StockDAO {
      * @param detail Replace with this version of product
      * @throws middle.StockException if issue
      */
-    void modifyStock(Product detail) throws StockException;
+    void update(T replacement) throws StockException;
 }

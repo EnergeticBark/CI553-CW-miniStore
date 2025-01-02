@@ -2,9 +2,9 @@ import catalogue.Product;
 import debug.DEBUG;
 import exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
+import middle.DAO;
 import middle.MiddleFactory;
 import middle.StockException;
-import middle.StockDAO;
 import usecases.GetProductByNumber;
 import usecases.GetProductsBySearch;
 
@@ -17,7 +17,7 @@ import java.util.Locale;
  */
 public class CustomerModel {
     private Product product = null;
-    private StockDAO stockDAO = null;
+    private DAO<Product> stockDAO = null;
 
     final SimpleStringProperty searchQuery = new SimpleStringProperty();
 

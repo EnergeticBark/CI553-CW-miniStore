@@ -20,7 +20,7 @@ public class CashierModel {
     private Product product = null; // Current product
     private Basket theBasket = null; // Bought items
 
-    private StockDAO stockDAO = null;
+    private DAO<Product> stockDAO = null;
     private OrderProcessor theOrder = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();

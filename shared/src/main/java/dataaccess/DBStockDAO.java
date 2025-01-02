@@ -2,9 +2,9 @@ package dataaccess;
 
 import catalogue.Product;
 import debug.DEBUG;
+import middle.DAO;
 import middle.StockException;
-import middle.StockDAO;
-import remote.RemoteStockDAO;
+import remote.RemoteDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockDAO implements StockDAO, RemoteStockDAO {
+public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
     final private Connection theCon; // Connection to database
 
     /**
@@ -64,6 +64,7 @@ public class DBStockDAO implements StockDAO, RemoteStockDAO {
      * @param pNum The product number
      * @return true if exists otherwise false
      */
+    @Override
     public synchronized boolean exists(String pNum) throws StockException {
         final String query = "SELECT price FROM ProductTable WHERE ProductTable.productNo = ?";
 
@@ -79,7 +80,8 @@ public class DBStockDAO implements StockDAO, RemoteStockDAO {
         }
     }
 
-    public synchronized List<Product> searchByDescription(String searchQuery) throws StockException {
+    @Override
+    public synchronized List<Product> search(String searchQuery) throws StockException {
         // Make the search case-insensitive by converting the description and search query to uppercase.
         final String query = """
                 SELECT StockTable.productNo, description, picture, price, stockLevel
@@ -117,7 +119,8 @@ public class DBStockDAO implements StockDAO, RemoteStockDAO {
      * @param pNum The product number
      * @return Details in an instance of a Product
      */
-    public synchronized Product getDetails(String pNum) throws StockException {
+    @Override
+    public synchronized Product get(String pNum) throws StockException {
         final String query = """
                 SELECT description, picture, price, stockLevel
                 FROM ProductTable, StockTable
@@ -148,7 +151,8 @@ public class DBStockDAO implements StockDAO, RemoteStockDAO {
      * Information modified: Description, Price
      * @param detail Product details to change stock list to
      */
-    public synchronized void modifyStock(Product detail) throws StockException {
+    @Override
+    public synchronized void update(Product detail) throws StockException {
         final String insertProductQuery = "INSERT INTO ProductTable VALUES (?, ?, ?, ?)";
         final String insertStockQuery = "INSERT INTO StockTable VALUES (?, ?)";
 
