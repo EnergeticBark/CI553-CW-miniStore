@@ -6,6 +6,8 @@
 
 package middle;
 
+import products.ProductDAO;
+
 /**
  * Provide access to middle tier components.
  */

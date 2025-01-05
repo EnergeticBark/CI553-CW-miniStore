@@ -1,12 +1,12 @@
-import catalogue.Product;
+import products.Product;
 import debug.DEBUG;
-import exceptions.ProductDoesNotExistException;
+import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
-import middle.ProductDAO;
+import products.ProductDAO;
 import middle.MiddleFactory;
 import middle.DAOException;
-import usecases.GetProductByNumber;
-import usecases.GetProductsBySearch;
+import products.usecases.GetProductByNumber;
+import products.usecases.GetProductsBySearch;
 
 import java.text.NumberFormat;
 import java.util.List;

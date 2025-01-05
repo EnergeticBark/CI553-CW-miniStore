@@ -10,7 +10,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-interface RemoteDAO<T> extends Remote {
+public interface RemoteDAO<T> extends Remote {
     boolean exists(String number) throws RemoteException, DAOException;
     List<T> search(String searchQuery) throws RemoteException, DAOException;
     T get(String number) throws RemoteException, DAOException;

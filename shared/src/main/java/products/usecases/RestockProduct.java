@@ -1,8 +1,8 @@
-package usecases;
+package products.usecases;
 
-import catalogue.Product;
-import exceptions.ProductDoesNotExistException;
-import middle.ProductDAO;
+import products.Product;
+import products.exceptions.ProductDoesNotExistException;
+import products.ProductDAO;
 import middle.DAOException;
 
 public class RestockProduct {

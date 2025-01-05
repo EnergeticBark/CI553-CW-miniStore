@@ -2,7 +2,7 @@ package middle;
 
 import java.util.List;
 
-interface DAO<T> {
+public interface DAO<T> {
     /**
      * Checks if the product exits in the stock list
      * @param pNum Product number

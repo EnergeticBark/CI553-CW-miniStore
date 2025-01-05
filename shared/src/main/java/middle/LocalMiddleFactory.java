@@ -5,8 +5,9 @@
 
 package middle;
 
-import dataaccess.DBStockDAO;
+import products.dataaccess.SQLProductDAO;
 import orders.OrderProcessorImpl;
+import products.ProductDAO;
 
 /**
  * Provide access to middle tier components.
@@ -15,7 +16,7 @@ import orders.OrderProcessorImpl;
 
 // Pattern: Abstract Factory
 public class LocalMiddleFactory implements MiddleFactory {
-    private static DBStockDAO dbStockReader = null;
+    private static SQLProductDAO dbStockReader = null;
     private static OrderProcessorImpl order = null;
 
     /**
@@ -24,7 +25,7 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
     public ProductDAO makeStockDAO() throws DAOException {
         if (dbStockReader == null) {
-            dbStockReader = new DBStockDAO();
+            dbStockReader = new SQLProductDAO();
         }
         return dbStockReader;
     }

@@ -1,5 +1,5 @@
 import catalogue.BetterBasket;
-import catalogue.Product;
+import products.Product;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

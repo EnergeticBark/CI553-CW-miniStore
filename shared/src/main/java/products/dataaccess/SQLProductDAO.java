@@ -1,10 +1,12 @@
-package dataaccess;
+package products.dataaccess;
 
-import catalogue.Product;
+import dataaccess.DBAccess;
+import dataaccess.DBAccessFactory;
+import products.Product;
 import debug.DEBUG;
 import middle.DAOException;
-import middle.ProductDAO;
-import middle.RemoteProductDAO;
+import products.ProductDAO;
+import products.remote.RemoteProductDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockDAO implements ProductDAO, RemoteProductDAO {
+public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
     final private Connection theCon; // Connection to database
 
     /**
@@ -31,7 +33,7 @@ public class DBStockDAO implements ProductDAO, RemoteProductDAO {
      * Uses a factory method to help set up the connection
      * @throws DAOException if problem
      */
-    public DBStockDAO() throws DAOException {
+    public SQLProductDAO() throws DAOException {
         try {
             DBAccess dbDriver = (new DBAccessFactory()).getNewDBAccess();
             dbDriver.loadDriver();
@@ -73,7 +75,7 @@ public class DBStockDAO implements ProductDAO, RemoteProductDAO {
             ResultSet rs = statement.executeQuery();
 
             boolean res = rs.next();
-            DEBUG.trace("DB DBStockDAO: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
+            DEBUG.trace("DB SQLProductDAO: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
             return res;
         } catch (SQLException e) {
             throw new DAOException("SQL exists: " + e.getMessage());

@@ -1,6 +1,6 @@
-package usecases;
+package products.usecases;
 
-import catalogue.Product;
+import products.Product;
 
 public class AddStock {
     public void run(Product product, int amount) {

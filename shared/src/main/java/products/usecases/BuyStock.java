@@ -1,8 +1,8 @@
-package usecases;
+package products.usecases;
 
-import catalogue.Product;
-import exceptions.ProductOutOfStockException;
-import middle.ProductDAO;
+import products.Product;
+import products.exceptions.ProductOutOfStockException;
+import products.ProductDAO;
 import middle.DAOException;
 
 public class BuyStock {

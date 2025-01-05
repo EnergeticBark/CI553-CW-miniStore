@@ -11,7 +11,7 @@ public abstract class AbstractRemoteWrapper {
         this.url = url;
     }
 
-    abstract void connect() throws DAOException;
+    protected abstract void connect() throws DAOException;
 
     interface RemoteMethod<R, E extends Throwable> {
         R apply() throws E, RemoteException;

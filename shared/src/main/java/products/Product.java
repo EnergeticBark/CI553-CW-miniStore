@@ -1,4 +1,4 @@
-package catalogue;
+package products;
 
 import java.io.Serial;
 import java.io.Serializable;

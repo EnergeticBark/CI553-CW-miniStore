@@ -1,6 +1,6 @@
-import dataaccess.DBStockDAO;
+import products.dataaccess.SQLProductDAO;
 import middle.Names;
-import middle.RemoteProductDAO;
+import products.remote.RemoteProductDAO;
 import orders.OrderProcessorImpl;
 import remote.RemoteOrderProcessor;
 
@@ -41,10 +41,10 @@ class Server {
         }
 
         try {
-            theStockR = new DBStockDAO(); // Stock R
+            theStockR = new SQLProductDAO(); // Stock R
             UnicastRemoteObject.exportObject(theStockR, 0);
             Naming.rebind(stockReaderURL, theStockR); // bind to url
-            System.out.println("DBStockDAO bound to: " + stockReaderURL); // Inform world
+            System.out.println("SQLProductDAO bound to: " + stockReaderURL); // Inform world
 
             theOrder = new OrderProcessorImpl(); // OrderProcessorImpl
             UnicastRemoteObject.exportObject(theOrder, 0);

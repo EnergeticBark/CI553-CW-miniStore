@@ -2,7 +2,7 @@
 package orders;
 
 import catalogue.Basket;
-import catalogue.Product;
+import products.Product;
 import debug.DEBUG;
 import middle.OrderException;
 import middle.OrderProcessor;

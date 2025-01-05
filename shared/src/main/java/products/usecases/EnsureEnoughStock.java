@@ -1,7 +1,7 @@
-package usecases;
+package products.usecases;
 
-import catalogue.Product;
-import exceptions.ProductOutOfStockException;
+import products.Product;
+import products.exceptions.ProductOutOfStockException;
 
 public class EnsureEnoughStock {
     public void run(Product product, int quantity) throws ProductOutOfStockException {

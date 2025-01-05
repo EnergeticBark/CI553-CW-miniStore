@@ -4,6 +4,9 @@
  */
 package middle;
 
+import products.ProductDAO;
+import products.remote.RemoteProductDAOWrapper;
+
 /**
  * Provide access to middle tier components.
  */

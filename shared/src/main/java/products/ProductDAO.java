@@ -1,5 +1,5 @@
-package middle;
+package products;
 
-import catalogue.Product;
+import middle.DAO;
 
 public interface ProductDAO extends DAO<Product> {}

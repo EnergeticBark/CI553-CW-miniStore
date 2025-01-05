@@ -1,14 +1,14 @@
 import catalogue.Basket;
 import catalogue.BetterBasket;
-import catalogue.Product;
+import products.Product;
 import debug.DEBUG;
-import exceptions.ProductDoesNotExistException;
+import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
-import middle.ProductDAO;
+import products.ProductDAO;
 import middle.MiddleFactory;
 import middle.DAOException;
-import usecases.GetProductByNumber;
-import usecases.RestockProduct;
+import products.usecases.GetProductByNumber;
+import products.usecases.RestockProduct;
 
 /**
  * Implements the Model of the back door client

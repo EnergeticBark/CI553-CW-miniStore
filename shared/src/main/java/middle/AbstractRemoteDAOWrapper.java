@@ -13,13 +13,13 @@ import java.util.List;
  * @version 2.0
  */
 public abstract class AbstractRemoteDAOWrapper<T> extends AbstractRemoteWrapper implements DAO<T> {
-    RemoteDAO<T> stub = null;
+    protected RemoteDAO<T> stub = null;
 
     protected AbstractRemoteDAOWrapper(String url) {
         super(url);
     }
 
-    abstract void connect() throws DAOException;
+    protected abstract void connect() throws DAOException;
 
     /**
      * Checks if the product exits in the stock list

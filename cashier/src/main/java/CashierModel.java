@@ -1,14 +1,15 @@
 import catalogue.Basket;
 import catalogue.BetterBasket;
-import catalogue.Product;
+import products.Product;
 import debug.DEBUG;
-import exceptions.ProductDoesNotExistException;
-import exceptions.ProductOutOfStockException;
+import products.exceptions.ProductDoesNotExistException;
+import products.exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
 import middle.*;
-import usecases.BuyStock;
-import usecases.EnsureEnoughStock;
-import usecases.GetProductByNumber;
+import products.ProductDAO;
+import products.usecases.BuyStock;
+import products.usecases.EnsureEnoughStock;
+import products.usecases.GetProductByNumber;
 
 /**
  * Implements the Model of the cashier client

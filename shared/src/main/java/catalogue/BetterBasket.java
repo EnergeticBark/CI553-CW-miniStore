@@ -1,5 +1,7 @@
 package catalogue;
 
+import products.Product;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.Optional;

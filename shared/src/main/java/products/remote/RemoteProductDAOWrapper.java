@@ -1,6 +1,9 @@
-package middle;
+package products.remote;
 
-import catalogue.Product;
+import middle.AbstractRemoteDAOWrapper;
+import middle.DAOException;
+import products.Product;
+import products.ProductDAO;
 
 import java.rmi.Naming;
 
@@ -10,7 +13,7 @@ public class RemoteProductDAOWrapper extends AbstractRemoteDAOWrapper<Product> i
     }
 
     @Override
-    void connect() throws DAOException {
+    protected void connect() throws DAOException {
         // Setup connection
         try {
             stub = (RemoteProductDAO) Naming.lookup(url); // Stub returned
