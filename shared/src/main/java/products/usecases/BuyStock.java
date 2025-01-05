@@ -6,21 +6,21 @@ import products.ProductDAO;
 import middle.DAOException;
 
 public class BuyStock {
-    private final ProductDAO stockDAO;
+    private final ProductDAO productDAO;
 
-    public BuyStock(ProductDAO stockDAO) {
-        this.stockDAO = stockDAO;
+    public BuyStock(ProductDAO productDAO) {
+        this.productDAO = productDAO;
     }
 
     public Product run(String productNumber, int amount) throws
             ProductOutOfStockException,
             DAOException {
 
-        Product inventory = stockDAO.get(productNumber);
+        Product inventory = productDAO.get(productNumber);
         new EnsureEnoughStock().run(inventory, amount);
         Product customersProducts = inventory.take(amount);
 
-        stockDAO.update(inventory);
+        productDAO.update(inventory);
         return customersProducts;
     }
 }

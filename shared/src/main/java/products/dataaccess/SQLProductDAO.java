@@ -26,7 +26,7 @@ import java.util.List;
  * @version 2.0
  */
 public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
-    final private Connection theCon; // Connection to database
+    final private Connection connection; // Connection to database
 
     /**
      * Connects to database
@@ -38,13 +38,13 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
             DBAccess dbDriver = (new DBAccessFactory()).getNewDBAccess();
             dbDriver.loadDriver();
 
-            theCon = DriverManager.getConnection(
+            connection = DriverManager.getConnection(
                     dbDriver.urlOfDatabase(),
                     dbDriver.username(),
                     dbDriver.password()
             );
-            
-            theCon.setAutoCommit(true);
+
+            connection.setAutoCommit(true);
         } catch (SQLException e) {
             throw new DAOException("SQL problem:" + e.getMessage());
         } catch (Exception e) {
@@ -58,7 +58,7 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
      * @return a connection object
      */
     protected Connection getConnectionObject() {
-        return theCon;
+        return connection;
     }
 
     /**

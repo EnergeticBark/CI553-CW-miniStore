@@ -6,17 +6,17 @@ import products.ProductDAO;
 import middle.DAOException;
 
 public class RestockProduct {
-    private final ProductDAO stockDAO;
+    private final ProductDAO productDAO;
 
-    public RestockProduct(ProductDAO stockReadWriter) {
-        this.stockDAO = stockReadWriter;
+    public RestockProduct(ProductDAO productDAO) {
+        this.productDAO = productDAO;
     }
 
     public Product run(String productNumber, int amount) throws DAOException, ProductDoesNotExistException {
-        Product inventory = new GetProductByNumber(stockDAO).run(productNumber);
+        Product inventory = new GetProductByNumber(productDAO).run(productNumber);
         new AddStock().run(inventory, amount);
 
-        stockDAO.update(inventory);
+        productDAO.update(inventory);
         return inventory;
     }
 }

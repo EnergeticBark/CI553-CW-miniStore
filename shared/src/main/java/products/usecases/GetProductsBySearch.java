@@ -8,14 +8,14 @@ import middle.DAOException;
 import java.util.List;
 
 public class GetProductsBySearch {
-    private final ProductDAO stockDAO;
+    private final ProductDAO productDAO;
 
-    public GetProductsBySearch(ProductDAO stockDAO) {
-        this.stockDAO = stockDAO;
+    public GetProductsBySearch(ProductDAO productDAO) {
+        this.productDAO = productDAO;
     }
 
     public List<Product> run(String productNumber) throws ProductDoesNotExistException, DAOException {
-        List<Product> products = stockDAO.search(productNumber);
+        List<Product> products = productDAO.search(productNumber);
         if (products.isEmpty()) {
             throw new ProductDoesNotExistException();
         }

@@ -6,16 +6,16 @@ import products.ProductDAO;
 import middle.DAOException;
 
 public class GetProductByNumber {
-    private final ProductDAO stockDAO;
+    private final ProductDAO productDAO;
 
-    public GetProductByNumber(ProductDAO stockDAO) {
-        this.stockDAO = stockDAO;
+    public GetProductByNumber(ProductDAO productDAO) {
+        this.productDAO = productDAO;
     }
 
     public Product run(String productNumber) throws ProductDoesNotExistException, DAOException {
-        if (!stockDAO.exists(productNumber)) {
+        if (!productDAO.exists(productNumber)) {
             throw new ProductDoesNotExistException();
         }
-        return stockDAO.get(productNumber);
+        return productDAO.get(productNumber);
     }
 }
