@@ -2,7 +2,7 @@ package orders.remote;
 
 import catalogue.Basket;
 import debug.DEBUG;
-import middle.AbstractRemoteWrapper;
+import middle.RemoteMethod;
 import orders.OrderProcessor;
 import orders.exceptions.OrderException;
 
@@ -21,14 +21,14 @@ import java.util.Map;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class RemoteOrderProcessorWrapper extends AbstractRemoteWrapper implements OrderProcessor {
+public class RemoteOrderProcessorWrapper implements OrderProcessor {
+    private final String url;
     private RemoteOrderProcessor stub = null;
 
     public RemoteOrderProcessorWrapper(String url) {
-        super(url);
+        this.url = url;
     }
 
-    @Override
     protected void connect() throws OrderException {
         // Setup connection
         try {
