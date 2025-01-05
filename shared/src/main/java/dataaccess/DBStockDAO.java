@@ -2,9 +2,9 @@ package dataaccess;
 
 import catalogue.Product;
 import debug.DEBUG;
-import middle.DAO;
-import middle.StockException;
-import remote.RemoteDAO;
+import middle.DAOException;
+import middle.ProductDAO;
+import middle.RemoteProductDAO;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -23,15 +23,15 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
+public class DBStockDAO implements ProductDAO, RemoteProductDAO {
     final private Connection theCon; // Connection to database
 
     /**
      * Connects to database
      * Uses a factory method to help set up the connection
-     * @throws StockException if problem
+     * @throws DAOException if problem
      */
-    public DBStockDAO() throws StockException {
+    public DBStockDAO() throws DAOException {
         try {
             DBAccess dbDriver = (new DBAccessFactory()).getNewDBAccess();
             dbDriver.loadDriver();
@@ -44,9 +44,9 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
             
             theCon.setAutoCommit(true);
         } catch (SQLException e) {
-            throw new StockException("SQL problem:" + e.getMessage());
+            throw new DAOException("SQL problem:" + e.getMessage());
         } catch (Exception e) {
-            throw new StockException("Can not load database driver.");
+            throw new DAOException("Can not load database driver.");
         }
     }
 
@@ -65,7 +65,7 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
      * @return true if exists otherwise false
      */
     @Override
-    public synchronized boolean exists(String pNum) throws StockException {
+    public synchronized boolean exists(String pNum) throws DAOException {
         final String query = "SELECT price FROM ProductTable WHERE ProductTable.productNo = ?";
 
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
@@ -76,12 +76,12 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
             DEBUG.trace("DB DBStockDAO: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
             return res;
         } catch (SQLException e) {
-            throw new StockException("SQL exists: " + e.getMessage());
+            throw new DAOException("SQL exists: " + e.getMessage());
         }
     }
 
     @Override
-    public synchronized List<Product> search(String searchQuery) throws StockException {
+    public synchronized List<Product> search(String searchQuery) throws DAOException {
         // Make the search case-insensitive by converting the description and search query to uppercase.
         final String query = """
                 SELECT StockTable.productNo, description, picture, price, stockLevel
@@ -107,7 +107,7 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
                 foundProducts.add(product);
             }
         } catch (SQLException e) {
-            throw new StockException("SQL searchByDescription: " + e.getMessage());
+            throw new DAOException("SQL searchByDescription: " + e.getMessage());
         }
 
         return foundProducts;
@@ -120,7 +120,7 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
      * @return Details in an instance of a Product
      */
     @Override
-    public synchronized Product get(String pNum) throws StockException {
+    public synchronized Product get(String pNum) throws DAOException {
         final String query = """
                 SELECT description, picture, price, stockLevel
                 FROM ProductTable, StockTable
@@ -141,7 +141,7 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
                     rs.getInt("stockLevel")
             );
         } catch (SQLException e) {
-            throw new StockException("SQL getDetails: " + e.getMessage());
+            throw new DAOException("SQL getDetails: " + e.getMessage());
         }
     }
 
@@ -152,7 +152,7 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
      * @param detail Product details to change stock list to
      */
     @Override
-    public synchronized void update(Product detail) throws StockException {
+    public synchronized void update(Product detail) throws DAOException {
         final String insertProductQuery = "INSERT INTO ProductTable VALUES (?, ?, ?, ?)";
         final String insertStockQuery = "INSERT INTO StockTable VALUES (?, ?)";
 
@@ -202,7 +202,7 @@ public class DBStockDAO implements DAO<Product>, RemoteDAO<Product> {
                 }
             }
         } catch (SQLException e) {
-            throw new StockException("SQL modifyStock: " + e.getMessage());
+            throw new DAOException("SQL modifyStock: " + e.getMessage());
         }
     }
 }

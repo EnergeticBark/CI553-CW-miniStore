@@ -2,19 +2,19 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductOutOfStockException;
-import middle.DAO;
-import middle.StockException;
+import middle.ProductDAO;
+import middle.DAOException;
 
 public class BuyStock {
-    private final DAO<Product> stockDAO;
+    private final ProductDAO stockDAO;
 
-    public BuyStock(DAO<Product> stockDAO) {
+    public BuyStock(ProductDAO stockDAO) {
         this.stockDAO = stockDAO;
     }
 
     public Product run(String productNumber, int amount) throws
             ProductOutOfStockException,
-            StockException {
+            DAOException {
 
         Product inventory = stockDAO.get(productNumber);
         new EnsureEnoughStock().run(inventory, amount);

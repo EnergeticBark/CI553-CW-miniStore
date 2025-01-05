@@ -2,17 +2,17 @@ package usecases;
 
 import catalogue.Product;
 import exceptions.ProductDoesNotExistException;
-import middle.DAO;
-import middle.StockException;
+import middle.ProductDAO;
+import middle.DAOException;
 
 public class GetProductByNumber {
-    private final DAO<Product> stockDAO;
+    private final ProductDAO stockDAO;
 
-    public GetProductByNumber(DAO<Product> stockDAO) {
+    public GetProductByNumber(ProductDAO stockDAO) {
         this.stockDAO = stockDAO;
     }
 
-    public Product run(String productNumber) throws ProductDoesNotExistException, StockException {
+    public Product run(String productNumber) throws ProductDoesNotExistException, DAOException {
         if (!stockDAO.exists(productNumber)) {
             throw new ProductDoesNotExistException();
         }

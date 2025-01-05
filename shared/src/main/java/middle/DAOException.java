@@ -7,10 +7,10 @@ import java.io.Serial;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public class StockException extends Exception {
+public class DAOException extends Exception {
     @Serial
     private static final long serialVersionUID = 1;
-    public StockException(String s) {
+    public DAOException(String s) {
         super(s);
     }
 }

@@ -20,7 +20,7 @@ public class CashierModel {
     private Product product = null; // Current product
     private Basket theBasket = null; // Bought items
 
-    private DAO<Product> stockDAO = null;
+    private ProductDAO stockDAO = null;
     private OrderProcessor theOrder = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
@@ -78,7 +78,7 @@ public class CashierModel {
             fireAction(e.getMessage() + " not in stock");
         } catch (ProductDoesNotExistException _) {
             fireAction("Unknown product number " + trimmedProductNumber);
-        } catch (StockException e) {
+        } catch (DAOException e) {
             DEBUG.error("%s\n%s", "CashierModel.doCheck", e.getMessage());
             fireAction(e.getMessage());
         }
@@ -101,7 +101,7 @@ public class CashierModel {
             fireAction("Purchased " + product.getDescription());
         } catch (ProductOutOfStockException _) {
             fireAction("!!! Not in stock");
-        } catch (StockException e) {
+        } catch (DAOException e) {
             DEBUG.error("%s\n%s", "CashierModel.doBuy", e.getMessage());
             fireAction(e.getMessage());
         }
