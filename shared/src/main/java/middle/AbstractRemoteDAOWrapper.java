@@ -2,6 +2,7 @@ package middle;
 
 import debug.DEBUG;
 
+import java.rmi.RemoteException;
 import java.util.List;
 
 /**
@@ -20,6 +21,18 @@ public abstract class AbstractRemoteDAOWrapper<T> extends AbstractRemoteWrapper 
     }
 
     protected abstract void connect() throws DAOException;
+
+    protected <R> R wrapRemote(RemoteMethod<R, DAOException> remoteMethod) throws DAOException {
+        try {
+            if (stub == null) {
+                connect();
+            }
+            return remoteMethod.apply();
+        } catch (RemoteException e) {
+            stub = null;
+            throw new DAOException("Net: " + e.getMessage());
+        }
+    }
 
     /**
      * Checks if the product exits in the stock list

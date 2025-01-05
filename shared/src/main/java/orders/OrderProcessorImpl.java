@@ -3,7 +3,6 @@ package orders;
 import catalogue.Basket;
 import products.Product;
 import debug.DEBUG;
-import orders.exceptions.OrderException;
 import orders.remote.RemoteOrderProcessor;
 
 import java.util.stream.Collectors;
@@ -48,7 +47,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      *   would be good to recycle numbers after 999
      * @return A unique order number
      */
-    public synchronized int uniqueNumber() throws OrderException {
+    @Override
+    public synchronized int uniqueNumber() {
         return nextOrderNumber++;
     }
 
@@ -56,7 +56,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * Add a new order to the order processing system
      * @param bought A new order that is to be processed
      */
-    public synchronized void newOrder(Basket bought) throws OrderException {
+    @Override
+    public synchronized void newOrder(Basket bought) {
         DEBUG.trace("DEBUG: New order");
         orders.add(new Order(bought));
         for (Order order: orders) {
@@ -68,7 +69,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * Returns an order to pack from the warehouse.
      * @return An order to pack or null if no order
      */
-    public synchronized Basket getOrderToPack() throws OrderException {
+    @Override
+    public synchronized Basket getOrderToPack() {
         DEBUG.trace("DEBUG: Get order to pack");
         Basket foundWaiting = null;
         for (Order order: orders) {
@@ -88,7 +90,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * @param  orderNum The order that has been packed
      * @return true OrderProcessorImpl in system, false no such order
      */
-    public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
+    @Override
+    public synchronized boolean informOrderPacked(int orderNum) {
         DEBUG.trace("DEBUG: OrderProcessorImpl packed [%d]", orderNum);
         for (int i = 0; i < orders.size(); i++) {
             if (orders.get(i).getBasket().getOrderNum() == orderNum
@@ -105,7 +108,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * collected by the customer
      * @return true If order is in the system, otherwise false
      */
-    public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
+    @Override
+    public synchronized boolean informOrderCollected(int orderNum) {
         DEBUG.trace("DEBUG: OrderProcessorImpl collected [%d]", orderNum);
         for (int i = 0; i < orders.size(); i++) {
             if (orders.get(i).getBasket().getOrderNum() == orderNum
@@ -130,7 +134,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * </PRE>
      * @return a Map with the keys: "Waiting", "BeingPacked", "ToBeCollected"
      */
-    public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
+    @Override
+    public synchronized Map<String, List<Integer>> getOrderState() {
         //DEBUG.trace( "DEBUG: get state of order system" );
         Map<String, List<Integer>> res = new HashMap<>();
 

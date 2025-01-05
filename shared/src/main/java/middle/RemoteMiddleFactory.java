@@ -5,7 +5,7 @@
 package middle;
 
 import orders.OrderProcessor;
-import orders.OrderProcessorProvider;
+import orders.remote.RemoteOrderProcessorWrapper;
 import products.ProductDAO;
 import products.remote.RemoteProductDAOWrapper;
 
@@ -36,7 +36,7 @@ public class RemoteMiddleFactory implements MiddleFactory {
      * Access is via RMI
      */
     public OrderProcessor makeOrderProcessing() {
-        return new OrderProcessorProvider(orderURL);
+        return new RemoteOrderProcessorWrapper(orderURL);
     }
 }
 
