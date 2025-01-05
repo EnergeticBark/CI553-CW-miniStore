@@ -1,5 +1,4 @@
 import catalogue.Basket;
-import debug.DEBUG;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
@@ -21,6 +20,8 @@ public class PackingModel {
 
     private final StateOf worker = new StateOf();
 
+    private static final System.Logger LOGGER = System.getLogger(PackingModel.class.getName());
+
     /*
      * Construct the model of the warehouse Packing client
      * @param mf The factory to create the connection objects
@@ -29,7 +30,8 @@ public class PackingModel {
         try {
             theOrder = mf.makeOrderProcessing();  // Process order
         } catch (Exception e) {
-            DEBUG.error("CustomerModel.constructor\n%s", e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
 
         theBasket.set(null); // Initial Basket
@@ -101,7 +103,8 @@ public class PackingModel {
 
                 Thread.sleep(2000); // idle
             } catch (Exception e) {
-                DEBUG.error("%s\n%s", "BackGroundCheck.run()\n%s", e.getMessage());
+                LOGGER.log(System.Logger.Level.ERROR, e);
+                System.exit(-1);
             }
         }
     }
@@ -132,7 +135,8 @@ public class PackingModel {
             fireAction(""); // Inform picker
         } catch (OrderException e) { // Error
             // Of course should not happen
-            DEBUG.error("ReceiptModel.doOk()\n%s\n", e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
     }
 }

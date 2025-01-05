@@ -3,7 +3,6 @@ package orders;
 
 import catalogue.Basket;
 import products.Product;
-import debug.DEBUG;
 import orders.exceptions.OrderException;
 
 import java.util.ArrayList;
@@ -71,11 +70,7 @@ public class OrderX implements OrderProcessor {
      */
     public synchronized void newOrder(Basket bought) throws OrderException {
         // You need to modify and fill in the correct code
-        DEBUG.trace("DEBUG: New order");
         theWaitingTray.add(bought);
-        for (Basket bl: theWaitingTray) {
-            DEBUG.trace("OrderProcessor: " + asString(bl));
-        }
     }
 
     /**
@@ -85,7 +80,6 @@ public class OrderX implements OrderProcessor {
      */
     public synchronized Basket getOrderToPack() throws OrderException {
         // You need to modify and fill in the correct code
-        DEBUG.trace("DEBUG: Get order to pack");
         if (theWaitingTray.size() > 0) {
             Basket process = theWaitingTray.remove(0);
             theBeingPickedTray.add(process);
@@ -103,7 +97,6 @@ public class OrderX implements OrderProcessor {
      */
     public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
         // You need to modify and fill in the correct code
-        DEBUG.trace("DEBUG: OrderProcessorImpl picked [%d]", orderNum);
         for (int i = 0; i < theBeingPickedTray.size(); i++) {
             if (theBeingPickedTray.get(i).getOrderNum() == orderNum) {
                 Basket picked = theBeingPickedTray.remove(i);
@@ -121,7 +114,6 @@ public class OrderX implements OrderProcessor {
      */
     public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
         // You need to modify and fill in the correct code
-        DEBUG.trace("DEBUG: OrderProcessor collected [%d]", orderNum);
         for (int i = 0; i < theToBeCollectedTray.size(); i++) {
             if (theToBeCollectedTray.get(i).getOrderNum() == orderNum) {
                 theToBeCollectedTray.remove(i);
@@ -143,7 +135,6 @@ public class OrderX implements OrderProcessor {
      * @return a Map with the keys: Waiting, BeingPicked, ToBeCollected
      */
     public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
-        DEBUG.trace("DEBUG: get state of order system");
         Map<String, List<Integer>> res = new HashMap<>();
         res.put("Waiting", orderNos(theWaitingTray));
         res.put("BeingPicked", orderNos(theBeingPickedTray));

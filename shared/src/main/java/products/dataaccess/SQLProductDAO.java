@@ -3,7 +3,6 @@ package products.dataaccess;
 import dataaccess.DBAccess;
 import dataaccess.DBAccessFactory;
 import products.Product;
-import debug.DEBUG;
 import middle.DAOException;
 import products.ProductDAO;
 import products.remote.RemoteProductDAO;
@@ -74,9 +73,7 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
             statement.setString(1, pNum);
             ResultSet rs = statement.executeQuery();
 
-            boolean res = rs.next();
-            DEBUG.trace("DB SQLProductDAO: exists(%s) -> %s", pNum, ( res ? "T" : "F" ));
-            return res;
+            return rs.next();
         } catch (SQLException e) {
             throw new DAOException("SQL exists: " + e.getMessage());
         }
@@ -161,7 +158,6 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
         final String updateProductQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
         final String updateStockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
 
-        DEBUG.trace("DB DBStockReadWriter: modifyStock(%s)", detail.getProductNumber());
         try {
             if (!exists(detail.getProductNumber())) {
                 try (

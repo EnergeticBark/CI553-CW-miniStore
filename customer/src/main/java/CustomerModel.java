@@ -1,5 +1,4 @@
 import products.Product;
-import debug.DEBUG;
 import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
 import products.ProductDAO;
@@ -27,6 +26,8 @@ public class CustomerModel {
     final SimpleStringProperty productQuantity = new SimpleStringProperty();
     final SimpleStringProperty productNumber = new SimpleStringProperty();
 
+    private static final System.Logger LOGGER = System.getLogger(CustomerModel.class.getName());
+
     /*
      * Construct the model of the Customer
      * @param mf The factory to create the connection objects
@@ -35,11 +36,8 @@ public class CustomerModel {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
         } catch (Exception e) {
-            DEBUG.error("""
-                    CustomerModel.constructor
-                    Database not created?
-                    %s
-                    """, e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, "Database not created?\n{0}", e.getMessage());
+            System.exit(-1);
         }
     }
 
@@ -76,7 +74,8 @@ public class CustomerModel {
             fireAction("");
             return;
         } catch (DAOException e) {
-            DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         } catch (ProductDoesNotExistException _) {}
 
         try {
@@ -86,7 +85,8 @@ public class CustomerModel {
         } catch (ProductDoesNotExistException _) {
             fireAction("No results for \"" + trimmedQuery + "\"");
         } catch (DAOException e) {
-            DEBUG.error("CustomerClient.search()\n%s", e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
     }
 

@@ -1,7 +1,5 @@
 package middle;
 
-import debug.DEBUG;
-
 import java.rmi.RemoteException;
 import java.util.List;
 
@@ -41,13 +39,11 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
      */
     @Override
     public synchronized boolean exists(String number) throws DAOException {
-        DEBUG.trace("RemoteDAOWrapper:exists()");
         return wrapRemote(() -> stub.exists(number));
     }
 
     @Override
     public synchronized List<T> search(String searchQuery) throws DAOException {
-        DEBUG.trace("RemoteDAOWrapper:search()");
         return wrapRemote(() -> stub.search(searchQuery));
     }
 
@@ -57,7 +53,6 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
      */
     @Override
     public synchronized T get(String number) throws DAOException {
-        DEBUG.trace("RemoteDAOWrapper:get()");
         return wrapRemote(() -> stub.get(number));
     }
 
@@ -69,7 +64,6 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
      */
     @Override
     public synchronized void update(T detail) throws DAOException {
-        DEBUG.trace("RemoteDAOWrapper:update()");
         this.<Void>wrapRemote(() -> {
             stub.update(detail);
             return null;

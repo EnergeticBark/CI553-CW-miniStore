@@ -5,8 +5,6 @@
 
 package dataaccess;
 
-import debug.DEBUG;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -24,6 +22,8 @@ public class DBAccessFactory {
     private static String theAction = "";
     private static String theDataBase = "";
     private static String theOS = "";
+
+    private static final System.Logger LOGGER = System.getLogger(DBAccessFactory.class.getName());
 
     public static void setAction(String name) {
         theAction = name;
@@ -45,7 +45,7 @@ public class DBAccessFactory {
      */
     public DBAccess getNewDBAccess() {
         setEnvironment();
-        DEBUG.traceA("Using [%s] as database type\n", theDataBase);
+        LOGGER.log(System.Logger.Level.INFO, "Using [{0}] as database type\n", theDataBase);
         switch (theDataBase) {
             case "Derby":
                 return new DerbyAccess(); // Derby
@@ -62,7 +62,7 @@ public class DBAccessFactory {
                 return new LinuxAccess(); // MySQL Linux
 
             default:
-                DEBUG.error("DataBase [%s] not known\n", theDataBase);
+                LOGGER.log(System.Logger.Level.ERROR, "DataBase [{0}] not known\n", theDataBase);
                 System.exit(0);
         }
         return new DBAccess(); // Unknown
@@ -95,15 +95,16 @@ public class DBAccessFactory {
                 iStream.close();
                 return vec;
             } else {
-                DEBUG.error("File %s length %d bytes too long", file, len);
+                LOGGER.log(System.Logger.Level.ERROR, "File {0} length {1} bytes too long", file, len);
+                System.exit(-1);
             }
         }
         catch (FileNotFoundException  err) {
-            DEBUG.error("File does not exist: fileToBytes [%s]\n", file);
-            System.exit(0);
+            LOGGER.log(System.Logger.Level.ERROR, "File does not exist: fileToBytes [{0}]\n", file);
+            System.exit(-1);
         } catch (IOException err) {
-            DEBUG.error("IO error: fileToBytes [%s]\n", file);
-            System.exit(0);
+            LOGGER.log(System.Logger.Level.ERROR, "IO error: fileToBytes [{0}]\n", file);
+            System.exit(-1);
         }
         return vec;
     }
@@ -118,8 +119,8 @@ public class DBAccessFactory {
             File in = new File(path);
             return in.length();
         } catch (SecurityException err) {
-            DEBUG.error("Security error: length of file [%s]\n", path);
-            System.exit(0);
+            LOGGER.log(System.Logger.Level.ERROR, "Security error: length of file [{0}]\n", path);
+            System.exit(-1);
         }
         return -1;
     }

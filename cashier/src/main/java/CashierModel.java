@@ -3,7 +3,6 @@ import catalogue.BetterBasket;
 import orders.OrderProcessor;
 import orders.exceptions.OrderException;
 import products.Product;
-import debug.DEBUG;
 import products.exceptions.ProductDoesNotExistException;
 import products.exceptions.ProductOutOfStockException;
 import javafx.beans.property.SimpleStringProperty;
@@ -29,6 +28,8 @@ public class CashierModel {
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
 
+    private static final System.Logger LOGGER = System.getLogger(CashierModel.class.getName());
+
     /**
      * Construct the model of the Cashier
      * @param mf The factory to create the connection objects
@@ -38,7 +39,7 @@ public class CashierModel {
             stockDAO = mf.makeStockDAO(); // Database access
             theOrder = mf.makeOrderProcessing(); // Process order
         } catch (Exception e) {
-            DEBUG.error("CashierModel.constructor\n%s", e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
         }
         state = State.process; // Current state
     }
@@ -82,8 +83,8 @@ public class CashierModel {
         } catch (ProductDoesNotExistException _) {
             fireAction("Unknown product number " + trimmedProductNumber);
         } catch (DAOException e) {
-            DEBUG.error("%s\n%s", "CashierModel.doCheck", e.getMessage());
-            fireAction(e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
     }
 
@@ -105,8 +106,8 @@ public class CashierModel {
         } catch (ProductOutOfStockException _) {
             fireAction("!!! Not in stock");
         } catch (DAOException e) {
-            DEBUG.error("%s\n%s", "CashierModel.doBuy", e.getMessage());
-            fireAction(e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
         state = State.process; // All Done
     }
@@ -124,8 +125,8 @@ public class CashierModel {
             state = State.process; // All Done
             fireAction("Start New Order");
         } catch (OrderException e) {
-            DEBUG.error("%s\n%s", "CashierModel.doCancel", e.getMessage());
-            fireAction(e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
     }
 
@@ -147,11 +148,8 @@ public class CashierModel {
                 theBasket = makeBasket(); // basket list
                 theBasket.setOrderNum(uon); // Add an order number
             } catch (OrderException e) {
-                DEBUG.error("""
-                        Communications failure
-                        CashierModel.makeBasket()
-                        %s
-                        """, e.getMessage());
+                LOGGER.log(System.Logger.Level.ERROR, "Communications failure\n{0}", e.getMessage());
+                System.exit(-1);
             }
         }
     }

@@ -1,7 +1,6 @@
 import catalogue.Basket;
 import catalogue.BetterBasket;
 import products.Product;
-import debug.DEBUG;
 import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
 import products.ProductDAO;
@@ -21,6 +20,8 @@ public class BackDoorModel {
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
 
+    private static final System.Logger LOGGER = System.getLogger(BackDoorModel.class.getName());
+
     /*
      * Construct the model of the back door client
      * @param mf The factory to create the connection objects
@@ -29,7 +30,8 @@ public class BackDoorModel {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
         } catch (Exception e) {
-            DEBUG.error("CustomerModel.constructor\n%s", e.getMessage());
+            LOGGER.log(System.Logger.Level.ERROR, e);
+            System.exit(-1);
         }
 
         theBasket = makeBasket(); // Initial Basket

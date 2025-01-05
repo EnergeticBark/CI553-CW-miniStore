@@ -2,7 +2,6 @@ package orders;
 
 import catalogue.Basket;
 import products.Product;
-import debug.DEBUG;
 import orders.remote.RemoteOrderProcessor;
 
 import java.util.stream.Collectors;
@@ -58,11 +57,7 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      */
     @Override
     public synchronized void newOrder(Basket bought) {
-        DEBUG.trace("DEBUG: New order");
         orders.add(new Order(bought));
-        for (Order order: orders) {
-            DEBUG.trace("OrderProcessorImpl: " + asString(order.getBasket()));
-        }
     }
 
     /**
@@ -71,7 +66,6 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      */
     @Override
     public synchronized Basket getOrderToPack() {
-        DEBUG.trace("DEBUG: Get order to pack");
         Basket foundWaiting = null;
         for (Order order: orders) {
             if (order.getState() == Order.State.Waiting) {
@@ -92,7 +86,6 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      */
     @Override
     public synchronized boolean informOrderPacked(int orderNum) {
-        DEBUG.trace("DEBUG: OrderProcessorImpl packed [%d]", orderNum);
         for (int i = 0; i < orders.size(); i++) {
             if (orders.get(i).getBasket().getOrderNum() == orderNum
                     && orders.get(i).getState() == Order.State.BeingPacked) {
@@ -110,7 +103,6 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      */
     @Override
     public synchronized boolean informOrderCollected(int orderNum) {
-        DEBUG.trace("DEBUG: OrderProcessorImpl collected [%d]", orderNum);
         for (int i = 0; i < orders.size(); i++) {
             if (orders.get(i).getBasket().getOrderNum() == orderNum
                     && orders.get(i).getState() == Order.State.ToBeCollected) {

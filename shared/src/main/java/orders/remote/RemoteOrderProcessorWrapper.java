@@ -1,7 +1,6 @@
 package orders.remote;
 
 import catalogue.Basket;
-import debug.DEBUG;
 import middle.RemoteMethod;
 import orders.OrderProcessor;
 import orders.exceptions.OrderException;
@@ -54,7 +53,6 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
 
     @Override
     public void newOrder(Basket bought) throws OrderException {
-        DEBUG.trace("RemoteOrderProcessorWrapper:newOrder()");
         wrapRemote(() -> {
             stub.newOrder(bought);
             return null;
@@ -63,7 +61,6 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
 
     @Override
     public int uniqueNumber() throws OrderException {
-        DEBUG.trace("RemoteOrderProcessorWrapper:uniqueNumber()");
         return wrapRemote(() -> stub.uniqueNumber());
     }
 
@@ -74,7 +71,6 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
      */
     @Override
     public synchronized Basket getOrderToPack() throws OrderException {
-        DEBUG.trace("RemoteOrderProcessorWrapper:getOrderTioPack()");
         return wrapRemote(() -> stub.getOrderToPack());
     }
 
@@ -85,7 +81,6 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
      */
     @Override
     public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
-        DEBUG.trace("RemoteOrderProcessorWrapper:informOrderPacked()");
         return wrapRemote(() -> stub.informOrderPacked(orderNum));
     }
 
@@ -95,7 +90,6 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
      */
     @Override
     public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
-        DEBUG.trace("RemoteOrderProcessorWrapper:informOrderCollected()" );
         return wrapRemote(() -> stub.informOrderCollected(orderNum));
     }
 
@@ -104,7 +98,6 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
      */
     @Override
     public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
-        DEBUG.trace("RemoteOrderProcessorWrapper:getOrderState()");
         return wrapRemote(() -> stub.getOrderState());
     }
 }
