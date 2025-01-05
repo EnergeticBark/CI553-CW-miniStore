@@ -5,6 +5,7 @@
 
 package middle;
 
+import orders.OrderProcessor;
 import products.dataaccess.SQLProductDAO;
 import orders.OrderProcessorImpl;
 import products.ProductDAO;

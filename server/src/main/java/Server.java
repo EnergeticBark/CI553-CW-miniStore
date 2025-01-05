@@ -2,7 +2,7 @@ import products.dataaccess.SQLProductDAO;
 import middle.Names;
 import products.remote.RemoteProductDAO;
 import orders.OrderProcessorImpl;
-import remote.RemoteOrderProcessor;
+import orders.remote.RemoteOrderProcessor;
 
 import java.net.InetAddress;
 import java.rmi.Naming;

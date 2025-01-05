@@ -6,6 +6,8 @@
 
 package middle;
 
+import orders.OrderProcessor;
+import orders.exceptions.OrderException;
 import products.ProductDAO;
 
 /**

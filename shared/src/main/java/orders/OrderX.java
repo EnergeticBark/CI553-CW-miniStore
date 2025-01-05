@@ -4,8 +4,7 @@ package orders;
 import catalogue.Basket;
 import products.Product;
 import debug.DEBUG;
-import middle.OrderException;
-import middle.OrderProcessor;
+import orders.exceptions.OrderException;
 
 import java.util.ArrayList;
 import java.util.HashMap;

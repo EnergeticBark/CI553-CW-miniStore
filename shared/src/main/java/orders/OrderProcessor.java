@@ -1,6 +1,7 @@
-package middle;
+package orders;
 
 import catalogue.Basket;
+import orders.exceptions.OrderException;
 
 import java.util.List;
 import java.util.Map;

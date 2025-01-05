@@ -3,9 +3,8 @@ package orders;
 import catalogue.Basket;
 import products.Product;
 import debug.DEBUG;
-import middle.OrderException;
-import middle.OrderProcessor;
-import remote.RemoteOrderProcessor;
+import orders.exceptions.OrderException;
+import orders.remote.RemoteOrderProcessor;
 
 import java.util.stream.Collectors;
 

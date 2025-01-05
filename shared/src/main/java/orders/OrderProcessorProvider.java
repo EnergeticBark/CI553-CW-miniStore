@@ -1,8 +1,9 @@
-package middle;
+package orders;
 
 import catalogue.Basket;
 import debug.DEBUG;
-import remote.RemoteOrderProcessor;
+import orders.exceptions.OrderException;
+import orders.remote.RemoteOrderProcessor;
 
 import java.rmi.Naming;
 import java.util.List;

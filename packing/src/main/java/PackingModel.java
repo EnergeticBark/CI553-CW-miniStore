@@ -3,8 +3,8 @@ import debug.DEBUG;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
-import middle.OrderException;
-import middle.OrderProcessor;
+import orders.exceptions.OrderException;
+import orders.OrderProcessor;
 
 import java.util.concurrent.atomic.AtomicReference;
 

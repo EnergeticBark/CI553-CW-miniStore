@@ -1,4 +1,4 @@
-package middle;
+package orders.exceptions;
 
 import java.io.Serial;
 

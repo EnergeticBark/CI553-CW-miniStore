@@ -1,7 +1,7 @@
-package remote;
+package orders.remote;
 
 import catalogue.Basket;
-import middle.OrderException;
+import orders.exceptions.OrderException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

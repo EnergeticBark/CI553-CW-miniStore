@@ -4,6 +4,8 @@
  */
 package middle;
 
+import orders.OrderProcessor;
+import orders.OrderProcessorProvider;
 import products.ProductDAO;
 import products.remote.RemoteProductDAOWrapper;
 
