@@ -58,7 +58,7 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
 
     @Override
     public synchronized void create(T newEntity) throws DAOException {
-        this.<Void>wrapRemote(() -> {
+        wrapRemote(() -> {
             stub.create(newEntity);
             return null;
         });
@@ -72,7 +72,7 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
      */
     @Override
     public synchronized void update(T detail) throws DAOException {
-        this.<Void>wrapRemote(() -> {
+        wrapRemote(() -> {
             stub.update(detail);
             return null;
         });

@@ -8,8 +8,6 @@ import orders.exceptions.OrderException;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
 
 // There can only be 1 ResultSet opened per statement
 // so no simultaneous use of the statement object
@@ -76,24 +74,10 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
      * the shop floor.
      */
     @Override
-    public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
-        return wrapRemote(() -> stub.informOrderPacked(orderNum));
-    }
-
-    /**
-     * Informs the order processing system that the order has been
-     * collected by the customer
-     */
-    @Override
-    public synchronized boolean informOrderCollected(int orderNum) throws OrderException {
-        return wrapRemote(() -> stub.informOrderCollected(orderNum));
-    }
-
-    /**
-     * Returns information about all orders in the order processing system
-     */
-    @Override
-    public synchronized Map<String, List<Integer>> getOrderState() throws OrderException {
-        return wrapRemote(() -> stub.getOrderState());
+    public synchronized void informOrderPacked(int orderNum) throws OrderException {
+        wrapRemote(() -> {
+            stub.informOrderPacked(orderNum);
+            return null;
+        });
     }
 }

@@ -3,9 +3,6 @@ package orders;
 import catalogue.Basket;
 import orders.exceptions.OrderException;
 
-import java.util.List;
-import java.util.Map;
-
 /**
  * Defines the interface for accessing the order processing system.
  * @author  Mike Smith University of Brighton
@@ -18,9 +15,5 @@ public interface OrderProcessor {
 
     // Used by Packer
     Order getOrderToPack() throws OrderException;
-    boolean informOrderPacked(int orderNum) throws OrderException;
-
-    // Not being used in this version.
-    boolean informOrderCollected(int orderNum) throws OrderException; // Collection
-    Map<String,List<Integer>> getOrderState() throws OrderException; // Display
+    void informOrderPacked(int orderNum) throws OrderException;
 }

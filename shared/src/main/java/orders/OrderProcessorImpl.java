@@ -5,9 +5,6 @@ import middle.DAOException;
 import orders.exceptions.OrderException;
 import orders.remote.RemoteOrderProcessor;
 
-
-import java.util.*;
-
 /**
  * The order processing system.<BR>
  * Manages the progression of customer orders, 
@@ -58,10 +55,7 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
     @Override
     public synchronized Order getOrderToPack() throws OrderException {
         try {
-            System.out.println("looking for order");
             for (Order order: orderDAO.getAll()) {
-                System.out.println(order.getOrderNumber());
-                System.out.println(order.getState());
                 if (order.getState() == Order.State.Waiting) {
                     // Found order waiting.
                     order.setState(Order.State.BeingPacked);
@@ -80,75 +74,17 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * packed and the products are now being delivered to the
      * collection desk
      * @param  orderNum The order that has been packed
-     * @return true OrderProcessorImpl in system, false no such order
      */
     @Override
-    public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
+    public synchronized void informOrderPacked(int orderNum) throws OrderException {
         try {
-            System.out.println("packed WOOO");
             Order order = orderDAO.get(String.valueOf(orderNum));
             if (order.getState() == Order.State.BeingPacked) {
                 order.setState(Order.State.ToBeCollected);
                 orderDAO.update(order);
             }
-            return true;
         } catch (DAOException e) {
             throw new OrderException(e.getMessage());
         }
-    }
-
-    /**
-     * Informs the order processing system that the order has been
-     * collected by the customer
-     * @return true If order is in the system, otherwise false
-     */
-    @Override
-    public synchronized boolean informOrderCollected(int orderNum) {
-        /*for (int i = 0; i < orderDAO.size(); i++) {
-            if (orderDAO.get(i).getOrderNumber() == orderNum
-                    && orderDAO.get(i).getState() == Order.State.ToBeCollected) {
-                orderDAO.remove(i);
-                return true;
-            }
-        }*/
-        return false;
-    }
-
-    /**
-     * Returns information about all the orders (there order number)
-     * in the order processing system
-     * This consists of a map with the following keys:
-     *<PRE>
-     * Key "Waiting"        a list of orders waiting to be processed
-     * Key "BeingPacked"    a list of orders that are currently being packed
-     * Key "ToBeCollected"  a list of orders that can now be collected
-     * Associated with each key is a List&lt;Integer&gt; of order numbers.
-     * Note: Each order number will be unique number.
-     * </PRE>
-     * @return a Map with the keys: "Waiting", "BeingPacked", "ToBeCollected"
-     */
-    @Override
-    public synchronized Map<String, List<Integer>> getOrderState() {
-        //DEBUG.trace( "DEBUG: get state of order system" );
-        Map<String, List<Integer>> res = new HashMap<>();
-
-        res.put("Waiting", orderNums(Order.State.Waiting));
-        res.put("BeingPacked", orderNums(Order.State.BeingPacked));
-        res.put("ToBeCollected", orderNums(Order.State.ToBeCollected));
-
-        return res;
-    }
-
-    /**
-     * Return the list of order numbers in selected state
-     * @param inState The state to find order numbers in
-     * @return A list of order numbers
-     */
-    private List<Integer> orderNums(Order.State inState) {
-        /*return orderDAO.stream()
-                .filter(order -> order.getState() == inState)
-                .map(Order::getOrderNumber)
-                .collect(Collectors.toList());*/
-        return null;
     }
 }

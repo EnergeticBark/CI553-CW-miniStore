@@ -6,8 +6,6 @@ import orders.exceptions.OrderException;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Defines the RMI interface for the OrderProcessor.
@@ -18,7 +16,5 @@ import java.util.Map;
 public interface RemoteOrderProcessor extends Remote {
     void newOrder(Basket order) throws RemoteException, OrderException;
     Order getOrderToPack() throws RemoteException, OrderException;
-    boolean informOrderPacked(int orderNum) throws RemoteException, OrderException;
-    boolean informOrderCollected(int orderNum) throws RemoteException, OrderException;
-    Map<String, List<Integer>> getOrderState() throws RemoteException, OrderException;
+    void informOrderPacked(int orderNum) throws RemoteException, OrderException;
 }
