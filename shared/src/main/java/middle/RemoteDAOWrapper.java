@@ -56,6 +56,14 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
         return wrapRemote(() -> stub.get(number));
     }
 
+    @Override
+    public synchronized void create(T newEntity) throws DAOException {
+        this.<Void>wrapRemote(() -> {
+            stub.create(newEntity);
+            return null;
+        });
+    }
+
     /**
      * Modifies Stock details for a given product number.
      * Information modified: Description, Price

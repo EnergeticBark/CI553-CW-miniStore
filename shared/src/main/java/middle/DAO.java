@@ -27,6 +27,8 @@ public interface DAO<T> {
      */
     T get(String identifier) throws DAOException;
 
+    void create(T newEntity) throws DAOException;
+
     /**
      * Modifies Stock details for a given product number.
      * Information modified: Description, Price

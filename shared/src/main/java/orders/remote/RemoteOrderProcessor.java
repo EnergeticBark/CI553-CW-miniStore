@@ -1,6 +1,7 @@
 package orders.remote;
 
 import catalogue.Basket;
+import orders.Order;
 import orders.exceptions.OrderException;
 
 import java.rmi.Remote;
@@ -16,8 +17,7 @@ import java.util.Map;
  */
 public interface RemoteOrderProcessor extends Remote {
     void newOrder(Basket order) throws RemoteException, OrderException;
-    int uniqueNumber() throws RemoteException, OrderException;
-    Basket getOrderToPack() throws RemoteException, OrderException;
+    Order getOrderToPack() throws RemoteException, OrderException;
     boolean informOrderPacked(int orderNum) throws RemoteException, OrderException;
     boolean informOrderCollected(int orderNum) throws RemoteException, OrderException;
     Map<String, List<Integer>> getOrderState() throws RemoteException, OrderException;

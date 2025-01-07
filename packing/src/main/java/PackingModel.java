@@ -2,6 +2,7 @@ import catalogue.Basket;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import middle.MiddleFactory;
+import orders.Order;
 import orders.exceptions.OrderException;
 import orders.OrderProcessor;
 
@@ -11,9 +12,9 @@ import java.util.concurrent.atomic.AtomicReference;
  * Implements the Model of the warehouse packing client
  */
 public class PackingModel {
-    private final AtomicReference<Basket> theBasket = new AtomicReference<>();
+    private final AtomicReference<Order> order = new AtomicReference<>();
 
-    private OrderProcessor theOrder = null;
+    private OrderProcessor orderProcessor = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
@@ -28,13 +29,13 @@ public class PackingModel {
      */
     public PackingModel(MiddleFactory mf) {
         try {
-            theOrder = mf.makeOrderProcessing();  // Process order
+            orderProcessor = mf.makeOrderProcessing();  // Process order
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
         }
 
-        theBasket.set(null); // Initial Basket
+        order.set(null); // Initial Order
 
         // Start a background check to see when a new order can be packed
         Thread pollOrders = new Thread(this::checkForNewOrder);
@@ -92,9 +93,9 @@ public class PackingModel {
                     continue;
                 }
 
-                Basket sb = theOrder.getOrderToPack(); // Order
-                if (sb != null) { // Order to pack
-                    theBasket.set(sb); // Working on
+                Order nextOrder = orderProcessor.getOrderToPack(); // Order
+                if (nextOrder != null) { // Order to pack
+                    order.set(nextOrder); // Working on
                     Platform.runLater(() -> fireAction("Bought Receipt"));
                 } else {
                     worker.free(); // Free
@@ -114,7 +115,10 @@ public class PackingModel {
      * @return the basket
      */
     public Basket getBasket() {
-        return theBasket.get();
+        if (order.get() == null) {
+            return null;
+        }
+        return order.get().getBasket();
     }
 
     /**
@@ -122,15 +126,15 @@ public class PackingModel {
      */
     public void doPacked() {
         try {
-            Basket basket = theBasket.get(); // Basket being packed
-            if (basket == null) {
+            Order packedOrder = this.order.get(); // Order being packed
+            if (packedOrder == null) {
                 fireAction("No order"); // Not packed order
                 return;
             }
 
-            theBasket.set(null); // packed
-            int no = basket.getOrderNum(); // Order no
-            theOrder.informOrderPacked(no); // Tell system
+            order.set(null); // packed
+            int orderNumber = packedOrder.getOrderNumber();
+            orderProcessor.informOrderPacked(orderNumber); // Tell system
             worker.free(); // Can pack some more
             fireAction(""); // Inform picker
         } catch (OrderException e) { // Error

@@ -5,7 +5,9 @@
 
 package middle;
 
+import orders.OrderDAO;
 import orders.OrderProcessor;
+import orders.dataaccess.SQLOrderDAO;
 import products.dataaccess.SQLProductDAO;
 import orders.OrderProcessorImpl;
 import products.ProductDAO;
@@ -18,6 +20,7 @@ import products.ProductDAO;
 // Pattern: Abstract Factory
 public class LocalMiddleFactory implements MiddleFactory {
     private static SQLProductDAO dbStockReader = null;
+    private static SQLOrderDAO orderDAO = null;
     private static OrderProcessorImpl order = null;
 
     /**
@@ -31,13 +34,20 @@ public class LocalMiddleFactory implements MiddleFactory {
         return dbStockReader;
     }
 
+    public OrderDAO makeOrderDAO() throws DAOException {
+        if (orderDAO == null) {
+            orderDAO = new SQLOrderDAO();
+        }
+        return orderDAO;
+    }
+
     /**
      * Return an object to access the order processing system.
      * All users share this same object.
      */
     public OrderProcessor makeOrderProcessing() {
         if (order == null) {
-            order = new OrderProcessorImpl();
+            order = new OrderProcessorImpl(orderDAO);
         }
         return order;
     }

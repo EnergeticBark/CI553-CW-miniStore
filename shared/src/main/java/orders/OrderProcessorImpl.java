@@ -1,10 +1,10 @@
 package orders;
 
 import catalogue.Basket;
-import products.Product;
+import middle.DAOException;
+import orders.exceptions.OrderException;
 import orders.remote.RemoteOrderProcessor;
 
-import java.util.stream.Collectors;
 
 import java.util.*;
 
@@ -21,24 +21,12 @@ import java.util.*;
  */
 public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor {
     // Active orders in the miniStore system
-    private final ArrayList<Order> orders = new ArrayList<>();
+    private final OrderDAO orderDAO;
+
     private static int nextOrderNumber = 1; // Start at order 1
 
-    /**
-     * Used to generate debug information
-     * @param  basket an instance of a basket
-     * @return Description of contents
-     */
-    private String asString(Basket basket) {
-        StringBuilder sb = new StringBuilder(1024);
-        Formatter fr = new Formatter(sb);
-        fr.format("#%d (", basket.getOrderNum());
-        for (Product pr: basket) {
-            fr.format("%-15.15s: %3d ", pr.getDescription(), pr.getQuantity());
-        }
-        fr.format(")");
-        fr.close();
-        return sb.toString();
+    public OrderProcessorImpl(OrderDAO orderDAO) {
+        this.orderDAO = orderDAO;
     }
 
     /**
@@ -46,8 +34,7 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      *   would be good to recycle numbers after 999
      * @return A unique order number
      */
-    @Override
-    public synchronized int uniqueNumber() {
+    private synchronized int uniqueNumber() {
         return nextOrderNumber++;
     }
 
@@ -56,8 +43,12 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * @param bought A new order that is to be processed
      */
     @Override
-    public synchronized void newOrder(Basket bought) {
-        orders.add(new Order(bought));
+    public synchronized void newOrder(Basket bought) throws OrderException {
+        try {
+            orderDAO.create(new Order(uniqueNumber(), bought));
+        } catch (DAOException e) {
+            throw new OrderException(e.getMessage());
+        }
     }
 
     /**
@@ -65,16 +56,23 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * @return An order to pack or null if no order
      */
     @Override
-    public synchronized Basket getOrderToPack() {
-        Basket foundWaiting = null;
-        for (Order order: orders) {
-            if (order.getState() == Order.State.Waiting) {
-                foundWaiting = order.getBasket();
-                order.setState(Order.State.BeingPacked);
-                break;
+    public synchronized Order getOrderToPack() throws OrderException {
+        try {
+            System.out.println("looking for order");
+            for (Order order: orderDAO.getAll()) {
+                System.out.println(order.getOrderNumber());
+                System.out.println(order.getState());
+                if (order.getState() == Order.State.Waiting) {
+                    // Found order waiting.
+                    order.setState(Order.State.BeingPacked);
+                    orderDAO.update(order);
+                    return order;
+                }
             }
+        } catch (DAOException e) {
+            throw new OrderException(e.getMessage());
         }
-        return foundWaiting;
+        return null;
     }
 
     /**
@@ -85,15 +83,18 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * @return true OrderProcessorImpl in system, false no such order
      */
     @Override
-    public synchronized boolean informOrderPacked(int orderNum) {
-        for (int i = 0; i < orders.size(); i++) {
-            if (orders.get(i).getBasket().getOrderNum() == orderNum
-                    && orders.get(i).getState() == Order.State.BeingPacked) {
-                orders.get(i).setState(Order.State.ToBeCollected);
-                return true;
+    public synchronized boolean informOrderPacked(int orderNum) throws OrderException {
+        try {
+            System.out.println("packed WOOO");
+            Order order = orderDAO.get(String.valueOf(orderNum));
+            if (order.getState() == Order.State.BeingPacked) {
+                order.setState(Order.State.ToBeCollected);
+                orderDAO.update(order);
             }
+            return true;
+        } catch (DAOException e) {
+            throw new OrderException(e.getMessage());
         }
-        return false;
     }
 
     /**
@@ -103,13 +104,13 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      */
     @Override
     public synchronized boolean informOrderCollected(int orderNum) {
-        for (int i = 0; i < orders.size(); i++) {
-            if (orders.get(i).getBasket().getOrderNum() == orderNum
-                    && orders.get(i).getState() == Order.State.ToBeCollected) {
-                orders.remove(i);
+        /*for (int i = 0; i < orderDAO.size(); i++) {
+            if (orderDAO.get(i).getOrderNumber() == orderNum
+                    && orderDAO.get(i).getState() == Order.State.ToBeCollected) {
+                orderDAO.remove(i);
                 return true;
             }
-        }
+        }*/
         return false;
     }
 
@@ -144,9 +145,10 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
      * @return A list of order numbers
      */
     private List<Integer> orderNums(Order.State inState) {
-        return orders.stream()
+        /*return orderDAO.stream()
                 .filter(order -> order.getState() == inState)
-                .map(order -> order.getBasket().getOrderNum())
-                .collect(Collectors.toList());
+                .map(Order::getOrderNumber)
+                .collect(Collectors.toList());*/
+        return null;
     }
 }

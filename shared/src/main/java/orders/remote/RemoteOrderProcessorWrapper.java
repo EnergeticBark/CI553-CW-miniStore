@@ -2,6 +2,7 @@ package orders.remote;
 
 import catalogue.Basket;
 import middle.RemoteMethod;
+import orders.Order;
 import orders.OrderProcessor;
 import orders.exceptions.OrderException;
 
@@ -59,18 +60,13 @@ public class RemoteOrderProcessorWrapper implements OrderProcessor {
         });
     }
 
-    @Override
-    public int uniqueNumber() throws OrderException {
-        return wrapRemote(() -> stub.uniqueNumber());
-    }
-
     /**
      * Returns an order to pick from the warehouse
      * if no order then returns null.
      * @return An order to pick
      */
     @Override
-    public synchronized Basket getOrderToPack() throws OrderException {
+    public synchronized Order getOrderToPack() throws OrderException {
         return wrapRemote(() -> stub.getOrderToPack());
     }
 

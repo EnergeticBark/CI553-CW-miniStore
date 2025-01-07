@@ -15,10 +15,9 @@ import java.util.Map;
 public interface OrderProcessor {
     // Used by Cashier
     void newOrder(Basket bought) throws OrderException;
-    int uniqueNumber() throws OrderException;
 
     // Used by Packer
-    Basket getOrderToPack() throws OrderException;
+    Order getOrderToPack() throws OrderException;
     boolean informOrderPacked(int orderNum) throws OrderException;
 
     // Not being used in this version.

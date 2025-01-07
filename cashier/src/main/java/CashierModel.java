@@ -20,10 +20,10 @@ public class CashierModel {
 
     private State state; // Current state
     private Product product = null; // Current product
-    private Basket theBasket = null; // Bought items
+    private Basket basket = null; // Bought items
 
     private ProductDAO stockDAO = null;
-    private OrderProcessor theOrder = null;
+    private OrderProcessor orderProcessor = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
@@ -37,7 +37,7 @@ public class CashierModel {
     public CashierModel(MiddleFactory mf) {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
-            theOrder = mf.makeOrderProcessing(); // Process order
+            orderProcessor = mf.makeOrderProcessing(); // Process order
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
         }
@@ -59,7 +59,7 @@ public class CashierModel {
      * @return basket
      */
     public Basket getBasket() {
-        return theBasket;
+        return basket;
     }
 
     /**
@@ -101,7 +101,7 @@ public class CashierModel {
             new BuyStock(stockDAO).run(product.getProductNumber(), 1);
 
             makeBasketIfReq(); // new Basket ?
-            theBasket.add(product); // Add to bought
+            basket.add(product); // Add to bought
             fireAction("Purchased " + product.getDescription());
         } catch (ProductOutOfStockException _) {
             fireAction("!!! Not in stock");
@@ -117,11 +117,11 @@ public class CashierModel {
      */
     public void bought() {
         try {
-            if (theBasket != null && !theBasket.isEmpty()) { // items > 1
+            if (basket != null && !basket.isEmpty()) { // items > 1
                 // T
-                theOrder.newOrder(theBasket); // Process order
+                orderProcessor.newOrder(basket); // Process order
             }
-            theBasket = null;
+            basket = null;
             state = State.process; // All Done
             fireAction("Start New Order");
         } catch (OrderException e) {
@@ -142,15 +142,8 @@ public class CashierModel {
      * make a Basket when required
      */
     private void makeBasketIfReq() {
-        if (theBasket == null) {
-            try {
-                int uon = theOrder.uniqueNumber(); // Unique order num.
-                theBasket = makeBasket(); // basket list
-                theBasket.setOrderNum(uon); // Add an order number
-            } catch (OrderException e) {
-                LOGGER.log(System.Logger.Level.ERROR, "Communications failure\n{0}", e.getMessage());
-                System.exit(-1);
-            }
+        if (basket == null) {
+            basket = makeBasket(); // basket list
         }
     }
 
