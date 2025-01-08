@@ -7,7 +7,7 @@ import products.ProductDAO;
 
 import java.rmi.Naming;
 
-public class RemoteProductDAOWrapper extends RemoteDAOWrapper<Product> implements ProductDAO {
+public class RemoteProductDAOWrapper extends RemoteDAOWrapper<Product, RemoteProductDAO> implements ProductDAO {
     public RemoteProductDAOWrapper(String url) {
         super(url);
     }

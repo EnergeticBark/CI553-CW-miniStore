@@ -15,7 +15,7 @@ public class CashierClient extends Application {
         // If the first or second arguments exist, use them as StockDAO and OrderProcessor's URLs.
         // Otherwise, use their default URLs.
         String stockURL = args.isEmpty() ? Names.STOCK_DAO : args.getFirst();
-        String orderURL = args.size() < 2 ? Names.ORDER : args.get(1);
+        String orderURL = args.size() < 2 ? Names.ORDER_DAO : args.get(1);
 
         RemoteMiddleFactory rmf = new RemoteMiddleFactory();
         rmf.setStockURL(stockURL);

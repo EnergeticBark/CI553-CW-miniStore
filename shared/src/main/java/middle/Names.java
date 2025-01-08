@@ -7,5 +7,5 @@ package middle;
  */
 public class Names {
     public static String STOCK_DAO = "rmi://localhost/stock_dao";
-    public static String ORDER = "rmi://localhost/order";
+    public static String ORDER_DAO = "rmi://localhost/order_dao";
 }

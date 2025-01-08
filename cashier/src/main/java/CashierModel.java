@@ -1,7 +1,7 @@
 import catalogue.Basket;
 import catalogue.BetterBasket;
-import orders.OrderProcessor;
-import orders.exceptions.OrderException;
+import orders.OrderDAO;
+import orders.usecases.CreateOrder;
 import products.Product;
 import products.exceptions.ProductDoesNotExistException;
 import products.exceptions.ProductOutOfStockException;
@@ -23,7 +23,7 @@ public class CashierModel {
     private Basket basket = null; // Bought items
 
     private ProductDAO stockDAO = null;
-    private OrderProcessor orderProcessor = null;
+    private OrderDAO orderDAO = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
@@ -37,7 +37,7 @@ public class CashierModel {
     public CashierModel(MiddleFactory mf) {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
-            orderProcessor = mf.makeOrderProcessing(); // Process order
+            orderDAO = mf.makeOrderDAO(); // Process order
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
         }
@@ -119,12 +119,12 @@ public class CashierModel {
         try {
             if (basket != null && !basket.isEmpty()) { // items > 1
                 // T
-                orderProcessor.newOrder(basket); // Process order
+                new CreateOrder(orderDAO).run(basket); // Process order
             }
             basket = null;
             state = State.process; // All Done
             fireAction("Start New Order");
-        } catch (OrderException e) {
+        } catch (DAOException e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
         }

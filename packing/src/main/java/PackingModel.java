@@ -1,10 +1,12 @@
 import catalogue.Basket;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
+import middle.DAOException;
 import middle.MiddleFactory;
 import orders.Order;
-import orders.exceptions.OrderException;
-import orders.OrderProcessor;
+import orders.OrderDAO;
+import orders.usecases.GetOrderToPack;
+import orders.usecases.InformOrderPacked;
 
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -14,7 +16,7 @@ import java.util.concurrent.atomic.AtomicReference;
 public class PackingModel {
     private final AtomicReference<Order> order = new AtomicReference<>();
 
-    private OrderProcessor orderProcessor = null;
+    private OrderDAO orderDAO = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
     final SimpleStringProperty output = new SimpleStringProperty();
@@ -29,7 +31,7 @@ public class PackingModel {
      */
     public PackingModel(MiddleFactory mf) {
         try {
-            orderProcessor = mf.makeOrderProcessing();  // Process order
+            orderDAO = mf.makeOrderDAO();  // Process order
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
@@ -93,7 +95,7 @@ public class PackingModel {
                     continue;
                 }
 
-                Order nextOrder = orderProcessor.getOrderToPack(); // Order
+                Order nextOrder = new GetOrderToPack(orderDAO).run(); // Order
                 if (nextOrder != null) { // Order to pack
                     order.set(nextOrder); // Working on
                     Platform.runLater(() -> fireAction("Bought Receipt"));
@@ -133,11 +135,10 @@ public class PackingModel {
             }
 
             order.set(null); // packed
-            int orderNumber = packedOrder.getOrderNumber();
-            orderProcessor.informOrderPacked(orderNumber); // Tell system
+            new InformOrderPacked(orderDAO).run(packedOrder); // Tell system
             worker.free(); // Can pack some more
             fireAction(""); // Inform picker
-        } catch (OrderException e) { // Error
+        } catch (DAOException e) { // Error
             // Of course should not happen
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);

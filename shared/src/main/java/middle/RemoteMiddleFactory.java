@@ -4,9 +4,9 @@
  */
 package middle;
 
-import orders.OrderProcessor;
-import orders.remote.RemoteOrderProcessorWrapper;
+import orders.OrderDAO;
 import products.ProductDAO;
+import orders.remote.RemoteOrderDAOWrapper;
 import products.remote.RemoteProductDAOWrapper;
 
 /**
@@ -27,6 +27,7 @@ public class RemoteMiddleFactory implements MiddleFactory {
      * Return an object to access the database for read only access.
      * Access is via RMI
      */
+    @Override
     public ProductDAO makeStockDAO() {
         return new RemoteProductDAOWrapper(stockURL);
     }
@@ -35,8 +36,9 @@ public class RemoteMiddleFactory implements MiddleFactory {
      * Return an object to access the order processing system.
      * Access is via RMI
      */
-    public OrderProcessor makeOrderProcessing() {
-        return new RemoteOrderProcessorWrapper(orderURL);
+    @Override
+    public OrderDAO makeOrderDAO() {
+        return new RemoteOrderDAOWrapper(orderURL);
     }
 }
 

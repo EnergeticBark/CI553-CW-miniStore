@@ -6,8 +6,7 @@
 
 package middle;
 
-import orders.OrderProcessor;
-import orders.exceptions.OrderException;
+import orders.OrderDAO;
 import products.ProductDAO;
 
 /**
@@ -25,9 +24,9 @@ public interface MiddleFactory {
 
     /**
      * Return an object to access the order processing system
-     * @return instance of OrderProcessor
-     * @throws OrderException if issue
+     * @return instance of OrderDAO
+     * @throws DAOException if issue
      */
-    OrderProcessor makeOrderProcessing() throws OrderException, DAOException;
+    OrderDAO makeOrderDAO() throws DAOException;
 }
 

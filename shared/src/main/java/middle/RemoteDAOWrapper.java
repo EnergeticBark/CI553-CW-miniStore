@@ -11,9 +11,9 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public abstract class RemoteDAOWrapper<T> implements DAO<T> {
+public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO<T> {
     protected String url;
-    protected RemoteDAO<T> stub = null;
+    protected U stub = null;
 
     protected RemoteDAOWrapper(String url) {
         this.url = url;

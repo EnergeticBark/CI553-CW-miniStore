@@ -1,11 +1,8 @@
-import orders.OrderDAO;
 import orders.dataaccess.SQLOrderDAO;
 import orders.remote.RemoteOrderDAO;
 import products.dataaccess.SQLProductDAO;
 import middle.Names;
 import products.remote.RemoteProductDAO;
-import orders.OrderProcessorImpl;
-import orders.remote.RemoteOrderProcessor;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
@@ -23,19 +20,16 @@ class Server {
                 ? Names.STOCK_DAO // default location
                 : args[0]; // supplied location
 
-        String orderDAOURL = "rmi://localhost/order_dao";
-
-        String orderProcessorURL = args.length < 2
-                ? Names.ORDER // default location
+        String orderDAOURL = args.length < 2
+                ? Names.ORDER_DAO // default location
                 : args[1]; // supplied location
 
-        (new Server()).bind(stockReaderURL, orderDAOURL, orderProcessorURL);
+        (new Server()).bind(stockReaderURL, orderDAOURL);
     }
 
-    private void bind(String stockReaderURL, String orderDAOURL, String orderProcessorURL) {
+    private void bind(String stockReaderURL, String orderDAOURL) {
         RemoteProductDAO theStockR; // Remote stock object
-        RemoteOrderDAO orderDAO;
-        RemoteOrderProcessor theOrder; // Remote order object
+        RemoteOrderDAO orderDAO; // Remote order object
         System.out.println("Server: "); // Introduction
         try {
             LocateRegistry.createRegistry(1099);
@@ -56,11 +50,6 @@ class Server {
             UnicastRemoteObject.exportObject(orderDAO, 0);
             Naming.rebind(orderDAOURL, orderDAO); // bind to url
             System.out.println("SQLOrderDAO bound to: " + orderDAOURL); // Inform world
-
-            theOrder = new OrderProcessorImpl((OrderDAO) orderDAO); // OrderProcessorImpl
-            UnicastRemoteObject.exportObject(theOrder, 0);
-            Naming.rebind(orderProcessorURL, theOrder); // bind to url
-            System.out.println("OrderProcessorImpl bound to: " + orderProcessorURL); // Inform world
         } catch (Exception err) {
             System.out.println("Fail Server: " + err.getMessage()); // Variety of reasons
         }
