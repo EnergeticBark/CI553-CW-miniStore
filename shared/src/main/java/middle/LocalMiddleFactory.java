@@ -5,6 +5,7 @@
 
 package middle;
 
+import dao.DAOException;
 import orders.OrderDAO;
 import orders.dataaccess.SQLOrderDAO;
 import products.dataaccess.SQLProductDAO;

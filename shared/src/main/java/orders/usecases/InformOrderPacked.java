@@ -1,6 +1,6 @@
 package orders.usecases;
 
-import middle.DAOException;
+import dao.DAOException;
 import orders.Order;
 import orders.OrderDAO;
 

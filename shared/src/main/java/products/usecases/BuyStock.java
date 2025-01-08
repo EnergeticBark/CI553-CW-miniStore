@@ -3,7 +3,7 @@ package products.usecases;
 import products.Product;
 import products.exceptions.ProductOutOfStockException;
 import products.ProductDAO;
-import middle.DAOException;
+import dao.DAOException;
 
 public class BuyStock {
     private final ProductDAO productDAO;

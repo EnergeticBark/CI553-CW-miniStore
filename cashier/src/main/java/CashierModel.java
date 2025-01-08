@@ -1,5 +1,6 @@
 import catalogue.Basket;
 import catalogue.BetterBasket;
+import dao.DAOException;
 import orders.OrderDAO;
 import orders.usecases.CreateOrder;
 import products.Product;

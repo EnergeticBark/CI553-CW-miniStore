@@ -1,4 +1,4 @@
-package middle;
+package dao;
 
 import java.util.List;
 

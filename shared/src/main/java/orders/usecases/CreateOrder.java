@@ -1,7 +1,7 @@
 package orders.usecases;
 
 import catalogue.Basket;
-import middle.DAOException;
+import dao.DAOException;
 import orders.Order;
 import orders.OrderDAO;
 

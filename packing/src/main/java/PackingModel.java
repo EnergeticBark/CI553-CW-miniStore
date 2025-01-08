@@ -1,7 +1,7 @@
 import catalogue.Basket;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import middle.DAOException;
+import dao.DAOException;
 import middle.MiddleFactory;
 import orders.Order;
 import orders.OrderDAO;

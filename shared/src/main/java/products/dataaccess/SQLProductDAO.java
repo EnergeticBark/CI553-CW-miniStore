@@ -3,7 +3,7 @@ package products.dataaccess;
 import dataaccess.DBAccess;
 import dataaccess.DBAccessFactory;
 import products.Product;
-import middle.DAOException;
+import dao.DAOException;
 import products.ProductDAO;
 import products.remote.RemoteProductDAO;
 

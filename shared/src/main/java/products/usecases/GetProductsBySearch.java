@@ -3,7 +3,7 @@ package products.usecases;
 import products.Product;
 import products.exceptions.ProductDoesNotExistException;
 import products.ProductDAO;
-import middle.DAOException;
+import dao.DAOException;
 
 import java.util.List;
 

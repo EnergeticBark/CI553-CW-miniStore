@@ -1,7 +1,7 @@
 package orders.remote;
 
-import middle.RemoteDAOWrapper;
-import middle.DAOException;
+import dao.RemoteDAOWrapper;
+import dao.DAOException;
 import orders.Order;
 import orders.OrderDAO;
 

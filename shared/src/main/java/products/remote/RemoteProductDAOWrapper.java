@@ -1,7 +1,7 @@
 package products.remote;
 
-import middle.RemoteDAOWrapper;
-import middle.DAOException;
+import dao.RemoteDAOWrapper;
+import dao.DAOException;
 import products.Product;
 import products.ProductDAO;
 

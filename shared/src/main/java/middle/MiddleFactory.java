@@ -6,6 +6,7 @@
 
 package middle;
 
+import dao.DAOException;
 import orders.OrderDAO;
 import products.ProductDAO;
 

@@ -1,7 +1,7 @@
 package orders.remote;
 
-import middle.DAOException;
-import middle.RemoteDAO;
+import dao.DAOException;
+import dao.RemoteDAO;
 import orders.Order;
 
 import java.rmi.RemoteException;

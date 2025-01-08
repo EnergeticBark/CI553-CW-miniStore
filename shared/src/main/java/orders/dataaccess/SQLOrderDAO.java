@@ -3,7 +3,7 @@ package orders.dataaccess;
 import catalogue.Basket;
 import dataaccess.DBAccess;
 import dataaccess.DBAccessFactory;
-import middle.DAOException;
+import dao.DAOException;
 import orders.Order;
 import orders.OrderDAO;
 import orders.remote.RemoteOrderDAO;

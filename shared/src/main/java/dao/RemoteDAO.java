@@ -1,4 +1,4 @@
-package middle;
+package dao;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;

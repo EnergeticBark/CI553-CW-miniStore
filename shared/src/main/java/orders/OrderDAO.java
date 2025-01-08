@@ -1,7 +1,7 @@
 package orders;
 
-import middle.DAO;
-import middle.DAOException;
+import dao.DAO;
+import dao.DAOException;
 
 import java.util.List;
 
