@@ -140,7 +140,7 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
                     rs.getInt("stockLevel")
             );
         } catch (SQLException e) {
-            throw new DAOException("SQL getDetails: " + e.getMessage());
+            throw new DAOException("SQL get: " + e.getMessage());
         }
     }
 

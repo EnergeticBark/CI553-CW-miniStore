@@ -20,11 +20,6 @@ public class Basket extends ArrayList<Product> implements Serializable {
     private static final long serialVersionUID = 1;
 
     /**
-     * Constructor for a basket which is used to represent a customer order/wish list
-     */
-    public Basket() {}
-
-    /**
      * Add a product to the Basket.
      * Product is appended to the end of the existing products
      * in the basket.
