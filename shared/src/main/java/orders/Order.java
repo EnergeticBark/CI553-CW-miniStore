@@ -41,12 +41,4 @@ public class Order implements Serializable {
     public void setState(State state) {
         this.state = state;
     }
-
-    public int getStateID() {
-        return switch (state) {
-            case State.Waiting -> 1;
-            case State.BeingPacked -> 2;
-            case State.ToBeCollected -> 3;
-        };
-    }
 }

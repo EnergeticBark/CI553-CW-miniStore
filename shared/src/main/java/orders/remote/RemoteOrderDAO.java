@@ -9,4 +9,5 @@ import java.util.List;
 
 public interface RemoteOrderDAO extends RemoteDAO<Order> {
     List<Order> getAll() throws DAOException, RemoteException;
+    int getNextOrderNumber() throws DAOException, RemoteException;
 }

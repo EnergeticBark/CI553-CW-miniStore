@@ -115,7 +115,12 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
                 PreparedStatement orderLineStatement = getConnectionObject().prepareStatement(orderLineQuery)
         ) {
             orderStatement.setInt(1, order.getOrderNumber());
-            orderStatement.setInt(2, order.getStateID());
+            int stateID = switch (order.getState()) {
+                case Order.State.Waiting -> 1;
+                case Order.State.BeingPacked -> 2;
+                case Order.State.ToBeCollected -> 3;
+            };
+            orderStatement.setInt(2, stateID);
             orderStatement.executeUpdate();
 
             for (Product product: order.getBasket()) {
@@ -171,5 +176,22 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         }
 
         return orders;
+    }
+
+    /**
+     * Generates a unique order number
+     *   would be good to recycle numbers after 999
+     * @return A unique order number
+     */
+    @Override
+    public synchronized int getNextOrderNumber() throws DAOException {
+        final String orderQuery = "VALUES (NEXT VALUE FOR orderSeq)";
+        try (PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery)) {
+            ResultSet rs = orderStatement.executeQuery();
+            rs.next();
+            return rs.getInt(1);
+        } catch (SQLException e) {
+            throw new DAOException("SQL getNextOrderNumber: " + e.getMessage());
+        }
     }
 }

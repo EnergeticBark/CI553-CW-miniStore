@@ -8,17 +8,6 @@ import orders.OrderDAO;
 public class CreateOrder {
     private final OrderDAO orderDAO;
 
-    private static int nextOrderNumber = 1; // Start at order 1
-
-    /**
-     * Generates a unique order number
-     *   would be good to recycle numbers after 999
-     * @return A unique order number
-     */
-    private synchronized int uniqueNumber() {
-        return nextOrderNumber++;
-    }
-
     public CreateOrder(OrderDAO orderDAO) {
         this.orderDAO = orderDAO;
     }
@@ -28,6 +17,7 @@ public class CreateOrder {
      * @param bought A new order that is to be processed
      */
     public void run(Basket bought) throws DAOException {
-        orderDAO.create(new Order(uniqueNumber(), bought));
+        int orderNumber = orderDAO.getNextOrderNumber();
+        orderDAO.create(new Order(orderNumber, bought));
     }
 }

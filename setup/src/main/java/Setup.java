@@ -43,6 +43,8 @@ class Setup {
             "SELECT * FROM StockTable, ProductTable WHERE StockTable.productNo = ProductTable.productNo",
 
             "DROP TABLE OrderTable",
+            "DROP SEQUENCE orderSeq RESTRICT",
+            "CREATE SEQUENCE orderSeq MINVALUE 1",
             "CREATE TABLE OrderTable ("
                     + "orderNo INT,"
                     + "state   INT)",

@@ -29,4 +29,9 @@ public class RemoteOrderDAOWrapper extends RemoteDAOWrapper<Order, RemoteOrderDA
     public List<Order> getAll() throws DAOException {
         return wrapRemote(() -> stub.getAll());
     }
+
+    @Override
+    public int getNextOrderNumber() throws DAOException {
+        return wrapRemote(() -> stub.getNextOrderNumber());
+    }
 }
