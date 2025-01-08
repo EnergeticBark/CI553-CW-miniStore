@@ -4,6 +4,9 @@ import catalogue.Basket;
 import middle.DAOException;
 import orders.exceptions.OrderException;
 import orders.remote.RemoteOrderProcessor;
+import orders.usecases.CreateOrder;
+import orders.usecases.GetOrderToPack;
+import orders.usecases.InformOrderPacked;
 
 /**
  * The order processing system.<BR>
@@ -20,19 +23,8 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
     // Active orders in the miniStore system
     private final OrderDAO orderDAO;
 
-    private static int nextOrderNumber = 1; // Start at order 1
-
     public OrderProcessorImpl(OrderDAO orderDAO) {
         this.orderDAO = orderDAO;
-    }
-
-    /**
-     * Generates a unique order number
-     *   would be good to recycle numbers after 999
-     * @return A unique order number
-     */
-    private synchronized int uniqueNumber() {
-        return nextOrderNumber++;
     }
 
     /**
@@ -42,7 +34,7 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
     @Override
     public synchronized void newOrder(Basket bought) throws OrderException {
         try {
-            orderDAO.create(new Order(uniqueNumber(), bought));
+            new CreateOrder(orderDAO).run(bought);
         } catch (DAOException e) {
             throw new OrderException(e.getMessage());
         }
@@ -55,18 +47,10 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
     @Override
     public synchronized Order getOrderToPack() throws OrderException {
         try {
-            for (Order order: orderDAO.getAll()) {
-                if (order.getState() == Order.State.Waiting) {
-                    // Found order waiting.
-                    order.setState(Order.State.BeingPacked);
-                    orderDAO.update(order);
-                    return order;
-                }
-            }
+            return new GetOrderToPack(orderDAO).run();
         } catch (DAOException e) {
             throw new OrderException(e.getMessage());
         }
-        return null;
     }
 
     /**
@@ -79,10 +63,7 @@ public class OrderProcessorImpl implements OrderProcessor, RemoteOrderProcessor 
     public synchronized void informOrderPacked(int orderNum) throws OrderException {
         try {
             Order order = orderDAO.get(String.valueOf(orderNum));
-            if (order.getState() == Order.State.BeingPacked) {
-                order.setState(Order.State.ToBeCollected);
-                orderDAO.update(order);
-            }
+            new InformOrderPacked(orderDAO).run(order);
         } catch (DAOException e) {
             throw new OrderException(e.getMessage());
         }

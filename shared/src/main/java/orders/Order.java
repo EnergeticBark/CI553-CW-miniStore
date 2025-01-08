@@ -38,7 +38,7 @@ public class Order implements Serializable {
         return basket;
     }
 
-    void setState(State state) {
+    public void setState(State state) {
         this.state = state;
     }
 

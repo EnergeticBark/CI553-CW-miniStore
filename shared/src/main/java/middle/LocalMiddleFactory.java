@@ -45,8 +45,9 @@ public class LocalMiddleFactory implements MiddleFactory {
      * Return an object to access the order processing system.
      * All users share this same object.
      */
-    public OrderProcessor makeOrderProcessing() {
+    public OrderProcessor makeOrderProcessing() throws DAOException {
         if (order == null) {
+            orderDAO = (SQLOrderDAO) makeOrderDAO();
             order = new OrderProcessorImpl(orderDAO);
         }
         return order;

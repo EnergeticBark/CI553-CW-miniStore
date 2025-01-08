@@ -28,6 +28,6 @@ public interface MiddleFactory {
      * @return instance of OrderProcessor
      * @throws OrderException if issue
      */
-    OrderProcessor makeOrderProcessing() throws OrderException;
+    OrderProcessor makeOrderProcessing() throws OrderException, DAOException;
 }
 
