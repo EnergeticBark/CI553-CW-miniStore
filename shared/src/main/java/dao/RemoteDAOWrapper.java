@@ -1,4 +1,4 @@
-package middle;
+package dao;
 
 import java.rmi.RemoteException;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.List;
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */
-public abstract class RemoteDAOWrapper<T> implements DAO<T> {
+public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO<T> {
     protected String url;
-    protected RemoteDAO<T> stub = null;
+    protected U stub = null;
 
     protected RemoteDAOWrapper(String url) {
         this.url = url;
@@ -56,6 +56,14 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
         return wrapRemote(() -> stub.get(number));
     }
 
+    @Override
+    public synchronized void create(T newEntity) throws DAOException {
+        wrapRemote(() -> {
+            stub.create(newEntity);
+            return null;
+        });
+    }
+
     /**
      * Modifies Stock details for a given product number.
      * Information modified: Description, Price
@@ -64,7 +72,7 @@ public abstract class RemoteDAOWrapper<T> implements DAO<T> {
      */
     @Override
     public synchronized void update(T detail) throws DAOException {
-        this.<Void>wrapRemote(() -> {
+        wrapRemote(() -> {
             stub.update(detail);
             return null;
         });

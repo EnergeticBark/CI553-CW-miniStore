@@ -3,7 +3,7 @@ package products.dataaccess;
 import dataaccess.DBAccess;
 import dataaccess.DBAccessFactory;
 import products.Product;
-import middle.DAOException;
+import dao.DAOException;
 import products.ProductDAO;
 import products.remote.RemoteProductDAO;
 
@@ -144,6 +144,29 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
         }
     }
 
+    @Override
+    public synchronized void create(Product product) throws DAOException {
+        final String productQuery = "INSERT INTO ProductTable VALUES (?, ?, ?, ?)";
+        final String stockQuery = "INSERT INTO StockTable VALUES (?, ?)";
+
+        try (
+                PreparedStatement productStatement = getConnectionObject().prepareStatement(productQuery);
+                PreparedStatement stockStatement = getConnectionObject().prepareStatement(stockQuery)
+        ) {
+            productStatement.setString(1, product.getProductNumber());
+            productStatement.setString(2, product.getDescription());
+            productStatement.setString(3, "images/Pic" + product.getProductNumber() + ".jpg");
+            productStatement.setDouble(4, product.getPrice());
+            productStatement.executeUpdate();
+
+            stockStatement.setString(1, product.getProductNumber());
+            stockStatement.setInt(2, product.getQuantity());
+            stockStatement.executeUpdate();
+        } catch (SQLException e) {
+            throw new DAOException("SQL create: " + e.getMessage());
+        }
+    }
+
     /**
      * Modifies Stock details for a given product number.
      *  Assumed to exist in database.
@@ -152,53 +175,21 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
      */
     @Override
     public synchronized void update(Product detail) throws DAOException {
-        final String insertProductQuery = "INSERT INTO ProductTable VALUES (?, ?, ?, ?)";
-        final String insertStockQuery = "INSERT INTO StockTable VALUES (?, ?)";
+        final String productQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
+        final String stockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
 
-        final String updateProductQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
-        final String updateStockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
+        try (
+                PreparedStatement productStatement = getConnectionObject().prepareStatement(productQuery);
+                PreparedStatement stockStatement = getConnectionObject().prepareStatement(stockQuery)
+        ) {
+            productStatement.setString(1, detail.getDescription());
+            productStatement.setDouble(2, detail.getPrice());
+            productStatement.setString(3, detail.getProductNumber());
+            productStatement.executeUpdate();
 
-        try {
-            if (!exists(detail.getProductNumber())) {
-                try (
-                        PreparedStatement insertProductStatement = getConnectionObject()
-                                .prepareStatement(insertProductQuery);
-                        PreparedStatement insertStockStatement = getConnectionObject()
-                                .prepareStatement(insertStockQuery)
-                ) {
-                    insertProductStatement.setString(1, detail.getProductNumber());
-                    insertProductStatement.setString(2, detail.getDescription());
-                    insertProductStatement.setString(
-                            3,
-                            "images/Pic" + detail.getProductNumber() + ".jpg"
-                    );
-                    insertProductStatement.setDouble(
-                            4,
-                            detail.getPrice()
-                    );
-                    insertProductStatement.executeUpdate();
-
-                    insertStockStatement.setString(1, detail.getProductNumber());
-                    insertStockStatement.setInt(2, detail.getQuantity());
-                    insertStockStatement.executeUpdate();
-                }
-            } else {
-                try (
-                        PreparedStatement updateProductStatement = getConnectionObject()
-                                .prepareStatement(updateProductQuery);
-                        PreparedStatement updateStockStatement = getConnectionObject()
-                                .prepareStatement(updateStockQuery)
-                ) {
-                    updateProductStatement.setString(1, detail.getDescription());
-                    updateProductStatement.setDouble(2, detail.getPrice());
-                    updateProductStatement.setString(3, detail.getProductNumber());
-                    updateProductStatement.executeUpdate();
-
-                    updateStockStatement.setInt(1, detail.getQuantity());
-                    updateStockStatement.setString(2, detail.getProductNumber());
-                    updateStockStatement.executeUpdate();
-                }
-            }
+            stockStatement.setInt(1, detail.getQuantity());
+            stockStatement.setString(2, detail.getProductNumber());
+            stockStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("SQL modifyStock: " + e.getMessage());
         }

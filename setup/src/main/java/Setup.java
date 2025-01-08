@@ -40,7 +40,29 @@ class Setup {
             "INSERT INTO StockTable VALUES ('0006', 15)",
             "INSERT INTO StockTable VALUES ('0007', 01)",
 
-            "SELECT * FROM StockTable, ProductTable WHERE StockTable.productNo = ProductTable.productNo"
+            "SELECT * FROM StockTable, ProductTable WHERE StockTable.productNo = ProductTable.productNo",
+
+            "DROP TABLE OrderTable",
+            "DROP SEQUENCE orderSeq RESTRICT",
+            "CREATE SEQUENCE orderSeq MINVALUE 1",
+            "CREATE TABLE OrderTable ("
+                    + "orderNo INT,"
+                    + "state   INT)",
+
+            "DROP TABLE OrderStateTable",
+            "CREATE TABLE OrderStateTable ("
+                    + "id   INT,"
+                    + "name VARCHAR(20))",
+
+            "INSERT INTO OrderStateTable VALUES (1, 'Waiting')",
+            "INSERT INTO OrderStateTable VALUES (2, 'BeingPacked')",
+            "INSERT INTO OrderStateTable VALUES (3, 'ToBeCollected')",
+
+            "DROP TABLE OrderLineTable",
+            "CREATE TABLE OrderLineTable ("
+                    + "orderNo   INT,"
+                    + "productNo CHAR(4),"
+                    + "quantity  INT)"
     };
 
     public static void main(String[] args) {

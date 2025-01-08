@@ -1,8 +1,8 @@
+import orders.dataaccess.SQLOrderDAO;
+import orders.remote.RemoteOrderDAO;
 import products.dataaccess.SQLProductDAO;
 import middle.Names;
 import products.remote.RemoteProductDAO;
-import orders.OrderProcessorImpl;
-import orders.remote.RemoteOrderProcessor;
 
 import java.net.InetAddress;
 import java.rmi.Naming;
@@ -20,16 +20,16 @@ class Server {
                 ? Names.STOCK_DAO // default location
                 : args[0]; // supplied location
 
-        String orderProcessorURL = args.length < 2
-                ? Names.ORDER // default location
+        String orderDAOURL = args.length < 2
+                ? Names.ORDER_DAO // default location
                 : args[1]; // supplied location
 
-        (new Server()).bind(stockReaderURL, orderProcessorURL);
+        (new Server()).bind(stockReaderURL, orderDAOURL);
     }
 
-    private void bind(String stockReaderURL, String orderProcessorURL) {
+    private void bind(String stockReaderURL, String orderDAOURL) {
         RemoteProductDAO theStockR; // Remote stock object
-        RemoteOrderProcessor theOrder; // Remote order object
+        RemoteOrderDAO orderDAO; // Remote order object
         System.out.println("Server: "); // Introduction
         try {
             LocateRegistry.createRegistry(1099);
@@ -46,10 +46,10 @@ class Server {
             Naming.rebind(stockReaderURL, theStockR); // bind to url
             System.out.println("SQLProductDAO bound to: " + stockReaderURL); // Inform world
 
-            theOrder = new OrderProcessorImpl(); // OrderProcessorImpl
-            UnicastRemoteObject.exportObject(theOrder, 0);
-            Naming.rebind(orderProcessorURL, theOrder); // bind to url
-            System.out.println("OrderProcessorImpl bound to: " + orderProcessorURL); // Inform world
+            orderDAO = new SQLOrderDAO();
+            UnicastRemoteObject.exportObject(orderDAO, 0);
+            Naming.rebind(orderDAOURL, orderDAO); // bind to url
+            System.out.println("SQLOrderDAO bound to: " + orderDAOURL); // Inform world
         } catch (Exception err) {
             System.out.println("Fail Server: " + err.getMessage()); // Variety of reasons
         }

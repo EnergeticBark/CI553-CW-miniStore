@@ -1,5 +1,5 @@
 package products;
 
-import middle.DAO;
+import dao.DAO;
 
 public interface ProductDAO extends DAO<Product> {}

@@ -1,13 +1,13 @@
 package products.remote;
 
-import middle.RemoteDAOWrapper;
-import middle.DAOException;
+import dao.RemoteDAOWrapper;
+import dao.DAOException;
 import products.Product;
 import products.ProductDAO;
 
 import java.rmi.Naming;
 
-public class RemoteProductDAOWrapper extends RemoteDAOWrapper<Product> implements ProductDAO {
+public class RemoteProductDAOWrapper extends RemoteDAOWrapper<Product, RemoteProductDAO> implements ProductDAO {
     public RemoteProductDAOWrapper(String url) {
         super(url);
     }

@@ -18,31 +18,11 @@ import java.util.Locale;
 public class Basket extends ArrayList<Product> implements Serializable {
     @Serial
     private static final long serialVersionUID = 1;
-    private int theOrderNum = 0; // Order number
 
     /**
      * Constructor for a basket which is used to represent a customer order/wish list
      */
-    public Basket() {
-        theOrderNum  = 0;
-    }
-
-    /**
-     * Set the customers unique order number
-     * Valid order Numbers 1 ... N
-     * @param anOrderNum A unique order number
-     */
-    public void setOrderNum(int anOrderNum) {
-        theOrderNum = anOrderNum;
-    }
-
-    /**
-     * Returns the customers unique order number
-     * @return the customers order number
-     */
-    public int getOrderNum() {
-        return theOrderNum;
-    }
+    public Basket() {}
 
     /**
      * Add a product to the Basket.
@@ -67,9 +47,6 @@ public class Basket extends ArrayList<Product> implements Serializable {
         Formatter fr = new Formatter(sb, uk);
         String cSign = (Currency.getInstance(uk)).getSymbol();
         double total = 0.00;
-        if (theOrderNum != 0) {
-            fr.format("Order number: %03d\n", theOrderNum);
-        }
 
         if (this.size() > 0) {
             for (Product pr: this) {

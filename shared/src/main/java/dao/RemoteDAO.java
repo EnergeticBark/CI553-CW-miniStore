@@ -1,4 +1,4 @@
-package middle;
+package dao;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -14,5 +14,6 @@ public interface RemoteDAO<T> extends Remote {
     boolean exists(String number) throws RemoteException, DAOException;
     List<T> search(String searchQuery) throws RemoteException, DAOException;
     T get(String number) throws RemoteException, DAOException;
+    void create(T newEntity) throws RemoteException, DAOException;
     void update(T detail) throws RemoteException, DAOException;
 }

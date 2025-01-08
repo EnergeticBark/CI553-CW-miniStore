@@ -5,7 +5,7 @@ import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
 import products.ProductDAO;
 import middle.MiddleFactory;
-import middle.DAOException;
+import dao.DAOException;
 import products.usecases.GetProductByNumber;
 import products.usecases.RestockProduct;
 
