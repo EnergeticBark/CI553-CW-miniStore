@@ -9,7 +9,7 @@ public interface DAO<T> {
      * @return true if exists otherwise false
      * @throws DAOException if issue
      */
-    boolean exists(String pNum) throws DAOException;
+    boolean exists(int identifier) throws DAOException;
 
     /**
      * Search for products based on keywords in their descriptions.
@@ -25,7 +25,7 @@ public interface DAO<T> {
      * @return StockNumber, Description, Price, Quantity
      * @throws DAOException if issue
      */
-    T get(String identifier) throws DAOException;
+    T get(int identifier) throws DAOException;
 
     void create(T newEntity) throws DAOException;
 

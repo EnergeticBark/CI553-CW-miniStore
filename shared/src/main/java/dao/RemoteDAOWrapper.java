@@ -38,8 +38,8 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
      * @return true if exists otherwise false
      */
     @Override
-    public synchronized boolean exists(String number) throws DAOException {
-        return wrapRemote(() -> stub.exists(number));
+    public synchronized boolean exists(int identifier) throws DAOException {
+        return wrapRemote(() -> stub.exists(identifier));
     }
 
     @Override
@@ -52,8 +52,8 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
      * @return StockNumber, Description, Price, Quantity
      */
     @Override
-    public synchronized T get(String number) throws DAOException {
-        return wrapRemote(() -> stub.get(number));
+    public synchronized T get(int identifier) throws DAOException {
+        return wrapRemote(() -> stub.get(identifier));
     }
 
     @Override

@@ -62,15 +62,15 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
 
     /**
      * Checks if the product exits in the stock list
-     * @param pNum The product number
+     * @param productNumber The product number
      * @return true if exists otherwise false
      */
     @Override
-    public synchronized boolean exists(String pNum) throws DAOException {
+    public synchronized boolean exists(int productNumber) throws DAOException {
         final String query = "SELECT price FROM ProductTable WHERE ProductTable.productNo = ?";
 
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            statement.setString(1, pNum);
+            statement.setInt(1, productNumber);
             ResultSet rs = statement.executeQuery();
 
             return rs.next();
@@ -96,7 +96,7 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
 
             while (rs.next()) {
                 final Product product = new Product(
-                        rs.getString("productNo"),
+                        rs.getInt("productNo"),
                         rs.getString("description"),
                         rs.getString("picture"),
                         rs.getDouble("price"),
@@ -115,11 +115,11 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
     /**
      * Returns details about the product in the stock list.
      * Assumed to exist in database.
-     * @param pNum The product number
+     * @param productNumber The product number
      * @return Details in an instance of a Product
      */
     @Override
-    public synchronized Product get(String pNum) throws DAOException {
+    public synchronized Product get(int productNumber) throws DAOException {
         final String query = """
                 SELECT description, picture, price, stockLevel
                 FROM ProductTable, StockTable
@@ -128,12 +128,12 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
                 """;
 
         try (PreparedStatement statement = getConnectionObject().prepareStatement(query)) {
-            statement.setString(1, pNum);
+            statement.setInt(1, productNumber);
             ResultSet rs = statement.executeQuery();
 
             rs.next();
             return new Product(
-                    pNum,
+                    productNumber,
                     rs.getString("description"),
                     rs.getString("picture"),
                     rs.getDouble("price"),
@@ -153,13 +153,13 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
                 PreparedStatement productStatement = getConnectionObject().prepareStatement(productQuery);
                 PreparedStatement stockStatement = getConnectionObject().prepareStatement(stockQuery)
         ) {
-            productStatement.setString(1, product.getProductNumber());
+            productStatement.setInt(1, product.getProductNumber());
             productStatement.setString(2, product.getDescription());
             productStatement.setString(3, "images/Pic" + product.getProductNumber() + ".jpg");
             productStatement.setDouble(4, product.getPrice());
             productStatement.executeUpdate();
 
-            stockStatement.setString(1, product.getProductNumber());
+            stockStatement.setInt(1, product.getProductNumber());
             stockStatement.setInt(2, product.getQuantity());
             stockStatement.executeUpdate();
         } catch (SQLException e) {
@@ -171,10 +171,10 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
      * Modifies Stock details for a given product number.
      *  Assumed to exist in database.
      * Information modified: Description, Price
-     * @param detail Product details to change stock list to
+     * @param replacement Product details to change stock list to
      */
     @Override
-    public synchronized void update(Product detail) throws DAOException {
+    public synchronized void update(Product replacement) throws DAOException {
         final String productQuery = "UPDATE ProductTable SET description = ?, price = ? WHERE productNo = ?";
         final String stockQuery = "UPDATE StockTable SET stockLevel = ? WHERE productNo = ?";
 
@@ -182,13 +182,13 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
                 PreparedStatement productStatement = getConnectionObject().prepareStatement(productQuery);
                 PreparedStatement stockStatement = getConnectionObject().prepareStatement(stockQuery)
         ) {
-            productStatement.setString(1, detail.getDescription());
-            productStatement.setDouble(2, detail.getPrice());
-            productStatement.setString(3, detail.getProductNumber());
+            productStatement.setString(1, replacement.getDescription());
+            productStatement.setDouble(2, replacement.getPrice());
+            productStatement.setInt(3, replacement.getProductNumber());
             productStatement.executeUpdate();
 
-            stockStatement.setInt(1, detail.getQuantity());
-            stockStatement.setString(2, detail.getProductNumber());
+            stockStatement.setInt(1, replacement.getQuantity());
+            stockStatement.setInt(2, replacement.getProductNumber());
             stockStatement.executeUpdate();
         } catch (SQLException e) {
             throw new DAOException("SQL modifyStock: " + e.getMessage());

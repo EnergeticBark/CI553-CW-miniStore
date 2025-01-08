@@ -12,7 +12,7 @@ public class RestockProduct {
         this.productDAO = productDAO;
     }
 
-    public Product run(String productNumber, int amount) throws DAOException, ProductDoesNotExistException {
+    public Product run(int productNumber, int amount) throws DAOException, ProductDoesNotExistException {
         Product inventory = new GetProductByNumber(productDAO).run(productNumber);
         new AddStock().run(inventory, amount);
 

@@ -50,7 +50,7 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
     }
 
     @Override
-    public boolean exists(String pNum) throws DAOException {
+    public boolean exists(int pNum) throws DAOException {
         return false;
     }
 
@@ -60,14 +60,12 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
     }
 
     @Override
-    public Order get(String identifier) throws DAOException {
+    public Order get(int orderNumber) throws DAOException {
         final String orderQuery = "SELECT state FROM OrderTable WHERE orderNo = ?";
         final String orderLineQuery = """
             SELECT OrderLineTable.productNo, quantity, description, picture, price
             FROM OrderLineTable, ProductTable
             WHERE OrderLineTable.orderNo = ? AND OrderLineTable.productNo = ProductTable.productNo""";
-
-        int orderNumber = Integer.parseInt(identifier);
 
         try (
                 PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery);
@@ -82,7 +80,7 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
             Basket basket = new Basket();
             while (lineRs.next()) {
                 final Product product = new Product(
-                        lineRs.getString("productNo"),
+                        lineRs.getInt("productNo"),
                         lineRs.getString("description"),
                         lineRs.getString("picture"),
                         lineRs.getDouble("price"),
@@ -125,7 +123,7 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
 
             for (Product product: order.getBasket()) {
                 orderLineStatement.setInt(1, order.getOrderNumber());
-                orderLineStatement.setString(2, product.getProductNumber());
+                orderLineStatement.setInt(2, product.getProductNumber());
                 orderLineStatement.setInt(3, product.getQuantity());
                 orderLineStatement.executeUpdate();
             }
@@ -167,8 +165,7 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
             ResultSet rs = orderStatement.executeQuery();
             while (rs.next()) {
                 int orderNumber = rs.getInt("orderNo");
-                Order order = get(String.valueOf(orderNumber));
-
+                Order order = get(orderNumber);
                 orders.add(order);
             }
         } catch (SQLException e) {

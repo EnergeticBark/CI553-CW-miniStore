@@ -58,9 +58,10 @@ public class BackDoorModel {
     public void query(String productNumber) {
         String trimmedProductNumber = productNumber.trim();
         try {
-            Product product = new GetProductByNumber(stockDAO).run(trimmedProductNumber);
+            int parsedProductNumber = Integer.parseUnsignedInt(trimmedProductNumber);
+            Product product = new GetProductByNumber(stockDAO).run(parsedProductNumber);
             fireAction(product.showDetails());
-        } catch (ProductDoesNotExistException e) {
+        } catch (ProductDoesNotExistException | NumberFormatException _) {
             fireAction("Unknown product number " + trimmedProductNumber);
         } catch (DAOException e) {
             fireAction(e.getMessage());
@@ -77,15 +78,21 @@ public class BackDoorModel {
         String trimmedProductNumber = productNumber.trim();
         String trimmedQuantity = quantity.trim();
 
+        int parsedQuantity;
         try {
-            int amount = Integer.parseUnsignedInt(trimmedQuantity);
-            Product product = new RestockProduct(stockDAO).run(trimmedProductNumber, amount);
+            parsedQuantity = Integer.parseUnsignedInt(trimmedQuantity);
+        } catch (NumberFormatException e) {
+            fireAction("Invalid quantity");
+            return;
+        }
+
+        try {
+            int parsedProductNumber = Integer.parseUnsignedInt(trimmedProductNumber);
+            Product product = new RestockProduct(stockDAO).run(parsedProductNumber, parsedQuantity);
 
             theBasket.add(product);
             fireAction("");
-        } catch (NumberFormatException e) {
-            fireAction("Invalid quantity");
-        } catch (ProductDoesNotExistException _) {
+        } catch (ProductDoesNotExistException | NumberFormatException _) {
             fireAction("Unknown product number " + trimmedProductNumber);
         } catch (DAOException e) {
             fireAction(e.getMessage());

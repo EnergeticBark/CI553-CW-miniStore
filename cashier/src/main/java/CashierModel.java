@@ -72,7 +72,8 @@ public class CashierModel {
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
             // Remember prod.
-            product = new GetProductByNumber(stockDAO).run(trimmedProductNumber);
+            int parsedProductNumber = Integer.parseUnsignedInt(trimmedProductNumber);
+            product = new GetProductByNumber(stockDAO).run(parsedProductNumber);
             new EnsureEnoughStock().run(product, 1);
 
             state = State.checked; // OK await BUY
@@ -81,7 +82,7 @@ public class CashierModel {
             product.setQuantity(1);
         } catch (ProductOutOfStockException e) {
             fireAction(e.getMessage() + " not in stock");
-        } catch (ProductDoesNotExistException _) {
+        } catch (ProductDoesNotExistException | NumberFormatException _) {
             fireAction("Unknown product number " + trimmedProductNumber);
         } catch (DAOException e) {
             LOGGER.log(System.Logger.Level.ERROR, e);

@@ -12,7 +12,7 @@ public class GetProductByNumber {
         this.productDAO = productDAO;
     }
 
-    public Product run(String productNumber) throws ProductDoesNotExistException, DAOException {
+    public Product run(int productNumber) throws ProductDoesNotExistException, DAOException {
         if (!productDAO.exists(productNumber)) {
             throw new ProductDoesNotExistException();
         }

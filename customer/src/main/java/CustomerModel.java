@@ -70,13 +70,13 @@ public class CustomerModel {
         product = null;
         final String trimmedQuery = searchQuery.trim();
         try {
-            product = new GetProductByNumber(stockDAO).run(trimmedQuery);
+            product = new GetProductByNumber(stockDAO).run(Integer.parseUnsignedInt(trimmedQuery));
             fireAction("");
             return;
         } catch (DAOException e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
-        } catch (ProductDoesNotExistException _) {}
+        } catch (ProductDoesNotExistException | NumberFormatException _) {}
 
         try {
             List<Product> products = new GetProductsBySearch(stockDAO).run(trimmedQuery);

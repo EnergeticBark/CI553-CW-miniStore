@@ -11,9 +11,9 @@ import java.util.List;
  * @version 2.0
  */
 public interface RemoteDAO<T> extends Remote {
-    boolean exists(String number) throws RemoteException, DAOException;
+    boolean exists(int identifier) throws RemoteException, DAOException;
     List<T> search(String searchQuery) throws RemoteException, DAOException;
-    T get(String number) throws RemoteException, DAOException;
+    T get(int identifier) throws RemoteException, DAOException;
     void create(T newEntity) throws RemoteException, DAOException;
     void update(T detail) throws RemoteException, DAOException;
 }

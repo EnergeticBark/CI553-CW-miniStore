@@ -12,7 +12,7 @@ public class BuyStock {
         this.productDAO = productDAO;
     }
 
-    public Product run(String productNumber, int amount) throws
+    public Product run(int productNumber, int amount) throws
             ProductOutOfStockException,
             DAOException {
 
