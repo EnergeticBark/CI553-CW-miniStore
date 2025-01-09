@@ -70,7 +70,11 @@ public class PackingModel {
          * @return true if claimed else false
          */
         public synchronized boolean claim() { // Semaphore
-            return held ? false : (held = true);
+            if (held) {
+                return false;
+            }
+            held = true;
+            return true;
         }
 
         /**

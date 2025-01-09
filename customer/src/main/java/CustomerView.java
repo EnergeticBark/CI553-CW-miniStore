@@ -32,7 +32,9 @@ public class CustomerView {
         VBox vBox = new VBox(makeSearchPane(model), separator, makeProductPane(model));
 
         // Create scene, specifying the size of the window.
-        Scene scene = new Scene(vBox, WIDTH, HEIGHT);
+        Scene scene = new Scene(vBox);
+        stage.setWidth(WIDTH);
+        stage.setHeight(HEIGHT);
         stage.setMinWidth(WIDTH);
         stage.setMinHeight(HEIGHT);
         scene.getStylesheets().add("css/customer.css");
