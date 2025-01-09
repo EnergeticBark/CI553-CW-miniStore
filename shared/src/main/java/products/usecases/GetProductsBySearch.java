@@ -14,8 +14,8 @@ public class GetProductsBySearch {
         this.productDAO = productDAO;
     }
 
-    public List<Product> run(String productNumber) throws ProductDoesNotExistException, DAOException {
-        List<Product> products = productDAO.search(productNumber);
+    public List<Product> run(String searchQuery) throws ProductDoesNotExistException, DAOException {
+        List<Product> products = productDAO.search(searchQuery);
         if (products.isEmpty()) {
             throw new ProductDoesNotExistException();
         }

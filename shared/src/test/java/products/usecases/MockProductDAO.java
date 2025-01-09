@@ -18,7 +18,11 @@ public class MockProductDAO implements ProductDAO {
 
     @Override
     public List<Product> search(String searchQuery)  {
-        return List.of();
+        return products.stream()
+                .filter((product) -> product.getDescription()
+                        .toUpperCase()
+                        .contains(searchQuery.toUpperCase()))
+                .collect(Collectors.toList());
     }
 
     @Override
