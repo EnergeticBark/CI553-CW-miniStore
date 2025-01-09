@@ -3,6 +3,7 @@ package orders.usecases;
 import dao.DAOException;
 import orders.Order;
 import orders.OrderDAO;
+import orders.exceptions.OrderInvalidStateException;
 
 public class InformOrderPacked {
     private final OrderDAO orderDAO;
@@ -17,11 +18,13 @@ public class InformOrderPacked {
      * collection desk
      * @param order The order that has been packed
      */
-    public void run(Order order) throws DAOException {
-        if (order.getState() == Order.State.BeingPacked) {
-            order.setState(Order.State.ToBeCollected);
-            orderDAO.update(order);
+    public void run(Order order) throws OrderInvalidStateException, DAOException {
+        if (order.getState() != Order.State.BeingPacked) {
+            throw new OrderInvalidStateException("InformOrderPacked: order state was not 'BeingPacked'");
         }
+
+        order.setState(Order.State.ToBeCollected);
+        orderDAO.update(order);
     }
 }
 

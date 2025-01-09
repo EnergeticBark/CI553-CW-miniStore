@@ -5,6 +5,7 @@ import dao.DAOException;
 import middle.MiddleFactory;
 import orders.Order;
 import orders.OrderDAO;
+import orders.exceptions.OrderInvalidStateException;
 import orders.usecases.GetOrderToPack;
 import orders.usecases.InformOrderPacked;
 
@@ -138,7 +139,7 @@ public class PackingModel {
             new InformOrderPacked(orderDAO).run(packedOrder); // Tell system
             worker.free(); // Can pack some more
             fireAction(""); // Inform picker
-        } catch (DAOException e) { // Error
+        } catch (OrderInvalidStateException | DAOException e) { // Error
             // Of course should not happen
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
