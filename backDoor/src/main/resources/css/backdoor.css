@@ -1,3 +1,7 @@
+.titled-pane {
+    -fx-collapsible: false;
+}
+
 .button {
     -fx-min-width: 80px;
     -fx-pref-width: 80px;
@@ -10,6 +14,18 @@
     -fx-font-size: 16px;
 }
 
+#product-table {
+    -fx-pref-width: 226px;
+}
+
+#number-column {
+    -fx-pref-width: 110px;
+}
+
+#quantity-column {
+    -fx-pref-width: 100px;
+}
+
 #product-description {
     -fx-font-size: 26px;
 }
@@ -17,6 +33,10 @@
 #product-price {
     -fx-font-size: 28px;
     -fx-font-weight: bold;
+}
+
+#quantity-pane {
+    -fx-spacing: 10px;
 }
 
 #product-quantity {
