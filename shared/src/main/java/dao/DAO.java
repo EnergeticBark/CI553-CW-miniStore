@@ -1,5 +1,7 @@
 package dao;
 
+import java.util.List;
+
 public interface DAO<T> {
     /**
      * Checks if the product exits in the stock list
@@ -16,6 +18,8 @@ public interface DAO<T> {
      * @throws DAOException if issue
      */
     T get(int identifier) throws DAOException;
+
+    List<T> getAll() throws DAOException;
 
     void create(T newEntity) throws DAOException;
 

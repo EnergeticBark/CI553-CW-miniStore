@@ -145,6 +145,25 @@ public class SQLProductDAO implements ProductDAO, RemoteProductDAO {
     }
 
     @Override
+    public synchronized List<Product> getAll() throws DAOException {
+        final String productQuery = "SELECT productNo FROM ProductTable";
+        ArrayList<Product> products = new ArrayList<>();
+
+        try (PreparedStatement productStatement = getConnectionObject().prepareStatement(productQuery)) {
+            ResultSet rs = productStatement.executeQuery();
+            while (rs.next()) {
+                int productNumber = rs.getInt("productNo");
+                Product product = get(productNumber);
+                products.add(product);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("SQL getAll: " + e.getMessage());
+        }
+
+        return products;
+    }
+
+    @Override
     public synchronized void create(Product product) throws DAOException {
         final String productQuery = "INSERT INTO ProductTable VALUES (?, ?, ?, ?)";
         final String stockQuery = "INSERT INTO StockTable VALUES (?, ?)";
