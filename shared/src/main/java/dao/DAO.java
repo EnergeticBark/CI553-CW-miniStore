@@ -1,7 +1,5 @@
 package dao;
 
-import java.util.List;
-
 public interface DAO<T> {
     /**
      * Checks if the product exits in the stock list
@@ -10,14 +8,6 @@ public interface DAO<T> {
      * @throws DAOException if issue
      */
     boolean exists(int identifier) throws DAOException;
-
-    /**
-     * Search for products based on keywords in their descriptions.
-     * @param searchQuery The search query e.g. "TV", "Radio" or "Watch".
-     * @return A possibly empty list of search results.
-     * @throws DAOException If there was an issue.
-     */
-    List<T> search(String searchQuery) throws DAOException;
 
     /**
      * Returns details about the product in the stock list

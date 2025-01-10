@@ -1,7 +1,6 @@
 package dao;
 
 import java.rmi.RemoteException;
-import java.util.List;
 
 /**
  * Facade for read access to the stock list.
@@ -40,11 +39,6 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
     @Override
     public synchronized boolean exists(int identifier) throws DAOException {
         return wrapRemote(() -> stub.exists(identifier));
-    }
-
-    @Override
-    public synchronized List<T> search(String searchQuery) throws DAOException {
-        return wrapRemote(() -> stub.search(searchQuery));
     }
 
     /**
