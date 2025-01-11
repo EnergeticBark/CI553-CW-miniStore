@@ -22,7 +22,7 @@ public class BackDoorController {
     }
 
     /**
-     * RStock interaction from view
+     * restock interaction from view
      */
     public void restock() {
         model.restock();

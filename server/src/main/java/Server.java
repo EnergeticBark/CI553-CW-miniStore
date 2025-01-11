@@ -16,7 +16,7 @@ import java.rmi.server.UnicastRemoteObject;
  */
 class Server {
     public static void main(String[] args) {
-        String stockReaderURL = args.length < 1
+        String stockDAOURL = args.length < 1
                 ? Names.STOCK_DAO // default location
                 : args[0]; // supplied location
 
@@ -24,11 +24,11 @@ class Server {
                 ? Names.ORDER_DAO // default location
                 : args[1]; // supplied location
 
-        (new Server()).bind(stockReaderURL, orderDAOURL);
+        (new Server()).bind(stockDAOURL, orderDAOURL);
     }
 
-    private void bind(String stockReaderURL, String orderDAOURL) {
-        RemoteProductDAO theStockR; // Remote stock object
+    private void bind(String stockDAOURL, String orderDAOURL) {
+        RemoteProductDAO stockDAO; // Remote stock object
         RemoteOrderDAO orderDAO; // Remote order object
         System.out.println("Server: "); // Introduction
         try {
@@ -41,10 +41,10 @@ class Server {
         }
 
         try {
-            theStockR = new SQLProductDAO(); // Stock R
-            UnicastRemoteObject.exportObject(theStockR, 0);
-            Naming.rebind(stockReaderURL, theStockR); // bind to url
-            System.out.println("SQLProductDAO bound to: " + stockReaderURL); // Inform world
+            stockDAO = new SQLProductDAO();
+            UnicastRemoteObject.exportObject(stockDAO, 0);
+            Naming.rebind(stockDAOURL, stockDAO); // bind to url
+            System.out.println("SQLProductDAO bound to: " + stockDAOURL); // Inform world
 
             orderDAO = new SQLOrderDAO();
             UnicastRemoteObject.exportObject(orderDAO, 0);

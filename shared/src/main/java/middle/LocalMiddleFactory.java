@@ -18,7 +18,7 @@ import products.ProductDAO;
 
 // Pattern: Abstract Factory
 public class LocalMiddleFactory implements MiddleFactory {
-    private static SQLProductDAO dbStockReader = null;
+    private static SQLProductDAO stockDAO = null;
     private static SQLOrderDAO orderDAO = null;
 
     /**
@@ -27,10 +27,10 @@ public class LocalMiddleFactory implements MiddleFactory {
      */
     @Override
     public ProductDAO makeStockDAO() throws DAOException {
-        if (dbStockReader == null) {
-            dbStockReader = new SQLProductDAO();
+        if (stockDAO == null) {
+            stockDAO = new SQLProductDAO();
         }
-        return dbStockReader;
+        return stockDAO;
     }
 
     /**

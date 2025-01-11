@@ -12,7 +12,7 @@ public class BackDoorClient extends Application {
     @Override
     public void start(Stage stage) {
         final List<String> args = getParameters().getRaw();
-        // If the first argument exists, use it as StockReadWriter's URL, otherwise use the default URL.
+        // If the first argument exists, use it as StockDAOs's URL, otherwise use the default URL.
         final String stockURL = args.isEmpty() ? Names.STOCK_DAO : args.getFirst();
 
         RemoteMiddleFactory rmf = new RemoteMiddleFactory();
