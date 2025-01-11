@@ -57,12 +57,13 @@ public class BackDoorView {
         productQuantityColumn.setId("quantity-column");
 
         TableView<Product> productTable = new TableView<>();
-        productTable.itemsProperty().bind(model.stockList);
+        productTable.itemsProperty().bind(model.sortedStockList);
         productTable.getColumns().add(productNumberColumn);
         productTable.getColumns().add(productQuantityColumn);
         productTable.getSelectionModel()
                 .selectedItemProperty()
                 .addListener((_, _, product) -> controller.selectProduct(product));
+        model.sortedStockList.get().comparatorProperty().bind(productTable.comparatorProperty());
         VBox.setVgrow(productTable, Priority.ALWAYS);
         productTable.setId("product-table");
         return productTable;

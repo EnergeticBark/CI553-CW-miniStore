@@ -2,6 +2,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.transformation.SortedList;
 import javafx.scene.control.SpinnerValueFactory;
 import products.Product;
 import products.exceptions.ProductDoesNotExistException;
@@ -12,6 +13,7 @@ import dao.DAOException;
 import products.usecases.RestockProduct;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.Locale;
 
 /**
@@ -25,7 +27,8 @@ public class BackDoorModel {
             new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99999, 0)
     );
 
-    final ObjectProperty<ObservableList<Product>> stockList = new SimpleObjectProperty<>();
+    final ObservableList<Product> stockList = FXCollections.observableList(new ArrayList<>());
+    final ObjectProperty<SortedList<Product>> sortedStockList = new SimpleObjectProperty<>(new SortedList<>(stockList));
 
     final SimpleStringProperty productDescription = new SimpleStringProperty();
     final SimpleStringProperty productPrice = new SimpleStringProperty();
@@ -43,7 +46,7 @@ public class BackDoorModel {
     public BackDoorModel(MiddleFactory mf) {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
-            stockList.setValue(FXCollections.observableList(stockDAO.getAll()));
+            stockList.setAll(stockDAO.getAll());
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
@@ -89,7 +92,7 @@ public class BackDoorModel {
             fireAction("");
             try {
                 // Refresh the stock list.
-                stockList.setValue(FXCollections.observableList(stockDAO.getAll()));
+                stockList.setAll(stockDAO.getAll());
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
