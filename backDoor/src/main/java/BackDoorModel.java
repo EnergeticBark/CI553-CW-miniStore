@@ -2,6 +2,7 @@ import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.SpinnerValueFactory;
 import products.Product;
 import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
@@ -18,6 +19,11 @@ import java.util.Locale;
  */
 public class BackDoorModel {
     private Product product = null;
+    private ProductDAO stockDAO = null;
+
+    final SimpleObjectProperty<SpinnerValueFactory<Integer>> selectedQuantity = new SimpleObjectProperty<>(
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99999, 0)
+    );
 
     final ObjectProperty<ObservableList<Product>> stockList = new SimpleObjectProperty<>();
 
@@ -25,8 +31,6 @@ public class BackDoorModel {
     final SimpleStringProperty productPrice = new SimpleStringProperty();
     final SimpleStringProperty productQuantity = new SimpleStringProperty();
     final SimpleStringProperty productNumber = new SimpleStringProperty();
-
-    private ProductDAO stockDAO = null;
 
     final SimpleStringProperty action = new SimpleStringProperty();
 
@@ -48,8 +52,14 @@ public class BackDoorModel {
 
     // Tell the BackDoorView that the model has changed, so it needs to redraw.
     private void fireAction(String actionMessage) {
-        this.action.setValue(actionMessage);
-
+        action.setValue(actionMessage);
+        if (product == null) {
+            productDescription.setValue("");
+            productPrice.setValue("");
+            productQuantity.setValue("");
+            productNumber.setValue("");
+            return;
+        }
         productDescription.setValue(product.getDescription());
         productPrice.setValue(
                 NumberFormat.getCurrencyInstance(Locale.UK).format(
@@ -66,17 +76,16 @@ public class BackDoorModel {
     }
 
     /**
-     * Re stock
-     * @param quantity How many to be added
+     * Restock
      */
-    public void restock(int quantity) {
+    public void restock() {
         if (product == null) {
-            // TODO show this in the UI instead.
-            throw new RuntimeException("No product selected.");
+            fireAction("No product selected.");
+            return;
         }
 
         try {
-            product = new RestockProduct(stockDAO).run(product.getProductNumber(), quantity);
+            product = new RestockProduct(stockDAO).run(product.getProductNumber(), selectedQuantity.get().getValue());
             fireAction("");
             try {
                 // Refresh the stock list.
@@ -84,6 +93,7 @@ public class BackDoorModel {
             } catch (DAOException e) {
                 throw new RuntimeException(e);
             }
+            selectedQuantity.get().setValue(0);
         } catch (ProductDoesNotExistException | NumberFormatException _) {
             fireAction("Unknown product number " + product.getProductNumber());
         } catch (DAOException e) {

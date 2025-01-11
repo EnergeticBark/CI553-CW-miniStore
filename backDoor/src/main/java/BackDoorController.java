@@ -23,9 +23,8 @@ public class BackDoorController {
 
     /**
      * RStock interaction from view
-     * @param quantity The quantity to be re-stocked
      */
-    public void restock(int quantity) {
-        model.restock(quantity);
+    public void restock() {
+        model.restock();
     }
 }

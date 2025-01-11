@@ -95,13 +95,14 @@ public class BackDoorView {
 
         Spinner<Integer> spinner = new Spinner<>(0, 99999 , 0);
         spinner.setEditable(true);
+        spinner.valueFactoryProperty().bind(model.selectedQuantity);
         spinner.setId("spinner");
 
         Pane spacer = new Pane();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
         Button restockButton = new Button("Restock");
-        restockButton.setOnAction(_ -> controller.restock(spinner.getValue()));
+        restockButton.setOnAction(_ -> controller.restock());
 
         HBox inputPane = new HBox(plusLabel, spinner, spacer, restockButton);
 
@@ -110,7 +111,10 @@ public class BackDoorView {
 
         TitledPane stockPane = new TitledPane("Modify Stock", quantityPane);
 
-        VBox rightPane = new VBox(selectedPane, stockPane);
+        Label actionLabel = new Label();
+        actionLabel.textProperty().bind(model.action);
+
+        VBox rightPane = new VBox(selectedPane, stockPane, actionLabel);
         HBox.setHgrow(rightPane, Priority.ALWAYS);
         return rightPane;
     }
