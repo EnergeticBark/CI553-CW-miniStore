@@ -55,11 +55,6 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
     }
 
     @Override
-    public List<Order> search(String searchQuery) throws DAOException {
-        return List.of();
-    }
-
-    @Override
     public Order get(int orderNumber) throws DAOException {
         final String orderQuery = "SELECT state FROM OrderTable WHERE orderNo = ?";
         final String orderLineQuery = """

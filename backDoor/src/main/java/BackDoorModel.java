@@ -1,24 +1,38 @@
-import catalogue.Basket;
-import catalogue.BetterBasket;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.scene.control.SpinnerValueFactory;
 import products.Product;
 import products.exceptions.ProductDoesNotExistException;
 import javafx.beans.property.SimpleStringProperty;
 import products.ProductDAO;
 import middle.MiddleFactory;
 import dao.DAOException;
-import products.usecases.GetProductByNumber;
 import products.usecases.RestockProduct;
+
+import java.text.NumberFormat;
+import java.util.Locale;
 
 /**
  * Implements the Model of the back door client
  */
 public class BackDoorModel {
-    private Basket theBasket = null; // Bought items
-
+    private Product product = null;
     private ProductDAO stockDAO = null;
 
+    final SimpleObjectProperty<SpinnerValueFactory<Integer>> selectedQuantity = new SimpleObjectProperty<>(
+            new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 99999, 0)
+    );
+
+    final ObjectProperty<ObservableList<Product>> stockList = new SimpleObjectProperty<>();
+
+    final SimpleStringProperty productDescription = new SimpleStringProperty();
+    final SimpleStringProperty productPrice = new SimpleStringProperty();
+    final SimpleStringProperty productQuantity = new SimpleStringProperty();
+    final SimpleStringProperty productNumber = new SimpleStringProperty();
+
     final SimpleStringProperty action = new SimpleStringProperty();
-    final SimpleStringProperty output = new SimpleStringProperty();
 
     private static final System.Logger LOGGER = System.getLogger(BackDoorModel.class.getName());
 
@@ -29,90 +43,61 @@ public class BackDoorModel {
     public BackDoorModel(MiddleFactory mf) {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
+            stockList.setValue(FXCollections.observableList(stockDAO.getAll()));
         } catch (Exception e) {
             LOGGER.log(System.Logger.Level.ERROR, e);
             System.exit(-1);
         }
-
-        theBasket = makeBasket(); // Initial Basket
     }
 
     // Tell the BackDoorView that the model has changed, so it needs to redraw.
     private void fireAction(String actionMessage) {
-        this.action.setValue(actionMessage);
-        this.output.setValue(getBasket().getDetails());
-    }
-
-    /**
-     * Get the Basket of products
-     * @return basket
-     */
-    public Basket getBasket() {
-        return theBasket;
-    }
-
-    /**
-     * Query
-     * @param productNumber The product number of the item
-     */
-    public void query(String productNumber) {
-        String trimmedProductNumber = productNumber.trim();
-        try {
-            int parsedProductNumber = Integer.parseUnsignedInt(trimmedProductNumber);
-            Product product = new GetProductByNumber(stockDAO).run(parsedProductNumber);
-            fireAction(product.showDetails());
-        } catch (ProductDoesNotExistException | NumberFormatException _) {
-            fireAction("Unknown product number " + trimmedProductNumber);
-        } catch (DAOException e) {
-            fireAction(e.getMessage());
+        action.setValue(actionMessage);
+        if (product == null) {
+            productDescription.setValue("");
+            productPrice.setValue("");
+            productQuantity.setValue("");
+            productNumber.setValue("");
+            return;
         }
+        productDescription.setValue(product.getDescription());
+        productPrice.setValue(
+                NumberFormat.getCurrencyInstance(Locale.UK).format(
+                        product.getPrice()
+                )
+        );
+        productNumber.setValue(String.format("Product#: %04d", product.getProductNumber()));
+        productQuantity.setValue(String.format("Quantity In Stock: (%d)", product.getQuantity()));
+    }
+
+    public void selectProduct(Product product) {
+        this.product = product;
+        fireAction("");
     }
 
     /**
-     * Re stock
-     * @param productNumber The product number of the item
-     * @param quantity How many to be added
+     * Restock
      */
-    public void restock(String productNumber, String quantity) {
-        theBasket = makeBasket();
-        String trimmedProductNumber = productNumber.trim();
-        String trimmedQuantity = quantity.trim();
-
-        int parsedQuantity;
-        try {
-            parsedQuantity = Integer.parseUnsignedInt(trimmedQuantity);
-        } catch (NumberFormatException e) {
-            fireAction("Invalid quantity");
+    public void restock() {
+        if (product == null) {
+            fireAction("No product selected.");
             return;
         }
 
         try {
-            int parsedProductNumber = Integer.parseUnsignedInt(trimmedProductNumber);
-            Product product = new RestockProduct(stockDAO).run(parsedProductNumber, parsedQuantity);
-
-            theBasket.add(product);
+            product = new RestockProduct(stockDAO).run(product.getProductNumber(), selectedQuantity.get().getValue());
             fireAction("");
+            try {
+                // Refresh the stock list.
+                stockList.setValue(FXCollections.observableList(stockDAO.getAll()));
+            } catch (DAOException e) {
+                throw new RuntimeException(e);
+            }
+            selectedQuantity.get().setValue(0);
         } catch (ProductDoesNotExistException | NumberFormatException _) {
-            fireAction("Unknown product number " + trimmedProductNumber);
+            fireAction("Unknown product number " + product.getProductNumber());
         } catch (DAOException e) {
             fireAction(e.getMessage());
         }
     }
-
-    /**
-     * Clear the product()
-     */
-    public void clear() {
-        theBasket.clear(); // Clear s. list
-        fireAction("Enter Product Number"); // Set display
-    }
-
-    /**
-     * return an instance of a Basket
-     * @return a new instance of a Basket
-     */
-    protected Basket makeBasket() {
-        return new BetterBasket();
-    }
 }
-

@@ -12,20 +12,14 @@ public interface DAO<T> {
     boolean exists(int identifier) throws DAOException;
 
     /**
-     * Search for products based on keywords in their descriptions.
-     * @param searchQuery The search query e.g. "TV", "Radio" or "Watch".
-     * @return A possibly empty list of search results.
-     * @throws DAOException If there was an issue.
-     */
-    List<T> search(String searchQuery) throws DAOException;
-
-    /**
      * Returns details about the product in the stock list
      * @param pNum Product number
      * @return StockNumber, Description, Price, Quantity
      * @throws DAOException if issue
      */
     T get(int identifier) throws DAOException;
+
+    List<T> getAll() throws DAOException;
 
     void create(T newEntity) throws DAOException;
 

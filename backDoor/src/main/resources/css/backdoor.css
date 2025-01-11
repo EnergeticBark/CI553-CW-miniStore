@@ -1,0 +1,61 @@
+.titled-pane {
+    -fx-collapsible: false;
+}
+
+.button {
+    -fx-min-width: 80px;
+    -fx-pref-width: 80px;
+    -fx-pref-height: 45px;
+    -fx-font-size: 16px;
+}
+
+.text-field {
+    -fx-pref-height: 45px;
+    -fx-font-size: 16px;
+}
+
+#product-table {
+    -fx-pref-width: 226px;
+}
+
+#number-column {
+    -fx-pref-width: 110px;
+}
+
+#quantity-column {
+    -fx-pref-width: 100px;
+}
+
+#product-description {
+    -fx-font-size: 26px;
+}
+
+#product-price {
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+}
+
+#quantity-pane {
+    -fx-spacing: 10px;
+}
+
+#product-quantity {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+#plus-label {
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+
+    -fx-pref-width: 15px;
+    -fx-pref-height: 45px;
+
+    -fx-padding: 0 10px 0 5px;
+
+    -fx-alignment: center-left;
+}
+
+#spinner {
+    -fx-pref-width: 115px;
+}

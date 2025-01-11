@@ -18,11 +18,6 @@ public class MockOrderDAO implements OrderDAO {
     }
 
     @Override
-    public List<Order> search(String searchQuery)  {
-        return List.of();
-    }
-
-    @Override
     public Order get(int identifier) throws DAOException {
         Optional<Order> found = orders.stream()
                 .filter(order -> order.getOrderNumber() == identifier)

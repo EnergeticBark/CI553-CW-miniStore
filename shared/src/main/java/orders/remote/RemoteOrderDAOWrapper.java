@@ -6,7 +6,6 @@ import orders.Order;
 import orders.OrderDAO;
 
 import java.rmi.Naming;
-import java.util.List;
 
 public class RemoteOrderDAOWrapper extends RemoteDAOWrapper<Order, RemoteOrderDAO> implements OrderDAO {
     public RemoteOrderDAOWrapper(String url) {
@@ -23,11 +22,6 @@ public class RemoteOrderDAOWrapper extends RemoteDAOWrapper<Order, RemoteOrderDA
             stub = null;
             throw new DAOException("Com: " + e.getMessage());
         }
-    }
-
-    @Override
-    public List<Order> getAll() throws DAOException {
-        return wrapRemote(() -> stub.getAll());
     }
 
     @Override

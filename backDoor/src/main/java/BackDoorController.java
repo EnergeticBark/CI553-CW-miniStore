@@ -1,3 +1,5 @@
+import products.Product;
+
 /**
  * The BackDoor Controller
  */
@@ -12,27 +14,17 @@ public class BackDoorController {
         this.model = model;
     }
 
-    /**
-     * Query interaction from view
-     * @param pn The product number to be checked
-     */
-    public void query(String pn) {
-        model.query(pn);
+    public void selectProduct(Product product) {
+        if (product == null) {
+            return;
+        }
+        model.selectProduct(product);
     }
 
     /**
      * RStock interaction from view
-     * @param pn       The product number to be re-stocked
-     * @param quantity The quantity to be re-stocked
      */
-    public void restock(String pn, String quantity) {
-        model.restock(pn, quantity);
-    }
-
-    /**
-     * Clear interaction from view
-     */
-    public void clear() {
-        model.clear();
+    public void restock() {
+        model.restock();
     }
 }

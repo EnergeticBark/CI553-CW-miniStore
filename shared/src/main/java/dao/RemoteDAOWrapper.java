@@ -42,11 +42,6 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
         return wrapRemote(() -> stub.exists(identifier));
     }
 
-    @Override
-    public synchronized List<T> search(String searchQuery) throws DAOException {
-        return wrapRemote(() -> stub.search(searchQuery));
-    }
-
     /**
      * Returns details about the product in the stock list
      * @return StockNumber, Description, Price, Quantity
@@ -54,6 +49,11 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
     @Override
     public synchronized T get(int identifier) throws DAOException {
         return wrapRemote(() -> stub.get(identifier));
+    }
+
+    @Override
+    public List<T> getAll() throws DAOException {
+        return wrapRemote(() -> stub.getAll());
     }
 
     @Override
