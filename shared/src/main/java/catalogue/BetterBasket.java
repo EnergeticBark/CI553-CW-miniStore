@@ -20,7 +20,7 @@ public class BetterBasket extends Basket implements Serializable {
      * Add a product to the basket.
      * Unlike {@link Basket}, multiple instances with the same product number will be merged into a single
      * {@link Product} of appropriate quantity.
-     * @param product element whose presence in this collection is to be ensured.
+     * @param product Product to add, or merge if it's already in the basket.
      * @return true if the product was added successfully.
      */
     @Override

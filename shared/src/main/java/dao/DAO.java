@@ -4,30 +4,42 @@ import java.util.List;
 
 public interface DAO<T> {
     /**
-     * Checks if the product exits in the stock list
-     * @param pNum Product number
-     * @return true if exists otherwise false
-     * @throws DAOException if issue
+     * Checks if the entity exists in the persistence layer
+     * @param identifier The entities identifier, e.g. product number, order number, etc.
+     * @return true if an entity with the provided identifier exists, otherwise false.
+     * @throws DAOException if there was an issue.
      */
     boolean exists(int identifier) throws DAOException;
 
     /**
-     * Returns details about the product in the stock list
-     * @param pNum Product number
-     * @return StockNumber, Description, Price, Quantity
-     * @throws DAOException if issue
+     * Gets an entity from the persistence layer using its identifier.
+     * @param identifier The entities identifier, e.g. product number, order number, etc.
+     * @return The entity, e.g. Product, Order, etc.
+     * @throws DAOException if there was an issue, or if no such entity exists.
      */
     T get(int identifier) throws DAOException;
 
+    /**
+     * Gets a list of entities of this type stored in the persistence layer.
+     * @return A list of entities, e.g. Products, Orders, etc.
+     * Empty list if no entities of this type were stored.
+     * @throws DAOException if there was an issue.
+     */
     List<T> getAll() throws DAOException;
 
+    /**
+     * Creates a new entity in the persistence layer.
+     * @param newEntity The entity to save, e.g. a new Product or Order.
+     * @throws DAOException if there was an issue, such as an entity with the same identifier already existing.
+     */
     void create(T newEntity) throws DAOException;
 
     /**
-     * Modifies Stock details for a given product number.
-     * Information modified: Description, Price
-     * @param detail Replace with this version of product
-     * @throws DAOException if issue
+     * Modifies an entity that already exists in the persistence layer.
+     * For example, by passing this a Product parameter whose productNumber is 1, that Product will replace any
+     * existing Product in the persistence layer with the productNumber 1.
+     * @param replacement Replacement entity.
+     * @throws DAOException if there was an issue, or if there was no entity to replace.
      */
     void update(T replacement) throws DAOException;
 }
