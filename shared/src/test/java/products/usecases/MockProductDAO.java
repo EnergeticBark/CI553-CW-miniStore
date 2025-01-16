@@ -37,6 +37,11 @@ public class MockProductDAO implements ProductDAO {
     }
 
     @Override
+    public List<Product> getAll() {
+        return products;
+    }
+
+    @Override
     public void create(Product newEntity) {
         products.add(newEntity);
     }

@@ -29,6 +29,11 @@ public class MockOrderDAO implements OrderDAO {
     }
 
     @Override
+    public List<Order> getAll() {
+        return orders;
+    }
+
+    @Override
     public void create(Order newEntity) {
         orders.add(newEntity);
     }
@@ -39,11 +44,6 @@ public class MockOrderDAO implements OrderDAO {
                 .filter(order -> order.getOrderNumber() != replacement.getOrderNumber())
                 .collect(Collectors.toList());
         orders.add(replacement);
-    }
-
-    @Override
-    public List<Order> getAll() {
-        return orders;
     }
 
     @Override
