@@ -5,6 +5,7 @@ import dao.DAOException;
 import orders.Order;
 import orders.OrderDAO;
 
+/** Use case that adds a new order to the persistence layer. */
 public class CreateOrder {
     private final OrderDAO orderDAO;
 
@@ -13,8 +14,8 @@ public class CreateOrder {
     }
 
     /**
-     * Add a new order to the order processing system
-     * @param bought A new order that is to be processed
+     * Adds a new order to the persistence layer.
+     * @param bought the basket containing the products that were ordered.
      */
     public void run(Basket bought) throws DAOException {
         int orderNumber = orderDAO.getNextOrderNumber();

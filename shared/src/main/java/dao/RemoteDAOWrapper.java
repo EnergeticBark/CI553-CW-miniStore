@@ -5,7 +5,7 @@ import java.util.List;
 
 /**
  * Wrapper for allowing the {@link RemoteDAO} interface to be used as a local {@link DAO}.
- * This class only catches {@link RemoteException}s and rethrows them as {@link DAOException}s
+ * This class only catches {@link RemoteException}s and rethrows them as {@link DAOException}s.
  * All CRUD operations are performed in the class that implements RemoteDAO.
  * @param <T> The type of the entities this DAO works with.
  * @param <U> The RemoteDAO we want to use as a local DAO.

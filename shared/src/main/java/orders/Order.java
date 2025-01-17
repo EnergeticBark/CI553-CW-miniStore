@@ -5,9 +5,7 @@ import catalogue.Basket;
 import java.io.Serial;
 import java.io.Serializable;
 
-/**
- * Wraps a Basket and its state into an order.
- */
+/** Wraps a {@link Basket} and its state into an order. */
 public class Order implements Serializable {
     @Serial
     private static final long serialVersionUID = 20092507;

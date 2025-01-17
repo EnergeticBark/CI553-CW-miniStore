@@ -13,13 +13,13 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/** Implements CRUD access to {@link Order}s held in a relational database. */
 public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
-    final private Connection connection; // Connection to database
+    final private Connection connection; // Connection to the database.
 
     /**
-     * Connects to database
-     * Uses a factory method to help set up the connection
-     * @throws DAOException if problem
+     * Connects to the database. Uses a factory method to help set up the connection.
+     * @throws DAOException if there was a problem.
      */
     public SQLOrderDAO() throws DAOException {
         try {
@@ -41,19 +41,28 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
     }
 
     /**
-     * Returns a connection object that is used to process
-     * requests to the DataBase
-     * @return a connection object
+     * @param orderNumber the order number to check for.
+     * @return whether an {@link Order} with the provided order number exists in the database
      */
-    protected Connection getConnectionObject() {
-        return connection;
-    }
-
     @Override
-    public boolean exists(int pNum) throws DAOException {
-        return false;
+    public boolean exists(int orderNumber) throws DAOException {
+        final String query = "SELECT state FROM OrderTable WHERE orderNo = ?";
+
+        try (PreparedStatement statement = connection.prepareStatement(query)) {
+            statement.setInt(1, orderNumber);
+            ResultSet rs = statement.executeQuery();
+
+            return rs.next();
+        } catch (SQLException e) {
+            throw new DAOException("SQL exists: " + e.getMessage());
+        }
     }
 
+    /**
+     * Fetches an {@link Order} assumed to exist in the database.
+     * @param orderNumber the order number of the order to retrieve.
+     * @return the order with the provided order number.
+     */
     @Override
     public Order get(int orderNumber) throws DAOException {
         final String orderQuery = "SELECT state FROM OrderTable WHERE orderNo = ?";
@@ -63,8 +72,8 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
             WHERE OrderLineTable.orderNo = ? AND OrderLineTable.productNo = ProductTable.productNo""";
 
         try (
-                PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery);
-                PreparedStatement orderLineStatement = getConnectionObject().prepareStatement(orderLineQuery)
+                PreparedStatement orderStatement = connection.prepareStatement(orderQuery);
+                PreparedStatement orderLineStatement = connection.prepareStatement(orderLineQuery)
         ) {
             orderStatement.setInt(1, orderNumber);
             ResultSet rs = orderStatement.executeQuery();
@@ -98,14 +107,19 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         }
     }
 
+    /**
+     * Saves the provided {@link Order} in the database, allowing it to be retrieved later using
+     * {@link OrderDAO#get(int)} or {@link OrderDAO#getAll()}.
+     * @param order The entity to save, e.g. a new Product or Order.
+     */
     @Override
     public void create(Order order) throws DAOException {
         final String orderQuery = "INSERT INTO OrderTable VALUES (?, ?)";
         final String orderLineQuery = "INSERT INTO OrderLineTable VALUES (?, ?, ?)";
 
         try (
-                PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery);
-                PreparedStatement orderLineStatement = getConnectionObject().prepareStatement(orderLineQuery)
+                PreparedStatement orderStatement = connection.prepareStatement(orderQuery);
+                PreparedStatement orderLineStatement = connection.prepareStatement(orderLineQuery)
         ) {
             orderStatement.setInt(1, order.getOrderNumber());
             int stateID = switch (order.getState()) {
@@ -127,18 +141,22 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         }
     }
 
+    /**
+     * Modifies the details of an {@link Order} assumed to exist in database.
+     * @param replacement new version of the order to store.
+     */
     @Override
     public void update(Order replacement) throws DAOException {
         /*
-        We could update everything in place, but it would be much more complicated since each Order might have several
-        rows in OrderLines. It's much easier to just delete and then re-create the whole Order.
+         * We could update everything in place, but it would be much more complicated since each Order might have
+         * several rows in OrderLines. It's much easier to just delete and then re-create the whole Order.
          */
         final String orderQuery = "DELETE FROM OrderTable WHERE orderNo = ?";
         final String orderLineQuery = "DELETE FROM OrderLineTable WHERE orderNo = ?";
 
         try (
-                PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery);
-                PreparedStatement orderLineStatement = getConnectionObject().prepareStatement(orderLineQuery)
+                PreparedStatement orderStatement = connection.prepareStatement(orderQuery);
+                PreparedStatement orderLineStatement = connection.prepareStatement(orderLineQuery)
         ) {
             orderLineStatement.setInt(1, replacement.getOrderNumber());
             orderLineStatement.executeUpdate();
@@ -151,12 +169,13 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         }
     }
 
+    /** {@return a list of every order stored in the database} */
     @Override
     public synchronized List<Order> getAll() throws DAOException {
         final String orderQuery = "SELECT orderNo FROM OrderTable";
         ArrayList<Order> orders = new ArrayList<>();
 
-        try (PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery)) {
+        try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery)) {
             ResultSet rs = orderStatement.executeQuery();
             while (rs.next()) {
                 int orderNumber = rs.getInt("orderNo");
@@ -170,15 +189,11 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         return orders;
     }
 
-    /**
-     * Generates a unique order number
-     *   would be good to recycle numbers after 999
-     * @return A unique order number
-     */
+    /** {@return A unique order number} */
     @Override
     public synchronized int getNextOrderNumber() throws DAOException {
         final String orderQuery = "VALUES (NEXT VALUE FOR orderSeq)";
-        try (PreparedStatement orderStatement = getConnectionObject().prepareStatement(orderQuery)) {
+        try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery)) {
             ResultSet rs = orderStatement.executeQuery();
             rs.next();
             return rs.getInt(1);

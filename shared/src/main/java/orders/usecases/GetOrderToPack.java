@@ -6,6 +6,7 @@ import orders.OrderDAO;
 
 import java.util.Optional;
 
+/** Use case that retrieves an order to pack from the persistence layer. */
 public class GetOrderToPack {
     private final OrderDAO orderDAO;
 
@@ -13,10 +14,7 @@ public class GetOrderToPack {
         this.orderDAO = orderDAO;
     }
 
-    /**
-     * Returns an order to pack from the warehouse.
-     * @return An order to pack or null if no order
-     */
+    /** {@return An order ready to be packed or null if no order are waiting} */
     public Order run() throws DAOException {
         Optional<Order> unpackedOrder = orderDAO.getAll()
                 .stream()
@@ -26,7 +24,7 @@ public class GetOrderToPack {
             return null;
         }
 
-        // Found order waiting.
+        // Found an order waiting.
         Order order = unpackedOrder.get();
         order.setState(Order.State.BeingPacked);
         orderDAO.update(order);
