@@ -59,14 +59,20 @@ public class Product implements Serializable {
         return quantity;
     }
 
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     public Product take(int amount) {
         quantity -= amount;
         return new Product(productNumber, description, picture, price, amount);
     }
+
     public void add(int amount) {
         this.quantity += amount;
     }
 
+    /** {@return a description of the product suitable for printing} */
     public String showDetails() {
         return String.format(
                 "%s : %7.2f (%2d) ",
@@ -74,9 +80,5 @@ public class Product implements Serializable {
                 getPrice(),
                 getQuantity()
         );
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 }
