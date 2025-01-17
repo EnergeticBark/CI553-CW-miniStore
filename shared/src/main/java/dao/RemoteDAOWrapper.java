@@ -4,12 +4,11 @@ import java.rmi.RemoteException;
 import java.util.List;
 
 /**
- * Facade for read access to the stock list.
- * The actual implementation of this is held on the middle tier.
- * The actual stock list is held in a relational DataBase on the
- * third tier.
- * @author  Mike Smith University of Brighton
- * @version 2.0
+ * Wrapper for allowing the {@link RemoteDAO} interface to be used as a local {@link DAO}.
+ * This class only catches {@link RemoteException}s and rethrows them as {@link DAOException}s
+ * All CRUD operations are performed in the class that implements RemoteDAO.
+ * @param <T> The type of the entities this DAO works with.
+ * @param <U> The RemoteDAO we want to use as a local DAO.
  */
 public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO<T> {
     protected String url;
@@ -21,6 +20,13 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
 
     protected abstract void connect() throws DAOException;
 
+    /**
+     * Invokes a {@link RemoteDAO}'s method, wrapping its RemoteException in a DAOException.
+     * @param remoteMethod the method to invoke.
+     * @return Whatever the method remoteMethod would have returned.
+     * @param <R> The type of value returned by the remoteMethod.
+     * @throws DAOException If there was an error in the persistence layer, or if remoteMethod threw a RemoteException.
+     */
     protected <R> R wrapRemote(RemoteMethod<R, DAOException> remoteMethod) throws DAOException {
         try {
             if (stub == null) {
@@ -33,19 +39,11 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
         }
     }
 
-    /**
-     * Checks if the product exits in the stock list
-     * @return true if exists otherwise false
-     */
     @Override
     public synchronized boolean exists(int identifier) throws DAOException {
         return wrapRemote(() -> stub.exists(identifier));
     }
 
-    /**
-     * Returns details about the product in the stock list
-     * @return StockNumber, Description, Price, Quantity
-     */
     @Override
     public synchronized T get(int identifier) throws DAOException {
         return wrapRemote(() -> stub.get(identifier));
@@ -64,12 +62,6 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
         });
     }
 
-    /**
-     * Modifies Stock details for a given product number.
-     * Information modified: Description, Price
-     * @param detail Replace with this version of product
-     * @throws DAOException if issue
-     */
     @Override
     public synchronized void update(T detail) throws DAOException {
         wrapRemote(() -> {

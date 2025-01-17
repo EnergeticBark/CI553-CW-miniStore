@@ -2,6 +2,12 @@ package dao;
 
 import java.util.List;
 
+/**
+ * A generic DAO, or "Data Access Object" for performing CRUD (Create, Read, Update, and Delete) operations on entities
+ * of a specified type. Classes implementing this interface should store entities in a persistence layer, such as a
+ * database.
+ * @param <T> The type of the entities this DAO works with, e.g. Product or Order.
+ */
 public interface DAO<T> {
     /**
      * Checks if the entity exists in the persistence layer

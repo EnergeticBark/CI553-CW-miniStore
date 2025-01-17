@@ -7,8 +7,8 @@ import java.io.Serializable;
 import java.util.Optional;
 
 /**
- * Write a description of class BetterBasket here.
- *
+ * A collection of products to be purchased. Products are sorted by productNumber in ascending order.
+ * Any duplicate products get automatically merged into one {@link Product} of the correct quantity.
  * @author Seth Humphries
  * @version 1.0
  */
