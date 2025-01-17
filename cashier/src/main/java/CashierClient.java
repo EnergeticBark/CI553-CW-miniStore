@@ -25,8 +25,8 @@ public class CashierClient extends Application {
 
         CashierModel model = new CashierModel(rmf);
         CashierView view = new CashierView(stage, model, 0, 0);
-        CashierController cont = new CashierController(model);
-        view.setController(cont);
+        CashierController controller = new CashierController(model);
+        view.setController(controller);
 
         model.askForUpdate();
     }

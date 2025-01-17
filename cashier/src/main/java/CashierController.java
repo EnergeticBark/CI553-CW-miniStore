@@ -1,36 +1,36 @@
 /**
  * The Cashier Controller
  */
-public class CashierController {
+class CashierController {
     private final CashierModel model;
 
     /**
      * Constructor
      * @param model The model
      */
-    public CashierController(CashierModel model) {
+    CashierController(CashierModel model) {
         this.model = model;
     }
 
     /**
      * Check interaction from view
-     * @param pn The product number to be checked
+     * @param productNumber the product number to be checked
      */
-    public void checkStock(String pn) {
-        model.checkStock(pn);
+    void checkStock(String productNumber) {
+        model.checkStock(productNumber);
     }
 
     /**
      * Buy interaction from view
      */
-    public void buy() {
+    void buy() {
         model.buy();
     }
 
     /**
      * Bought interaction from view
      */
-    public void bought() {
+    void bought() {
         model.bought();
     }
 }

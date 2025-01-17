@@ -9,7 +9,7 @@ import javafx.stage.Stage;
 /**
  * View of the model 
  */
-public class CashierView {
+class CashierView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 420;
     private static final int HEIGHT = 270;
@@ -28,7 +28,7 @@ public class CashierView {
      * @param x x-coordinate of position of window on screen
      * @param y y-coordinate of position of window on screen
      */
-    public CashierView(Stage stage, CashierModel model, int x, int y) {
+    CashierView(Stage stage, CashierModel model, int x, int y) {
         // Set window location.
         stage.setX(x);
         stage.setY(y);
@@ -86,9 +86,9 @@ public class CashierView {
 
     /**
      * The controller object, used so that an interaction can be passed to the controller
-     * @param c The controller
+     * @param controller the controller
      */
-    public void setController(CashierController c) {
-        controller = c;
+    void setController(CashierController controller) {
+        this.controller = controller;
     }
 }

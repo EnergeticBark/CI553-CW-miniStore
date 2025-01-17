@@ -58,7 +58,10 @@ class BackDoorModel {
         }
     }
 
-    /** Tell the BackDoorView that the model has changed, so it needs to redraw. */
+    /**
+     * Tell the BackDoorView that the model has changed, so it needs to redraw.
+     * @param actionMessage message to show the user
+     */
     private void fireAction(String actionMessage) {
         action.setValue(actionMessage);
         if (product == null) {

@@ -16,7 +16,7 @@ import products.usecases.GetProductByNumber;
 /**
  * Implements the Model of the cashier client
  */
-public class CashierModel {
+class CashierModel {
     private enum State { process, checked }
 
     private State state; // Current state
@@ -35,7 +35,7 @@ public class CashierModel {
      * Construct the model of the Cashier
      * @param mf The factory to create the connection objects
      */
-    public CashierModel(MiddleFactory mf) {
+    CashierModel(MiddleFactory mf) {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
             orderDAO = mf.makeOrderDAO(); // Process order
@@ -45,29 +45,24 @@ public class CashierModel {
         state = State.process; // Current state
     }
 
-    // Tell the CashierView that the model has changed, so it needs to redraw.
+    /**
+     * Tell the CashierView that the model has changed, so it needs to redraw.
+     * @param actionMessage message to show the user
+     */
     private void fireAction(String actionMessage) {
         this.action.setValue(actionMessage);
-        if (getBasket() == null) {
+        if (basket == null) {
             output.setValue("Customers order");
         } else {
-            output.setValue(getBasket().getDetails());
+            output.setValue(basket.getDetails());
         }
-    }
-
-    /**
-     * Get the Basket of products
-     * @return basket
-     */
-    public Basket getBasket() {
-        return basket;
     }
 
     /**
      * Check if the product is in Stock
      * @param productNumber The product number
      */
-    public void checkStock(String productNumber) {
+    void checkStock(String productNumber) {
         state = State.process; // State process
         final String trimmedProductNumber = productNumber.trim(); // Product no.
         try {
@@ -90,10 +85,8 @@ public class CashierModel {
         }
     }
 
-    /**
-     * Buy the product
-     */
-    public void buy() {
+    /** Buy the product */
+    void buy() {
         try {
             if (state != State.checked) { // Not checked with customer
                 fireAction("please check its availability");
@@ -114,10 +107,8 @@ public class CashierModel {
         state = State.process; // All Done
     }
 
-    /**
-     * Customer pays for the contents of the basket
-     */
-    public void bought() {
+    /** Customer pays for the contents of the basket */
+    void bought() {
         try {
             if (basket != null && !basket.isEmpty()) { // items > 1
                 // T
@@ -132,28 +123,20 @@ public class CashierModel {
         }
     }
 
-    /**
-     * ask for update of view called at start of day
-     * or after system reset
-     */
-    public void askForUpdate() {
+    /** Asks for an update of view, called at start of day or after a system reset. */
+    void askForUpdate() {
         fireAction("Welcome");
     }
 
-    /**
-     * make a Basket when required
-     */
+    /** Make a Basket when required */
     private void makeBasketIfReq() {
         if (basket == null) {
             basket = makeBasket(); // basket list
         }
     }
 
-    /**
-     * return an instance of a new Basket
-     * @return an instance of a new Basket
-     */
-    protected Basket makeBasket() {
+    /** {@return an instance of a new Basket} */
+    private Basket makeBasket() {
         return new BetterBasket();
     }
 }
