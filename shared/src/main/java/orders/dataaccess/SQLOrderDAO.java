@@ -107,10 +107,30 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         }
     }
 
+    /** {@return a list of every order stored in the database} */
+    @Override
+    public synchronized List<Order> getAll() throws DAOException {
+        final String orderQuery = "SELECT orderNo FROM OrderTable";
+        ArrayList<Order> orders = new ArrayList<>();
+
+        try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery)) {
+            ResultSet rs = orderStatement.executeQuery();
+            while (rs.next()) {
+                int orderNumber = rs.getInt("orderNo");
+                Order order = get(orderNumber);
+                orders.add(order);
+            }
+        } catch (SQLException e) {
+            throw new DAOException("SQL getAll: " + e.getMessage());
+        }
+
+        return orders;
+    }
+
     /**
      * Saves the provided {@link Order} in the database, allowing it to be retrieved later using
      * {@link OrderDAO#get(int)} or {@link OrderDAO#getAll()}.
-     * @param order The entity to save, e.g. a new Product or Order.
+     * @param order the order to save.
      */
     @Override
     public void create(Order order) throws DAOException {
@@ -169,27 +189,7 @@ public class SQLOrderDAO implements OrderDAO, RemoteOrderDAO {
         }
     }
 
-    /** {@return a list of every order stored in the database} */
-    @Override
-    public synchronized List<Order> getAll() throws DAOException {
-        final String orderQuery = "SELECT orderNo FROM OrderTable";
-        ArrayList<Order> orders = new ArrayList<>();
-
-        try (PreparedStatement orderStatement = connection.prepareStatement(orderQuery)) {
-            ResultSet rs = orderStatement.executeQuery();
-            while (rs.next()) {
-                int orderNumber = rs.getInt("orderNo");
-                Order order = get(orderNumber);
-                orders.add(order);
-            }
-        } catch (SQLException e) {
-            throw new DAOException("SQL getAll: " + e.getMessage());
-        }
-
-        return orders;
-    }
-
-    /** {@return A unique order number} */
+    /** {@return a unique order number} */
     @Override
     public synchronized int getNextOrderNumber() throws DAOException {
         final String orderQuery = "VALUES (NEXT VALUE FOR orderSeq)";

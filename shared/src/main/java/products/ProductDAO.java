@@ -7,10 +7,10 @@ import java.util.List;
 
 public interface ProductDAO extends DAO<Product> {
     /**
-     * Search for products based on keywords in their descriptions.
-     * @param searchQuery The search query e.g. "TV", "Radio" or "Watch".
-     * @return A possibly empty list of search results.
-     * @throws DAOException If there was an issue.
+     * Searches for products based on keywords in their descriptions.
+     * @param searchQuery the search query e.g. "TV", "Radio" or "Watch".
+     * @return a possibly empty list of search results.
+     * @throws DAOException if there was an issue.
      */
     List<Product> search(String searchQuery) throws DAOException;
 }

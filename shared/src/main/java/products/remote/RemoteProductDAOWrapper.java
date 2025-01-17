@@ -6,8 +6,14 @@ import products.Product;
 import products.ProductDAO;
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.util.List;
 
+/**
+ * Wrapper for allowing the {@link RemoteProductDAO} interface to be used as a local {@link ProductDAO}.
+ * This class catches {@link RemoteException}s and rethrows them as {@link DAOException}s.
+ * All CRUD operations are performed in the class that implements RemoteProductDAO.
+ */
 public class RemoteProductDAOWrapper extends RemoteDAOWrapper<Product, RemoteProductDAO> implements ProductDAO {
     public RemoteProductDAOWrapper(String url) {
         super(url);

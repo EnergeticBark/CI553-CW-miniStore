@@ -10,7 +10,7 @@ import java.rmi.RemoteException;
 
 /**
  * Wrapper for allowing the {@link RemoteOrderDAO} interface to be used as a local {@link OrderDAO}.
- * This class only catches {@link RemoteException}s and rethrows them as {@link DAOException}s.
+ * This class catches {@link RemoteException}s and rethrows them as {@link DAOException}s.
  * All CRUD operations are performed in the class that implements RemoteOrderDAO.
  */
 public class RemoteOrderDAOWrapper extends RemoteDAOWrapper<Order, RemoteOrderDAO> implements OrderDAO {
