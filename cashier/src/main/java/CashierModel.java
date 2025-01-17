@@ -13,9 +13,7 @@ import products.usecases.BuyStock;
 import products.usecases.EnsureEnoughStock;
 import products.usecases.GetProductByNumber;
 
-/**
- * Implements the Model of the cashier client
- */
+/** Implements the Model of the cashier client */
 class CashierModel {
     private enum State { process, checked }
 

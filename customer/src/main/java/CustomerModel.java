@@ -26,7 +26,7 @@ class CustomerModel {
 
     private static final System.Logger LOGGER = System.getLogger(CustomerModel.class.getName());
 
-    /*
+    /**
      * Construct the model of the Customer
      * @param mf The factory to create the connection objects
      */

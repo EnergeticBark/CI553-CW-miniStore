@@ -16,9 +16,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-/**
- * Implements the Model of the back door client
- */
+/** Implements the Model of the back door client */
 class BackDoorModel {
     private Product product = null; // The product currently selected to be restocked.
     private ProductDAO stockDAO = null;
@@ -89,9 +87,7 @@ class BackDoorModel {
         fireAction(""); // Update the view with no error message.
     }
 
-    /**
-     * Restock the selected product by the amount specified in the Spinner.
-     */
+    /** Restock the selected product by the amount specified in the Spinner. */
     void restock() {
         if (product == null) {
             fireAction("No product selected.");

@@ -5,9 +5,7 @@ import middle.RemoteMiddleFactory;
 
 import java.util.List;
 
-/**
- * The standalone Cashier Client.
- */
+/** The standalone Cashier Client. */
 public class CashierClient extends Application {
     @Override
     public void start(Stage stage) {

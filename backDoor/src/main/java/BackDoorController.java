@@ -1,8 +1,6 @@
 import products.Product;
 
-/**
- * The BackDoor Controller
- */
+/** The BackDoor Controller */
 class BackDoorController {
     private final BackDoorModel model;
 
@@ -25,9 +23,7 @@ class BackDoorController {
         model.selectProduct(product);
     }
 
-    /**
-     * Restock interaction from view
-     */
+    /** Restock interaction from view */
     void restock() {
         model.restock();
     }

@@ -1,6 +1,4 @@
-/**
- * The Cashier Controller
- */
+/** The Cashier Controller */
 class CashierController {
     private final CashierModel model;
 
@@ -20,16 +18,12 @@ class CashierController {
         model.checkStock(productNumber);
     }
 
-    /**
-     * Buy interaction from view
-     */
+    /** Buy interaction from view */
     void buy() {
         model.buy();
     }
 
-    /**
-     * Bought interaction from view
-     */
+    /** Bought interaction from view */
     void bought() {
         model.bought();
     }

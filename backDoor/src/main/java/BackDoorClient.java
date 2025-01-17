@@ -5,9 +5,7 @@ import middle.RemoteMiddleFactory;
 
 import java.util.List;
 
-/**
- * The standalone BackDoor Client
- */
+/** The standalone BackDoor Client */
 public class BackDoorClient extends Application {
     @Override
     public void start(Stage stage) {

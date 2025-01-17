@@ -8,9 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import products.Product;
 
-/**
- * Implements the Customer view.
- */
+/** Implements the Customer view. */
 class BackDoorView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 500;

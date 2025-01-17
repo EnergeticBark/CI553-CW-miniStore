@@ -6,9 +6,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-/**
- * View of the model 
- */
+/** View of the model */
 class CashierView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 420;
