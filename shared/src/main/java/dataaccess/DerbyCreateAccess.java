@@ -1,8 +1,7 @@
 package dataaccess;
 
 /**
- * Implements management of an Apache Derby database.
- *  that is too be created
+ * Implements management of an Apache Derby database that is to be created.
  * @author  Mike Smith University of Brighton
  * @version 2.0
  */

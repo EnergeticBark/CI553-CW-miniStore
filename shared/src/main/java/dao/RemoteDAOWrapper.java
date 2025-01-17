@@ -63,9 +63,9 @@ public abstract class RemoteDAOWrapper<T, U extends RemoteDAO<T>> implements DAO
     }
 
     @Override
-    public synchronized void update(T detail) throws DAOException {
+    public synchronized void update(T replacement) throws DAOException {
         wrapRemote(() -> {
-            stub.update(detail);
+            stub.update(replacement);
             return null;
         });
     }

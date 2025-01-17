@@ -13,5 +13,5 @@ public interface RemoteDAO<T> extends Remote {
     T get(int identifier) throws RemoteException, DAOException;
     List<T> getAll() throws DAOException, RemoteException;
     void create(T newEntity) throws RemoteException, DAOException;
-    void update(T detail) throws RemoteException, DAOException;
+    void update(T replacement) throws RemoteException, DAOException;
 }

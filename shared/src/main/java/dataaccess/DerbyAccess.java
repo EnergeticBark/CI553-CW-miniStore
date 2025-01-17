@@ -9,17 +9,12 @@ class DerbyAccess extends DBAccess {
     private static final String URL = "jdbc:derby:catshop.db";
     private static final String DRIVER = "org.apache.derby.jdbc.EmbeddedDriver";
 
-    /**
-     * Load the Apache Derby database driver
-     */
+    /** Load the Apache Derby database driver */
     public void loadDriver() throws Exception {
         Class.forName(DRIVER).getDeclaredConstructor().newInstance();
     }
 
-    /**
-     * Return the url to access the database
-     * @return url to database
-     */
+    /** {@return the url to access the database} */
     public String urlOfDatabase() {
         return URL;
     }

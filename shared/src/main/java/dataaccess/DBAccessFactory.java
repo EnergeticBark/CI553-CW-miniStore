@@ -1,8 +1,3 @@
-/**
- * @author  Mike Smith University of Brighton
- * @version 3.0
- */
-
 package dataaccess;
 
 import java.io.File;
@@ -10,14 +5,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-/**
- * Manages the starting up of the database.
- * The database may be Access, mySQL etc.
- */
-
 // Pattern: Abstract Factory
 //          Fix to be
 
+/** Manages the starting up of the database. The database may be Access, mySQL etc. */
 public class DBAccessFactory {
     private static String theAction = "";
     private static String theDataBase = "";

@@ -1,20 +1,12 @@
-/**
- * @author  Mike Smith University of Brighton
- * Interface Middle factory
- * @version 2.0
- */
-
 package middle;
 
 import dao.DAOException;
 import orders.OrderDAO;
 import products.ProductDAO;
 
-/**
- * Provide access to middle tier components.
- */
-
 // Pattern: Abstract Factory
+
+/** Provide access to middle tier components. */
 public interface MiddleFactory {
     /**
      * Return an object to access the database.
@@ -24,7 +16,7 @@ public interface MiddleFactory {
     ProductDAO makeStockDAO() throws DAOException;
 
     /**
-     * Return an object to access the order processing system
+     * Return an object to access the order processing system.
      * @return instance of OrderDAO
      * @throws DAOException if issue
      */
