@@ -6,11 +6,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-/**
- * Implements the Packing view.
- */
-
-public class PackingView {
+/** Implements the Packing view. */
+class PackingView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 420;
     private static final int HEIGHT = 270;
@@ -27,7 +24,7 @@ public class PackingView {
      * @param x x-coordinate of position of window on screen
      * @param y y-coordinate of position of window on screen
      */
-    public PackingView(Stage stage, PackingModel model, int x, int y) {
+    PackingView(Stage stage, PackingModel model, int x, int y) {
         // Set window location.
         stage.setX(x);
         stage.setY(y);
@@ -72,7 +69,7 @@ public class PackingView {
         return vBox;
     }
 
-    public void setController(PackingController controller) {
+    void setController(PackingController controller) {
         this.controller = controller;
     }
 }

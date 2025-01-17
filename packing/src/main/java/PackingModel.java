@@ -11,10 +11,8 @@ import orders.usecases.InformOrderPacked;
 
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * Implements the Model of the warehouse packing client
- */
-public class PackingModel {
+/** Implements the Model of the warehouse packing client */
+class PackingModel {
     private final AtomicReference<Order> order = new AtomicReference<>();
 
     private OrderDAO orderDAO = null;
@@ -26,11 +24,11 @@ public class PackingModel {
 
     private static final System.Logger LOGGER = System.getLogger(PackingModel.class.getName());
 
-    /*
+    /**
      * Construct the model of the warehouse Packing client
      * @param mf The factory to create the connection objects
      */
-    public PackingModel(MiddleFactory mf) {
+    PackingModel(MiddleFactory mf) {
         try {
             orderDAO = mf.makeOrderDAO();  // Process order
         } catch (Exception e) {
@@ -47,7 +45,10 @@ public class PackingModel {
         pollOrders.start();
     }
 
-    // Tell the PackingView that the model has changed, so it needs to redraw.
+    /**
+     * Tell the PackingView that the model has changed, so it needs to redraw.
+     * @param actionMessage message to show the packer
+     */
     private void fireAction(String actionMessage) {
         this.action.setValue(actionMessage);
         if (getBasket() == null) {
@@ -58,18 +59,15 @@ public class PackingModel {
     }
 
 
-    /**
-     * Semaphore used to only allow 1 order
-     * to be packed at once by this person
-     */
-    static class StateOf {
+    /** Semaphore used to only allow 1 order to be packed at once by this person */
+    private static class StateOf {
         private boolean held = false;
 
         /**
          * Claim exclusive access
          * @return true if claimed else false
          */
-        public synchronized boolean claim() { // Semaphore
+        private synchronized boolean claim() { // Semaphore
             if (held) {
                 return false;
             }
@@ -77,24 +75,21 @@ public class PackingModel {
             return true;
         }
 
-        /**
-         * Free the lock
-         */
-        public synchronized void free() {   //
+        /** Free the lock */
+        private synchronized void free() {   //
             assert held;
             held = false;
         }
     }
 
     /**
-     * Method run in a separate thread to check if there
-     * is a new order waiting to be packed, and we have
-     * nothing to do.
+     * Method run in a separate thread to check if there is a new
+     * order waiting to be packed, and we have nothing to do.
      */
     private void checkForNewOrder() {
         while (true) {
             try {
-                boolean isFree = worker.claim(); // Are we free
+                boolean isFree = worker.claim(); // Are we free?
                 if (!isFree) {
                     Thread.sleep(2000);
                     continue;
@@ -117,21 +112,16 @@ public class PackingModel {
         }
     }
 
-    /**
-     * Return the Basket of products that are to be picked
-     * @return the basket
-     */
-    public Basket getBasket() {
+    /** {@return the Basket of products that are to be packed} */
+    private Basket getBasket() {
         if (order.get() == null) {
             return null;
         }
         return order.get().getBasket();
     }
 
-    /**
-     * Process a packed Order
-     */
-    public void doPacked() {
+    /** Process a packed Order */
+    void doPacked() {
         try {
             Order packedOrder = this.order.get(); // Order being packed
             if (packedOrder == null) {
