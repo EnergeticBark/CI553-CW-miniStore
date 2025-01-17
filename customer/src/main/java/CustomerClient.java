@@ -5,9 +5,7 @@ import middle.RemoteMiddleFactory;
 
 import java.util.List;
 
-/**
- * The standalone Customer Client
- */
+/** The standalone Customer Client */
 public class CustomerClient extends Application {
     @Override
     public void start(Stage stage) {

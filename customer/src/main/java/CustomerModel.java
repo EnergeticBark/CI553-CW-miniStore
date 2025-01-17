@@ -11,10 +11,8 @@ import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
 
-/**
- * Implements the Model of the customer client
- */
-public class CustomerModel {
+/** Implements the Model of the customer client */
+class CustomerModel {
     private Product product = null;
     private ProductDAO stockDAO = null;
 
@@ -32,7 +30,7 @@ public class CustomerModel {
      * Construct the model of the Customer
      * @param mf The factory to create the connection objects
      */
-    public CustomerModel(MiddleFactory mf) {
+    CustomerModel(MiddleFactory mf) {
         try {
             stockDAO = mf.makeStockDAO(); // Database access
         } catch (Exception e) {
@@ -41,7 +39,10 @@ public class CustomerModel {
         }
     }
 
-    // Tell the CustomerView that the model has changed, so it needs to redraw.
+    /**
+     * Tell the CustomerView that the model has changed, so it needs to redraw.
+     * @param actionMessage message to show the user
+     */
     private void fireAction(String actionMessage) {
         if (product == null) {
             picture.setValue(null);
@@ -63,10 +64,13 @@ public class CustomerModel {
     }
 
     /**
-     * Search for a product by its product number or description.
+     * Searches for a product by its product number or description.
+     * Searching by product number prioritized.
+     * If {@code searchQuery} matches a product's number exactly, then that product will be shown.
+     * Otherwise, this method will try to find a product whose description contains {@code searchQuery} as a substring.
      * @param searchQuery The search query.
      */
-    public void search(String searchQuery) {
+    void search(String searchQuery) {
         product = null;
         final String trimmedQuery = searchQuery.trim();
         try {
@@ -90,10 +94,8 @@ public class CustomerModel {
         }
     }
 
-    /**
-     * Clear the product
-     */
-    public void clear() {
+    /** Clear the product */
+    void clear() {
         searchQuery.setValue("");
         product = null; // Clear the product.
         fireAction("Enter Product Number");

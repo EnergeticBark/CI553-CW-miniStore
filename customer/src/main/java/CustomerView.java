@@ -6,10 +6,8 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
-/**
- * Implements the Customer view.
- */
-public class CustomerView {
+/** Implements the Customer view. */
+class CustomerView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 500;
     private static final int HEIGHT = 340;
@@ -22,7 +20,7 @@ public class CustomerView {
      * @param x     x-coordinate of position of window on screen
      * @param y     y-coordinate of position of window on screen
      */
-    public CustomerView(Stage stage, CustomerModel model, int x, int y) {
+    CustomerView(Stage stage, CustomerModel model, int x, int y) {
         // Set window location.
         stage.setX(x);
         stage.setY(y);
@@ -115,7 +113,7 @@ public class CustomerView {
      * The controller object, used so that an interaction can be passed to the controller
      * @param controller   The controller
      */
-    public void setController(CustomerController controller) {
+    void setController(CustomerController controller) {
         this.controller = controller;
     }
 }
