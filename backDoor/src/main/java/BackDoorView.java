@@ -11,7 +11,7 @@ import products.Product;
 /**
  * Implements the Customer view.
  */
-public class BackDoorView {
+class BackDoorView {
     // Width and height of the window in pixels.
     private static final int WIDTH = 500;
     private static final int HEIGHT = 340;
@@ -23,7 +23,7 @@ public class BackDoorView {
      * @param x x-coordinate of position of window on screen
      * @param y y-coordinate of position of window on screen
      */
-    public BackDoorView(Stage stage, BackDoorModel model, int x, int y) {
+    BackDoorView(Stage stage, BackDoorModel model, int x, int y) {
         // Set window location.
         stage.setX(x);
         stage.setY(y);

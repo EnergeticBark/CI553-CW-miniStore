@@ -17,15 +17,6 @@ public class MockProductDAO implements ProductDAO {
     }
 
     @Override
-    public List<Product> search(String searchQuery)  {
-        return products.stream()
-                .filter((product) -> product.getDescription()
-                        .toUpperCase()
-                        .contains(searchQuery.toUpperCase()))
-                .collect(Collectors.toList());
-    }
-
-    @Override
     public Product get(int identifier) throws DAOException {
         Optional<Product> found = products.stream()
                 .filter(product -> product.getProductNumber() == identifier)
@@ -52,5 +43,14 @@ public class MockProductDAO implements ProductDAO {
                 .filter(product -> product.getProductNumber() != replacement.getProductNumber())
                 .collect(Collectors.toList());
         products.add(replacement);
+    }
+
+    @Override
+    public List<Product> search(String searchQuery)  {
+        return products.stream()
+                .filter((product) -> product.getDescription()
+                        .toUpperCase()
+                        .contains(searchQuery.toUpperCase()))
+                .collect(Collectors.toList());
     }
 }

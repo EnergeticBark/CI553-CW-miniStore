@@ -3,18 +3,22 @@ import products.Product;
 /**
  * The BackDoor Controller
  */
-public class BackDoorController {
+class BackDoorController {
     private final BackDoorModel model;
 
     /**
      * Constructor
-     * @param model The model
+     * @param model the model this controller will talk to.
      */
-    public BackDoorController(BackDoorModel model) {
+    BackDoorController(BackDoorModel model) {
         this.model = model;
     }
 
-    public void selectProduct(Product product) {
+    /**
+     * Product selection interaction from view
+     * @param product which product the user selected from the table
+     */
+    void selectProduct(Product product) {
         if (product == null) {
             return;
         }
@@ -22,9 +26,9 @@ public class BackDoorController {
     }
 
     /**
-     * restock interaction from view
+     * Restock interaction from view
      */
-    public void restock() {
+    void restock() {
         model.restock();
     }
 }
